@@ -1,0 +1,51 @@
+cmake_minimum_required(VERSION 3.15)
+project(zwei)
+
+set(CMAKE_CXX_STANDARD 14)
+
+add_executable(
+        zwei
+        main.cpp
+        json/
+        json/printer.cpp
+        json/parser.cpp
+        imgui/imgui.cpp
+        imgui/imgui_impl_sdl.cpp
+        imgui/imgui_impl_opengl2.cpp
+        imgui/imgui_widgets.cpp
+        imgui/imgui_draw.cpp
+        config.h config.h src/Gfx.h src/Gfx.cpp src/Rt.h assets/Font.h assets/Font.cpp assets/Font.h assets/EmbeddedAsset.h)
+
+INCLUDE(FindPkgConfig)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${zwei_SOURCE_DIR}/cmake")
+set(LINUX ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
+PKG_SEARCH_MODULE(OpenGL gl)
+
+target_include_directories(
+        zwei
+        PRIVATE ${SDL2_INCLUDE_DIR}
+        PRIVATE ${SDL2_IMAGE_INCLUDE_DIR}
+        PRIVATE ${OpenGL_INCLUDE_DIRS}
+        PRIVATE ${zwei_SOURCE_DIR}/lua
+        PRIVATE ${zwei_SOURCE_DIR}/json
+        PRIVATE ${zwei_SOURCE_DIR}/imgui
+        PRIVATE ${zwei_SOURCE_DIR}/base64
+)
+
+target_link_libraries(
+        zwei
+        PRIVATE ${SDL2_LIBRARY}
+        PRIVATE ${SDL2_IMAGE_LIBRARIES}
+        PRIVATE ${OpenGL_LIBRARIES}
+)
+
+
+if (LINUX)
+    target_link_libraries(
+            zwei
+            PRIVATE ${zwei_SOURCE_DIR}/lua/linux64/liblua.a
+    )
+endif (LINUX)
