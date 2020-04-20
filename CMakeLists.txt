@@ -14,7 +14,7 @@ add_executable(
         imgui/imgui_impl_opengl2.cpp
         imgui/imgui_widgets.cpp
         imgui/imgui_draw.cpp
-        config.h config.h src/Gfx.h src/Gfx.cpp src/Rt.h assets/Font.h assets/Font.cpp assets/Font.h assets/EmbeddedAsset.h)
+        config.h config.h src/Gfx.h src/Gfx.cpp src/Rt.h)
 
 INCLUDE(FindPkgConfig)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${zwei_SOURCE_DIR}/cmake")
@@ -33,6 +33,7 @@ target_include_directories(
         PRIVATE ${zwei_SOURCE_DIR}/json
         PRIVATE ${zwei_SOURCE_DIR}/imgui
         PRIVATE ${zwei_SOURCE_DIR}/base64
+        PRIVATE ${zwei_SOURCE_DIR}/assets
 )
 
 target_link_libraries(

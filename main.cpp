@@ -5,11 +5,11 @@
 #include <IMGUI/imgui_impl_sdl.h>
 #include <IMGUI/imgui_impl_opengl2.h>
 
+#include <EMBEDDED/Font.h>
+
 #include "./config.h"
 #include "src/Gfx.h"
 #include "src/Rt.h"
-
-#include "assets/Font.h"
 
 void loop() {
     while (RT_Running) {
