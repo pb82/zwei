@@ -14,7 +14,11 @@ add_executable(
         imgui/imgui_impl_opengl2.cpp
         imgui/imgui_widgets.cpp
         imgui/imgui_draw.cpp
-        config.h config.h src/Gfx.h src/Gfx.cpp src/Rt.h)
+        assets/EMBEDDED/EmbeddedAsset.h
+        assets/EMBEDDED/Font.h assets/EMBEDDED/Font.cpp
+        config.h
+        src/Gfx.h src/Gfx.cpp
+        src/Rt.h src/Cam.h)
 
 INCLUDE(FindPkgConfig)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${zwei_SOURCE_DIR}/cmake")

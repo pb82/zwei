@@ -1,6 +1,8 @@
 #ifndef ZWEI_RT_H
 #define ZWEI_RT_H
 
+#include "Cam.h"
+
 #define RT_Running Rt::instance().running
 #define RT_Stop Rt::instance().stop
 
@@ -17,6 +19,7 @@ public:
     void operator=(Rt const &) = delete;
 
     bool running;
+    Camera camera;
 
     void stop() {
         this->running = false;
