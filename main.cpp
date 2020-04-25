@@ -5,11 +5,17 @@
 #include <IMGUI/imgui_impl_sdl.h>
 #include <IMGUI/imgui_impl_opengl2.h>
 
+#include <ASSETS/Assets.h>
 #include <EMBEDDED/Font.h>
+#include <EMBEDDED/Tiles.h>
+#include <iostream>
 
 #include "./config.h"
 #include "src/Gfx.h"
 #include "src/Rt.h"
+
+#include "src/ecs/Transform.h"
+#include "src/ecs/Entity.h"
 
 void loop() {
     while (RT_Running) {
@@ -43,7 +49,7 @@ void initImgui() {
     ImGui_ImplSDL2_InitForOpenGL(Gfx_Window, Gfx_GL_Context);
     ImGui_ImplOpenGL2_Init();
     ImGui::GetIO().IniFilename = nullptr;
-    ImGui::GetIO().Fonts->AddFontFromMemoryTTF(assets_Font(), 16, 16);
+    ImGui::GetIO().Fonts->AddFontFromMemoryTTF(Assets::instance().getFont(FONT), 16, 16);
 }
 
 void initSdl() {
@@ -79,7 +85,19 @@ void initSdl() {
 }
 
 int main(int, char **) {
+    Assets::instance().addFont(FONT, assets_Font);
+    Assets::instance().addTexture(TILES, assets_Tiles);
+
     initSdl();
     initImgui();
+
+    Entity ent;
+    ent.addComponent<Transform>(0, 0);
+
+    bool has = ent.hasComponent<Transform>();
+
+    std::cout << "has: " << has << std::endl;
+    ent.update();
+
     loop();
 }

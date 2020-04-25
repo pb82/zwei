@@ -16,9 +16,12 @@ add_executable(
         imgui/imgui_draw.cpp
         assets/EMBEDDED/EmbeddedAsset.h
         assets/EMBEDDED/Font.h assets/EMBEDDED/Font.cpp
+        assets/EMBEDDED/Tiles.h assets/EMBEDDED/Tiles.cpp
         config.h
         src/Gfx.h src/Gfx.cpp
-        src/Rt.h src/Cam.h)
+        src/Rt.h src/Cam.h src/ecs/Component.h src/ecs/Transform.h src/ecs/Entity.h
+        src/alg/Position.h
+        assets/Assets.cpp assets/ASSETS/Assets.h src/ecs/Tile.h)
 
 INCLUDE(FindPkgConfig)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${zwei_SOURCE_DIR}/cmake")

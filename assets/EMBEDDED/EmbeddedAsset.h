@@ -2,6 +2,7 @@
 #define ZWEI_EMBEDDEDASSET_H
 
 #include <string>
+#include <tuple>
 
 #include <BASE64/base64.h>
 
@@ -11,8 +12,9 @@ public:
         Base64::Decode(encoded, &decoded);
     }
 
-    void *operator()() {
-        return (void *) decoded.c_str();
+    std::tuple<void *, unsigned int> raw() {
+        auto *ptr = (void *) decoded.c_str();
+        return {ptr, decoded.size()};
     }
 
 private:

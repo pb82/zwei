@@ -7,7 +7,7 @@ public:
     Camera() : x(0.0f), y(0.0f), z(1.0f) {}
 
     void magnify(float factor) {
-        this->z *= factor;
+        this->z *= abs(factor);
     }
 
     void zoom(float increment) {
