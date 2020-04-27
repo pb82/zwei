@@ -5,6 +5,7 @@
 
 #define RT_Running Rt::instance().running
 #define RT_Stop Rt::instance().stop
+#define RT_Camera Rt::instance().camera
 
 // Shared runtime state
 class Rt {

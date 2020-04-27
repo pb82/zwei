@@ -2,21 +2,22 @@
 
 #include "../src/Gfx.h"
 
-Assets::~Assets() {
-    for (auto texture: textures) {
-        SDL_DestroyTexture(texture.second);
-    }
+Texture::~Texture() {
+    SDL_DestroyTexture(this->mem);
 }
 
 void Assets::addFont(Asset id, EmbeddedAsset &asset) {
-    fonts[id] = &asset;
+    fonts.emplace(id, &asset);
 }
 
 void Assets::addTexture(Asset id, EmbeddedAsset &asset) {
     auto raw = asset.raw();
     SDL_RWops *stream = SDL_RWFromConstMem(std::get<0>(raw), std::get<1>(raw));
     SDL_Texture *texture = IMG_LoadTexture_RW(Gfx_Renderer, stream, 1);
-    textures[id] = texture;
+
+    auto storage = std::make_shared<Texture>(texture);
+    SDL_QueryTexture(texture, nullptr, nullptr, &storage->w, &storage->h);
+    textures.emplace(id, storage);
 }
 
 void *Assets::getFont(Asset id) {
@@ -29,7 +30,7 @@ void *Assets::getFont(Asset id) {
     return std::get<0>(raw);
 }
 
-SDL_Texture *Assets::getTexture(Asset id) {
+std::shared_ptr<Texture> Assets::getTexture(Asset id) {
     auto texture = textures.find(id);
     if (texture == textures.end()) {
         return nullptr;

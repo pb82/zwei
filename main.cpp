@@ -1,3 +1,6 @@
+#include <cassert>
+#include <chrono>
+
 #include <SDL_image.h>
 #include <SDL_opengl.h>
 
@@ -16,22 +19,42 @@
 
 #include "src/ecs/Transform.h"
 #include "src/ecs/Entity.h"
+#include "src/ecs/Tile.h"
 
 void loop() {
+    auto targetMillis = (1 / configTargetFramerate) * 1000;
+
+    Entity ent;
+    ent.addComponent<Transform>(1, 1);
+    ent.addComponent<Tile>(TILES, 1);
+
+    auto t = ent.getComponent<Transform>();
+
+    RT_Camera.track(&t->p);
+
     while (RT_Running) {
+        auto timeStart = std::chrono::system_clock::now();
+
         glClear(GL_COLOR_BUFFER_BIT);
 
         SDL_Event event;
-        if (SDL_PollEvent(&event)) {
+        while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 RT_Stop();
             }
         }
 
+        ent.update();
+        ent.render();
+
         ImGui_ImplOpenGL2_NewFrame();
         ImGui_ImplSDL2_NewFrame(Gfx_Window);
         ImGui::NewFrame();
         {
+            ImGui::Begin("test");
+            ImGui::Text("Hello");
+            ImGui::Button("Push");
+            ImGui::End();
         }
         ImGui::Render();
 
@@ -39,17 +62,35 @@ void loop() {
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(Gfx_Window);
         glFinish();
+
+        auto frameTime = std::chrono::system_clock::now() - timeStart;
+        auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
+        float delay = targetMillis - millis;
+
+        if (delay > 0) {
+            SDL_Delay(delay);
+        }
     }
 }
 
 void initImgui() {
+    assert(Gfx_Window);
+    assert(Gfx_Renderer);
     IMGUI_CHECKVERSION();
+
     ImGui::CreateContext();
     ImGui::StyleColorsLight();
     ImGui_ImplSDL2_InitForOpenGL(Gfx_Window, Gfx_GL_Context);
     ImGui_ImplOpenGL2_Init();
     ImGui::GetIO().IniFilename = nullptr;
     ImGui::GetIO().Fonts->AddFontFromMemoryTTF(Assets::instance().getFont(FONT), 16, 16);
+}
+
+void initAssets() {
+    assert(Gfx_Renderer);
+
+    Assets::instance().addFont(FONT, assets_Font);
+    Assets::instance().addTexture(TILES, assets_Tiles);
 }
 
 void initSdl() {
@@ -59,16 +100,16 @@ void initSdl() {
         exit(1);
     }
 
-    if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-        exit(1);
-    }
-
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetSwapInterval(1);
+
+    if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
+        exit(1);
+    }
 
     Gfx_Window = SDL_CreateWindow(
             configWindowTitle,
@@ -82,22 +123,12 @@ void initSdl() {
     Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);
     Gfx_GL_Context = SDL_GL_CreateContext(Gfx_Window);
     SDL_GL_MakeCurrent(Gfx_Window, Gfx_GL_Context);
+    Gfx_Tile_Size = configTileSize;
 }
 
 int main(int, char **) {
-    Assets::instance().addFont(FONT, assets_Font);
-    Assets::instance().addTexture(TILES, assets_Tiles);
-
     initSdl();
+    initAssets();
     initImgui();
-
-    Entity ent;
-    ent.addComponent<Transform>(0, 0);
-
-    bool has = ent.hasComponent<Transform>();
-
-    std::cout << "has: " << has << std::endl;
-    ent.update();
-
     loop();
 }

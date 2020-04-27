@@ -1,8 +1,10 @@
 #ifndef ZWEI_CONFIG_H
 #define ZWEI_CONFIG_H
 
-const char *configWindowTitle = "Zwei";
-const int configWindowWidth = 800;
-const int configWindowHeight = 600;
+extern const char *configWindowTitle;
+extern const int configWindowWidth;
+extern const int configWindowHeight;
+extern const unsigned int configTileSize;
+extern const float configTargetFramerate;
 
 #endif

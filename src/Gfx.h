@@ -6,6 +6,7 @@
 #define Gfx_GL_Context Gfx::instance().glContext
 #define Gfx_Renderer Gfx::instance().renderer
 #define Gfx_Window Gfx::instance().window
+#define Gfx_Tile_Size Gfx::instance().tileSize
 
 // Shared SDL and GL structures
 class Gfx {
@@ -22,6 +23,8 @@ public:
     SDL_GLContext glContext;
     SDL_Renderer *renderer;
     SDL_Window *window;
+
+    unsigned int tileSize;
 
 private:
     Gfx() {}

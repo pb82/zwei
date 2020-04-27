@@ -8,7 +8,7 @@
 
 class Transform : public Component {
 public:
-    Transform(const Entity &parent, float x, float y)
+    Transform(Entity &parent, float x, float y)
             : Component(parent), p(x, y) {}
 
     Position p;

@@ -12,7 +12,7 @@ public:
         Base64::Decode(encoded, &decoded);
     }
 
-    std::tuple<void *, unsigned int> raw() {
+    std::tuple<void *, size_t> raw() {
         auto *ptr = (void *) decoded.c_str();
         return {ptr, decoded.size()};
     }

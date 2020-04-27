@@ -19,9 +19,16 @@ public:
     }
 
     template<typename T>
-    bool hasComponent() {
+    bool hasComponent() const {
         auto type = std::type_index(typeid(T));
         return components.find(type) != components.end();
+    }
+
+    template<typename T>
+    std::shared_ptr<T> getComponent() {
+        auto type = std::type_index(typeid(T));
+        auto component = components[type];
+        return std::dynamic_pointer_cast<T>(component);
     }
 
     void update() {

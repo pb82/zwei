@@ -2,6 +2,7 @@
 #define ZWEI_ASSETS_H
 
 #include <unordered_map>
+#include <memory>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -11,6 +12,17 @@
 enum Asset {
     FONT = 0,
     TILES
+};
+
+class Texture {
+public:
+    Texture(SDL_Texture *texture) : mem(texture) {}
+
+    ~Texture();
+
+    SDL_Texture *mem;
+    int w;
+    int h;
 };
 
 class Assets {
@@ -31,14 +43,12 @@ public:
 
     void *getFont(Asset id);
 
-    SDL_Texture *getTexture(Asset id);
+    std::shared_ptr<Texture> getTexture(Asset id);
 
 private:
     Assets() {}
 
-    ~Assets();
-
-    std::unordered_map<Asset, SDL_Texture *> textures;
+    std::unordered_map<Asset, std::shared_ptr<Texture>> textures;
     std::unordered_map<Asset, EmbeddedAsset *> fonts;
 };
 

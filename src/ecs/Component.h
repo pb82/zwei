@@ -5,7 +5,7 @@ class Entity;
 
 class Component {
 public:
-    Component(const Entity &parent) : parent(parent) {}
+    Component(Entity &parent) : parent(parent) {}
 
     virtual ~Component() {}
 
@@ -13,8 +13,8 @@ public:
 
     virtual void render() {}
 
-private:
-    const Entity &parent;
+protected:
+    Entity &parent;
 };
 
 #endif
