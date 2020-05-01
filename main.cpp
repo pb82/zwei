@@ -55,6 +55,8 @@ void loop() {
         }
         ImGui::Render();
 
+        RT_Camera.magnify(0.9995);
+
         // Flush
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(Gfx_Window);
@@ -67,8 +69,6 @@ void loop() {
         if (delay > 0) {
             SDL_Delay(delay);
         }
-
-        RT_Camera.magnify(0.995);
 
         Manager::instance().update(targetMillis);
     }

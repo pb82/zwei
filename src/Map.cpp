@@ -51,6 +51,8 @@ std::shared_ptr<Entity> Map::getTile(LayerType layer, int x, int y) {
 }
 
 bool Map::load(const char *file) {
+    using namespace JSON;
+
     File f(file);
     bool success = f.open();
     if (!success) {
@@ -61,11 +63,11 @@ bool Map::load(const char *file) {
     json.resize(f.size);
     f.read(json, 0, f.size);
 
-    JSON::Value v;
-    JSON::Parser p;
+    Value v;
+    Parser p;
     p.parse(v, json);
 
-    auto ll = v["layers"].as<JSON::Array>();
+    auto ll = v["layers"].as<Array>();
     for (auto &layer : ll) {
         auto l = std::make_shared<Layer>();
         l->load(layer);
