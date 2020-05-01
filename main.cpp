@@ -26,10 +26,9 @@ void loop() {
     Map m;
     m.load("./assets/RAW/map.json");
 
-    auto tracked = m.getTile(FLOOR, 0, 0);
-    auto position = tracked->getComponent<Transform>();
+    Position p(0, 0);
 
-    RT_Camera.track(&position->p);
+    RT_Camera.track(&p);
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();
@@ -69,7 +68,7 @@ void loop() {
             SDL_Delay(delay);
         }
 
-        RT_Camera.zoom(-0.001);
+        RT_Camera.magnify(0.995);
 
         Manager::instance().update(targetMillis);
     }

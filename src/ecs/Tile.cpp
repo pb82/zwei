@@ -13,7 +13,7 @@ void Tile::pick(SDL_Rect &source) {
     // Tile position in the tilemap
     int scalar = pos - 1;
     source.x = (scalar * Gfx_Tile_Size) % texture->w;
-    source.y = (scalar * Gfx_Tile_Size) / texture->w;
+    source.y = (scalar * Gfx_Tile_Size) / texture->w * Gfx_Tile_Size;
     source.w = Gfx_Tile_Size;
     source.h = Gfx_Tile_Size;
 }
