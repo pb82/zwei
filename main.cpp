@@ -11,26 +11,25 @@
 #include <ASSETS/Assets.h>
 #include <EMBEDDED/Font.h>
 #include <EMBEDDED/Tiles.h>
-#include <iostream>
 
 #include "./config.h"
 #include "src/Gfx.h"
 #include "src/Rt.h"
 
+#include "src/ecs/Manager.h"
 #include "src/ecs/Transform.h"
-#include "src/ecs/Entity.h"
-#include "src/ecs/Tile.h"
+#include "src/Map.h"
 
 void loop() {
     auto targetMillis = (1 / configTargetFramerate) * 1000;
 
-    Entity ent;
-    ent.addComponent<Transform>(1, 1);
-    ent.addComponent<Tile>(TILES, 1);
+    Map m;
+    m.load("./assets/RAW/map.json");
 
-    auto t = ent.getComponent<Transform>();
+    auto tracked = m.getTile(FLOOR, 0, 0);
+    auto position = tracked->getComponent<Transform>();
 
-    RT_Camera.track(&t->p);
+    RT_Camera.track(&position->p);
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();
@@ -44,8 +43,7 @@ void loop() {
             }
         }
 
-        ent.update();
-        ent.render();
+        Manager::instance().render();
 
         ImGui_ImplOpenGL2_NewFrame();
         ImGui_ImplSDL2_NewFrame(Gfx_Window);
@@ -70,6 +68,10 @@ void loop() {
         if (delay > 0) {
             SDL_Delay(delay);
         }
+
+        RT_Camera.zoom(-0.001);
+
+        Manager::instance().update(targetMillis);
     }
 }
 

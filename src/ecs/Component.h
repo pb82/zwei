@@ -9,7 +9,7 @@ public:
 
     virtual ~Component() {}
 
-    virtual void update() {}
+    virtual void update(float dt) {}
 
     virtual void render() {}
 
