@@ -1,5 +1,6 @@
 #include <cassert>
 #include <chrono>
+#include <algorithm>
 
 #include <SDL_image.h>
 #include <SDL_opengl.h>
@@ -17,7 +18,7 @@
 #include "src/Rt.h"
 
 #include "src/ecs/Manager.h"
-#include "src/ecs/Transform.h"
+#include "src/ecs/Tile.h"
 #include "src/Map.h"
 
 void loop() {
@@ -26,8 +27,13 @@ void loop() {
     Map m;
     m.load("./assets/RAW/map.json");
 
-    Position p(0, 0);
+    auto first = m.getTile(FLOOR, 0, 0);
+    auto tile = first->getComponent<Tile>();
+    tile->addAnimationFrame(58);
+    tile->addAnimationFrame(59);
+    tile->setAnimationSpeed(150);
 
+    Position p(0, 0);
     RT_Camera.track(&p);
 
     while (RT_Running) {
@@ -55,7 +61,9 @@ void loop() {
         }
         ImGui::Render();
 
-        RT_Camera.magnify(0.996);
+        RT_Camera.magnify(1.001);
+        p.x-=1;
+        p.y-=1;
 
         // Flush
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
@@ -63,14 +71,14 @@ void loop() {
         glFinish();
 
         auto frameTime = std::chrono::system_clock::now() - timeStart;
-        auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
+        float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
         float delay = targetMillis - millis;
 
         if (delay > 0) {
             SDL_Delay(delay);
         }
 
-        Manager::instance().update(targetMillis);
+        Manager::instance().update(std::max(millis, delay));
     }
 }
 
