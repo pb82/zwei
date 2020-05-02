@@ -3,6 +3,7 @@
 #include "io/File.h"
 #include "ecs/Tile.h"
 #include "ecs/Transform.h"
+#include "ecs/Animation.h"
 
 std::shared_ptr<Entity> Layer::getTile(int x, int y) {
     int pos = (y * w) + x;
@@ -25,7 +26,10 @@ void Layer::load(JSON::Value &layer) {
 
         auto entity = Manager::instance().addEntity();
         entity->addComponent<Transform>(x, y);
-        entity->addComponent<Tile>(asset, tileId);
+        entity->addComponent<Tile>(asset);
+        entity->addComponent<Animation>(100.0, false);
+        entity->getComponent<Animation>()->addAnimationFrame(tileId);
+
         tiles.push_back(entity);
     }
 }

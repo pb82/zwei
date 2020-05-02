@@ -11,7 +11,6 @@ enum Direction {
     S,
     E,
     W,
-    A
 };
 
 class Animation : public Component {
@@ -20,18 +19,25 @@ public:
 
     void update(float dt) override;
 
-    void addAnimationFrame(int frame, Direction d = A);
+    void addAnimationFrame(int a);
 
-    int getCurrentFrame(Direction d = A);
+    void addAnimationFrame(int n, int s, int e, int w);
+
+    int getCurrentFrame(Direction d = N);
 
     float speed;
 
     bool repeat;
 
 private:
+
+    void addFrameForDirection(Direction d, int frame);
+
     float animationCount = 0;
 
     int currentIndex = 0;
+
+    int frameCount = 0;
 
     std::unordered_map<Direction, std::vector<int>> frames;
 };

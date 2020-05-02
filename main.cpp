@@ -18,7 +18,7 @@
 #include "src/Rt.h"
 
 #include "src/ecs/Manager.h"
-#include "src/ecs/Tile.h"
+#include "src/ecs/Animation.h"
 #include "src/Map.h"
 
 void loop() {
@@ -28,10 +28,10 @@ void loop() {
     m.load("./assets/RAW/map.json");
 
     auto first = m.getTile(FLOOR, 0, 0);
-    auto tile = first->getComponent<Tile>();
-    tile->addAnimationFrame(58);
-    tile->addAnimationFrame(59);
-    tile->animationSpeed = 150;
+    auto animation = first->getComponent<Animation>();
+    animation->addAnimationFrame(58);
+    animation->addAnimationFrame(59);
+    animation->repeat = true;
 
     Position p(0, 0);
     RT_Camera.track(&p);
@@ -61,9 +61,9 @@ void loop() {
         }
         ImGui::Render();
 
-        RT_Camera.magnify(1.000);
-        p.x-=1;
-        p.y-=1;
+        RT_Camera.magnify(0.995);
+        p.x -= 1;
+        p.y -= 1;
 
         // Flush
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
