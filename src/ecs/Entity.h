@@ -41,11 +41,11 @@ public:
         }
     }
 
-    void render() {
+    void render(LayerType layer) {
         if (!isActive) return;
 
         for (const auto &component: components) {
-            component.second->render();
+            component.second->render(layer);
         }
     }
 

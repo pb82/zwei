@@ -27,12 +27,6 @@ void loop() {
     Map m;
     m.load("./assets/RAW/map.json");
 
-    auto first = m.getTile(FLOOR, 0, 0);
-    auto animation = first->getComponent<Animation>();
-    animation->addAnimationFrame(58);
-    animation->addAnimationFrame(59);
-    animation->repeat = true;
-
     Position p(0, 0);
     RT_Camera.track(&p);
 
@@ -48,16 +42,17 @@ void loop() {
             }
         }
 
-        Manager::instance().render();
+        Manager::instance().render(BACKGROUND);
+        Manager::instance().render(FLOOR);
+        Manager::instance().render(WALLS);
+        Manager::instance().render(OBJECTS);
+        Manager::instance().render(FOREGROUND);
 
         ImGui_ImplOpenGL2_NewFrame();
         ImGui_ImplSDL2_NewFrame(Gfx_Window);
         ImGui::NewFrame();
         {
-            ImGui::Begin("test");
-            ImGui::Text("Hello");
-            ImGui::Button("Push");
-            ImGui::End();
+            Manager::instance().render(UI);
         }
         ImGui::Render();
 

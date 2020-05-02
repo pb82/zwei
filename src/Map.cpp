@@ -27,9 +27,9 @@ void Layer::load(JSON::Value &layer) {
         auto entity = Manager::instance().addEntity();
         entity->addComponent<Transform>(x, y);
         entity->addComponent<Tile>(asset);
+        entity->addComponent<Layered>(type);
         entity->addComponent<Animation>(100.0, false);
         entity->getComponent<Animation>()->addAnimationFrame(tileId);
-
         tiles.push_back(entity);
     }
 }

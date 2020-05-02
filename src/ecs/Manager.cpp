@@ -12,8 +12,8 @@ void Manager::update(float dt) {
     }
 }
 
-void Manager::render() {
+void Manager::render(LayerType layer) {
     for (auto entity : entities) {
-        entity->render();
+        entity->render(layer);
     }
 }

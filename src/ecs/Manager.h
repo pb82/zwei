@@ -21,7 +21,7 @@ public:
 
     void update(float dt);
 
-    void render();
+    void render(LayerType layer);
 
 private:
     Manager() {}

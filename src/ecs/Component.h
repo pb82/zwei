@@ -1,6 +1,15 @@
 #ifndef ZWEI_COMPONENT_H
 #define ZWEI_COMPONENT_H
 
+enum LayerType {
+    BACKGROUND = 0,
+    FLOOR,
+    WALLS,
+    OBJECTS,
+    FOREGROUND,
+    UI
+};
+
 class Entity;
 
 class Component {
@@ -11,7 +20,7 @@ public:
 
     virtual void update(float dt) {}
 
-    virtual void render() {}
+    virtual void render(LayerType layer) {}
 
 protected:
     Entity &parent;

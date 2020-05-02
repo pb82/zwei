@@ -8,11 +8,8 @@
 #include <ASSETS/Assets.h>
 
 #include "ecs/Manager.h"
+#include "ecs/Layered.h"
 #include "io/File.h"
-
-enum LayerType {
-    FLOOR = 1
-};
 
 class Layer {
 public:

@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Transform.h"
 #include "Animation.h"
+#include "Layered.h"
 
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
@@ -28,8 +29,15 @@ void Tile::pick(SDL_Rect &source) {
     source.h = Gfx_Tile_Size;
 }
 
-void Tile::render() {
+void Tile::render(LayerType layer) {
     assert(parent.hasComponent<Transform>());
+    assert(parent.hasComponent<Layered>());
+
+    // Check if the tile is in the layer that is currently rendered
+    auto componentLayer = parent.getComponent<Layered>();
+    if (componentLayer->layer != layer) {
+        return;
+    }
 
     // Tilemap rect
     SDL_Rect source;
