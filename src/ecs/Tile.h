@@ -13,17 +13,16 @@ public:
 
     void addAnimationFrame(int tile);
 
-    void setAnimationSpeed(float ms);
-
     void render() override;
 
     void update(float dt) override;
+
+    float animationSpeed;
 
 private:
     void pick(SDL_Rect &source);
 
     std::vector<int> tiles;
-    float animationSpeed;
     float animationCount = 0;
     int currentTile;
     Asset id;

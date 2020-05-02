@@ -31,7 +31,7 @@ void loop() {
     auto tile = first->getComponent<Tile>();
     tile->addAnimationFrame(58);
     tile->addAnimationFrame(59);
-    tile->setAnimationSpeed(150);
+    tile->animationSpeed = 150;
 
     Position p(0, 0);
     RT_Camera.track(&p);
@@ -61,7 +61,7 @@ void loop() {
         }
         ImGui::Render();
 
-        RT_Camera.magnify(1.001);
+        RT_Camera.magnify(1.000);
         p.x-=1;
         p.y-=1;
 

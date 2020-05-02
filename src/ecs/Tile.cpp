@@ -25,10 +25,6 @@ void Tile::addAnimationFrame(int tile) {
     tiles.push_back(tile);
 }
 
-void Tile::setAnimationSpeed(float ms) {
-    this->animationSpeed = std::max(50.0f, ms);
-}
-
 void Tile::pick(SDL_Rect &source) {
     auto texture = Assets::instance().getTexture(id);
 
