@@ -6,7 +6,8 @@
  <image source="tiles.png" width="128" height="128"/>
  <tile id="56">
   <properties>
-   <property name="animation" value="[56,57,58]"/>
+   <property name="animation" value="[57,58]"/>
+   <property name="speed" type="int" value="100"/>
   </properties>
  </tile>
 </tileset>

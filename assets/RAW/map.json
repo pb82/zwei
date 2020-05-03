@@ -25,6 +25,11 @@
                  "name":"layerType",
                  "type":"int",
                  "value":1
+                }, 
+                {
+                 "name":"metadata",
+                 "type":"string",
+                 "value":"tiles.json"
                 }],
          "type":"tilelayer",
          "visible":true,

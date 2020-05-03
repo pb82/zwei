@@ -22,7 +22,7 @@ void Tile::pick(SDL_Rect &source) {
     auto animation = parent.getComponent<Animation>();
 
     // Tile position in the tilemap
-    int scalar = animation->getCurrentFrame() - 1;
+    int scalar = animation->getCurrentFrame();
     source.x = (scalar * Gfx_Tile_Size) % texture->w;
     source.y = (scalar * Gfx_Tile_Size) / texture->w * Gfx_Tile_Size;
     source.w = Gfx_Tile_Size;
@@ -33,7 +33,7 @@ void Tile::render(LayerType layer) {
     assert(parent.hasComponent<Transform>());
     assert(parent.hasComponent<Layered>());
 
-    // Check if the tile is in the layer that is currently rendered
+    // Check if the tile is in the layer that is currently drawn
     auto componentLayer = parent.getComponent<Layered>();
     if (componentLayer->layer != layer) {
         return;

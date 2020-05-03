@@ -23,7 +23,12 @@
                 {
                  "name":"animation",
                  "type":"string",
-                 "value":"[56,57,58]"
+                 "value":"[57,58]"
+                }, 
+                {
+                 "name":"speed",
+                 "type":"int",
+                 "value":100
                 }]
         }],
  "tilewidth":16,

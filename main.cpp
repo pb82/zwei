@@ -24,8 +24,8 @@
 void loop() {
     auto targetMillis = (1 / configTargetFramerate) * 1000;
 
-    Map m;
-    m.load("./assets/RAW/map.json");
+    Map m("./assets/RAW");
+    m.load("map.json");
 
     Position p(0, 0);
     RT_Camera.track(&p);
@@ -55,10 +55,6 @@ void loop() {
             Manager::instance().render(UI);
         }
         ImGui::Render();
-
-        RT_Camera.magnify(0.995);
-        p.x -= 1;
-        p.y -= 1;
 
         // Flush
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());

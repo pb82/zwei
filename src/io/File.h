@@ -9,6 +9,8 @@ using namespace std;
 
 class File {
 public:
+    File(std::string path) : path(path) {}
+
     File(const char *path) : path(path) {}
 
     ~File();
