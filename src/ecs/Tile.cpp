@@ -5,7 +5,6 @@
 #include "Entity.h"
 #include "Transform.h"
 #include "Animation.h"
-#include "Layered.h"
 
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
@@ -16,8 +15,6 @@ Tile::Tile(Entity &parent, Asset id)
 
 
 void Tile::pick(SDL_Rect &source) {
-    assert(parent.hasComponent<Animation>());
-
     auto texture = Assets::instance().getTexture(id);
     auto animation = parent.getComponent<Animation>();
 
@@ -30,15 +27,6 @@ void Tile::pick(SDL_Rect &source) {
 }
 
 void Tile::render(LayerType layer) {
-    assert(parent.hasComponent<Transform>());
-    assert(parent.hasComponent<Layered>());
-
-    // Check if the tile is in the layer that is currently drawn
-    auto componentLayer = parent.getComponent<Layered>();
-    if (componentLayer->layer != layer) {
-        return;
-    }
-
     // Tilemap rect
     SDL_Rect source;
     pick(source);

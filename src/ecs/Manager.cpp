@@ -1,19 +1,28 @@
 #include "Manager.h"
 
-std::shared_ptr<Entity> Manager::addEntity() {
+std::shared_ptr<Entity> Manager::addEntity(LayerType layer) {
     auto entity = std::make_shared<Entity>();
-    entities.push_back(entity);
+    if (entities.find(layer) == entities.end()) {
+        entities.emplace(layer, std::vector<std::shared_ptr<Entity>>());
+    }
+    entities.at(layer).push_back(entity);
     return entity;
 }
 
 void Manager::update(float dt) {
-    for (auto entity : entities) {
-        entity->update(dt);
+    for (auto &layer : entities) {
+        for (auto &entity : layer.second) {
+            entity->update(dt);
+        }
     }
 }
 
 void Manager::render(LayerType layer) {
-    for (auto entity : entities) {
+    if (entities.find(layer) == entities.end()) {
+        return;
+    }
+
+    for (auto &entity : entities.at(layer)) {
         entity->render(layer);
     }
 }

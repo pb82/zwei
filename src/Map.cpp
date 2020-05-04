@@ -111,10 +111,9 @@ void Layer::load(JSON::Value &layer) {
         // -1 because of the way tiled reserves id 0
         int tileId = data[i].as<int>() - 1;
 
-        auto entity = Manager::instance().addEntity();
+        auto entity = Manager::instance().addEntity(type);
         entity->addComponent<Transform>(x, y);
         entity->addComponent<Tile>(asset);
-        entity->addComponent<Layered>(type);
         entity->addComponent<Animation>(100.0, true);
         entity->getComponent<Animation>()->addAnimationFrame(tileId);
 

@@ -1,6 +1,7 @@
 #ifndef ZWEI_MANAGER_H
 #define ZWEI_MANAGER_H
 
+#include <unordered_map>
 #include <vector>
 #include <memory>
 
@@ -17,7 +18,7 @@ public:
 
     void operator=(Manager const &) = delete;
 
-    std::shared_ptr<Entity> addEntity();
+    std::shared_ptr<Entity> addEntity(LayerType layer);
 
     void update(float dt);
 
@@ -26,7 +27,9 @@ public:
 private:
     Manager() {}
 
-    std::vector<std::shared_ptr<Entity>> entities;
+    // std::vector<std::shared_ptr<Entity>> entities;
+
+    std::unordered_map<LayerType, std::vector<std::shared_ptr<Entity>>> entities;
 };
 
 #endif

@@ -23,6 +23,7 @@
 
 void loop() {
     auto targetMillis = (1 / configTargetFramerate) * 1000;
+    float millis = 0.0f;
 
     Map m("./assets/RAW");
     m.load("map.json");
@@ -62,7 +63,7 @@ void loop() {
         glFinish();
 
         auto frameTime = std::chrono::system_clock::now() - timeStart;
-        float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
+        millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
         float delay = targetMillis - millis;
 
         if (delay > 0) {

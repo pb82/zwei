@@ -9,7 +9,6 @@
 #include <ASSETS/Assets.h>
 
 #include "ecs/Manager.h"
-#include "ecs/Layered.h"
 #include "io/File.h"
 
 class Tileset {
