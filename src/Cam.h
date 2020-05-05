@@ -41,17 +41,17 @@ public:
             return;
         }
 
-        float factor = configTileSize * z;
+        float f = configTileSize * z;
 
-        target.x = x * (configTileSize * z) - tracked->x;
-        target.y = y * (configTileSize * z) - tracked->y;
+        target.x = (x * f) - (tracked->x * f);
+        target.y = (y * f) - (tracked->y * f);
 
         // Calculate the width of the tile by calculating the position of the
         // next tile and then subtracting the current position. This has the
         // advantage of being immune to rounding / off by one pixel errors
         // when zooming
-        target.w = ((1 + x) * (configTileSize * z) - tracked->x) - target.x;
-        target.h = ((1 + y) * (configTileSize * z) - tracked->y) - target.y;
+        target.w = ((1 + x) * f - (tracked->x * f)) - target.x;
+        target.h = ((1 + y) * f - (tracked->y * f)) - target.y;
     }
 
     // set camera position
