@@ -19,6 +19,8 @@
 
 #include "src/ecs/Manager.h"
 #include "src/ecs/Animation.h"
+#include "src/ecs/Transform.h"
+#include "src/ecs/Sprite.h"
 #include "src/Map.h"
 
 void loop() {
@@ -28,8 +30,17 @@ void loop() {
     Map m("./assets/RAW");
     m.load("map.json");
 
-    Position p(0, 0);
-    RT_Camera.track(&p);
+
+    auto sprite = Manager::instance().addEntity(OBJECTS);
+    sprite->addComponent<Transform>(5, 5);
+    sprite->addComponent<Sprite>(TILES, 0, 1);
+    sprite->addComponent<Animation>(200, true);
+    sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
+    sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
+    sprite->getComponent<Animation>()->addAnimationFrame(34, 10, 26, 18);
+
+    auto transform = sprite->getComponent<Transform>();
+    RT_Camera.track(&transform->p);
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();

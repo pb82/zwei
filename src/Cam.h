@@ -41,6 +41,8 @@ public:
             return;
         }
 
+        float factor = configTileSize * z;
+
         target.x = x * (configTileSize * z) - tracked->x;
         target.y = y * (configTileSize * z) - tracked->y;
 

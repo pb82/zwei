@@ -5,13 +5,7 @@
 #include <vector>
 
 #include "Component.h"
-
-enum Direction {
-    N = 1,
-    S,
-    E,
-    W,
-};
+#include "../alg/Direction.h"
 
 class Animation : public Component {
 public:

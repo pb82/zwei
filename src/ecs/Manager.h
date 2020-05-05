@@ -27,8 +27,6 @@ public:
 private:
     Manager() {}
 
-    // std::vector<std::shared_ptr<Entity>> entities;
-
     std::unordered_map<LayerType, std::vector<std::shared_ptr<Entity>>> entities;
 };
 

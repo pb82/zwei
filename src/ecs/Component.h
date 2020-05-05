@@ -20,7 +20,7 @@ public:
 
     virtual void update(float dt) {}
 
-    virtual void render(LayerType layer) {}
+    virtual void render() {}
 
 protected:
     Entity &parent;

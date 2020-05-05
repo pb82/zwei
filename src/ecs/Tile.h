@@ -11,7 +11,7 @@ class Tile : public Component {
 public:
     Tile(Entity &parent, Asset id);
 
-    void render(LayerType layer) override;
+    void render() override;
 
 private:
     void pick(SDL_Rect &source);

@@ -23,6 +23,6 @@ void Manager::render(LayerType layer) {
     }
 
     for (auto &entity : entities.at(layer)) {
-        entity->render(layer);
+        entity->render();
     }
 }
