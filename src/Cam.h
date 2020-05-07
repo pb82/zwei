@@ -11,7 +11,7 @@ public:
             : tracked(nullptr),
               w(configWindowWidth),
               h(configWindowHeight),
-              z(5.0f) {
+              z(3.0f) {
     }
 
     void magnify(float factor) {
@@ -42,18 +42,25 @@ public:
         }
 
         float f = configTileSize * z;
-        float dx = configWindowWidth / 2;
-        float dy = configWindowWidth / 2;
 
-        target.x = (x * f) - ((tracked->x * f) - dx);
-        target.y = (y * f) - ((tracked->y * f) - dy);
+        // Center on camera
+        float dx = configWindowWidth / 2;
+        float dy = configWindowHeight / 2;
+        float ox = (tracked->x * f) - dx;
+        float oy = (tracked->y * f) - dy;
+
+        if (ox < 0) ox = 0;
+        if (oy < 0) oy = 0;
+
+        target.x = (x * f) - ox;
+        target.y = (y * f) - oy;
 
         // Calculate the width of the tile by calculating the position of the
         // next tile and then subtracting the current position. This has the
         // advantage of being immune to rounding / off by one pixel errors
         // when zooming
-        target.w = ((1 + x) * f - (tracked->x * f) + dx) - target.x;
-        target.h = ((1 + y) * f - (tracked->y * f) + dy) - target.y;
+        target.w = ((1 + x) * f - ox) - target.x;
+        target.h = ((1 + y) * f - oy) - target.y;
     }
 
     // set camera position
