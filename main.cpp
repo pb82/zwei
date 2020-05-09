@@ -71,7 +71,7 @@ void loop() {
         }
         ImGui::Render();
 
-        RT_Camera.magnify(0.999);
+        // RT_Camera.magnify(0.999);
 
         // Flush
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());

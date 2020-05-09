@@ -5,6 +5,7 @@
 
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
+#include "../alg/Color.h"
 
 Sprite::Sprite(Entity &parent, Asset id, float angle, float speed)
         : Component(parent),

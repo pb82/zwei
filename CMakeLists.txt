@@ -23,7 +23,7 @@ add_executable(
         src/alg/Position.h
         assets/Assets.cpp assets/ASSETS/Assets.h src/ecs/Tile.h src/ecs/Tile.cpp
         src/Draw.cpp src/Draw.h config.cpp src/io/File.cpp src/io/File.h src/Map.cpp src/Map.h
-        src/ecs/Manager.h src/ecs/Manager.cpp src/ecs/Animation.cpp src/ecs/Animation.h src/ecs/Sprite.cpp src/ecs/Sprite.h src/alg/Vector.h src/alg/Vector.cpp src/alg/Direction.h)
+        src/ecs/Manager.h src/ecs/Manager.cpp src/ecs/Animation.cpp src/ecs/Animation.h src/ecs/Sprite.cpp src/ecs/Sprite.h src/alg/Vector.h src/alg/Vector.cpp src/alg/Direction.h src/alg/Color.h src/alg/Color.cpp)
 
 INCLUDE(FindPkgConfig)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${zwei_SOURCE_DIR}/cmake")

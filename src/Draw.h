@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "alg/Color.h"
+
 class Draw {
 public:
     static Draw &instance() {
@@ -15,6 +17,8 @@ public:
     void operator=(Draw const &) = delete;
 
     void draw(SDL_Texture *texture, SDL_Rect &source, SDL_Rect &target);
+
+    void line(Color &c, int x1, int y1, int x2, int y2);
 
 private:
     Draw() {}
