@@ -65,6 +65,8 @@ public:
 
     std::shared_ptr<Entity> getTile(LayerType layer, int x, int y);
 
+    void getSize(LayerType layer, int *w, int *h);
+
 private:
     std::string baseDir;
 

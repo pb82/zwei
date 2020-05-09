@@ -1,6 +1,8 @@
 #ifndef ZWEI_CAM_H
 #define ZWEI_CAM_H
 
+#include <algorithm>
+
 #include "../config.h"
 #include "alg/Position.h"
 
@@ -11,7 +13,14 @@ public:
             : tracked(nullptr),
               w(configWindowWidth),
               h(configWindowHeight),
-              z(3.0f) {
+              z(3.0f),
+              mw(0),
+              mh(0) {
+    }
+
+    void mapSize(int mw, int mh) {
+        this->mw = mw;
+        this->mh = mh;
     }
 
     void magnify(float factor) {
@@ -43,24 +52,28 @@ public:
 
         float f = configTileSize * z;
 
-        // Center on camera
-        float dx = configWindowWidth / 2;
-        float dy = configWindowHeight / 2;
-        float ox = (tracked->x * f) - dx;
-        float oy = (tracked->y * f) - dy;
+        // Offsets: the pixels to move in each direction to center in on
+        // the tracked sprite
+        float dx = std::max((tracked->x * f) - (configWindowWidth / 2), 0.0f);
+        float dy = std::max((tracked->y * f) - (configWindowHeight / 2), 0.0f);
 
-        if (ox < 0) ox = 0;
-        if (oy < 0) oy = 0;
+        dx = std::min(dx, (mw * configTileSize * z) - configWindowWidth);
+        dy = std::min(dy, (mh * configTileSize * z) - configWindowHeight);
 
-        target.x = (x * f) - ox;
-        target.y = (y * f) - oy;
+        // If the zoom factor is out of bounds (more than the whole map can be seen at
+        // once) we center the whole map
+        if (dx < 0) dx /= 2;
+        if (dy < 0) dy /= 2;
+
+        target.x = (x * f) - dx;
+        target.y = (y * f) - dy;
 
         // Calculate the width of the tile by calculating the position of the
         // next tile and then subtracting the current position. This has the
         // advantage of being immune to rounding / off by one pixel errors
         // when zooming
-        target.w = ((1 + x) * f - ox) - target.x;
-        target.h = ((1 + y) * f - oy) - target.y;
+        target.w = ((1 + x) * f - dx) - target.x;
+        target.h = ((1 + y) * f - dy) - target.y;
     }
 
     // set camera position
@@ -73,6 +86,8 @@ private:
     float w;
     float h;
     float z;
+    int mw;
+    int mh;
 };
 
 #endif

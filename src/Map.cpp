@@ -157,6 +157,14 @@ std::shared_ptr<Entity> Map::getTile(LayerType layer, int x, int y) {
     return layers[layer]->getTile(x, y);
 }
 
+void Map::getSize(LayerType layer, int *w, int *h) {
+    auto l = layers.find(layer);
+    if (l != layers.end()) {
+        *w = l->second->w;
+        *h = l->second->h;
+    }
+}
+
 bool Map::load(const char *file) {
     using namespace JSON;
 

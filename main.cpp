@@ -30,9 +30,12 @@ void loop() {
     Map m("./assets/RAW");
     m.load("map.json");
 
+    int mW, mH;
+    m.getSize(FLOOR, &mW, &mH);
+    RT_Camera.mapSize(mW, mH);
 
     auto sprite = Manager::instance().addEntity(OBJECTS);
-    sprite->addComponent<Transform>(5, 5);
+    sprite->addComponent<Transform>(15, 1);
     sprite->addComponent<Sprite>(TILES, 0, 1);
     sprite->addComponent<Animation>(200, true);
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
@@ -67,6 +70,8 @@ void loop() {
             Manager::instance().render(UI);
         }
         ImGui::Render();
+
+        RT_Camera.magnify(0.999);
 
         // Flush
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
