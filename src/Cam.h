@@ -52,10 +52,11 @@ public:
 
         float f = configTileSize * z;
 
+
         // Offsets: the pixels to move in each direction to center in on
         // the tracked sprite
-        float dx = std::max((tracked->x * f) - (configWindowWidth / 2), 0.0f);
-        float dy = std::max((tracked->y * f) - (configWindowHeight / 2), 0.0f);
+        float dx = std::max((tracked->x * f) + (f / 2) - (configWindowWidth / 2), 0.0f);
+        float dy = std::max((tracked->y * f) + (f / 2) - (configWindowHeight / 2), 0.0f);
 
         dx = std::min(dx, (mw * configTileSize * z) - configWindowWidth);
         dy = std::min(dy, (mh * configTileSize * z) - configWindowHeight);
