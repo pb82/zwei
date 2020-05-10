@@ -6,19 +6,18 @@
 
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
-#include "../alg/Color.h"
 
-Sprite::Sprite(Entity &parent, Asset id, float angle)
+Sprite::Sprite(Entity &parent, Asset id)
         : Component(parent),
-          assetId(id),
-          trajectory(0, angle) {}
+          assetId(id) {}
 
 void Sprite::pick(SDL_Rect &source) {
     auto texture = Assets::instance().getTexture(assetId);
     auto animation = parent.getComponent<Animation>();
+    auto acceleration = parent.getComponent<Acceleration>();
 
     // Tile position in the tilemap
-    Direction d = trajectory.getDirection();
+    Direction d = acceleration->trajectory.getDirection();
     int scalar = animation->getCurrentFrame(d);
     source.x = (scalar * Gfx_Tile_Size) % texture->w;
     source.y = (scalar * Gfx_Tile_Size) / texture->w * Gfx_Tile_Size;
@@ -45,10 +44,6 @@ void Sprite::render() {
 }
 
 void Sprite::update(float dt) {
-    auto transform = parent.getComponent<Transform>();
     auto acceleration = parent.getComponent<Acceleration>();
     acceleration->accelerate(dt);
-
-    trajectory.radius = acceleration->speed * (dt / 1000);
-    trajectory.translate(&transform->p.x, &transform->p.y);
 }

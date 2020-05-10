@@ -8,7 +8,7 @@
 
 class Sprite : public Component {
 public:
-    Sprite(Entity &parent, Asset id, float angle);
+    Sprite(Entity &parent, Asset id);
 
     void render() override;
 
@@ -18,7 +18,6 @@ private:
     void pick(SDL_Rect &source);
 
     Asset assetId;
-    Vector trajectory;
 };
 
 

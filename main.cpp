@@ -40,9 +40,9 @@ void loop() {
     auto sprite = Manager::instance().addEntity(OBJECTS);
 
     sprite->addComponent<Transform>(2, 12);
-    sprite->addComponent<Sprite>(TILES, 0.75);
+    sprite->addComponent<Sprite>(TILES);
     sprite->addComponent<Animation>(200, true);
-    sprite->addComponent<Acceleration>(2.0f, 10);
+    sprite->addComponent<Acceleration>(3.0f, 5, 0.3f);
 
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
@@ -77,6 +77,8 @@ void loop() {
             Manager::instance().render(UI);
         }
         ImGui::Render();
+
+        RT_Camera.magnify(0.998);
 
         // Flush
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());

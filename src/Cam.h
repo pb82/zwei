@@ -3,6 +3,8 @@
 
 #include <algorithm>
 
+#include <SDL2/SDL.h>
+
 #include "../config.h"
 #include "alg/Position.h"
 
