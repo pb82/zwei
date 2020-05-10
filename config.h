@@ -6,5 +6,6 @@ extern const int configWindowWidth;
 extern const int configWindowHeight;
 extern const unsigned int configTileSize;
 extern const float configTargetFramerate;
+extern const float configZoomFactor;
 
 #endif

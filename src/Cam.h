@@ -13,22 +13,17 @@ public:
             : tracked(nullptr),
               w(configWindowWidth),
               h(configWindowHeight),
-              z(3.0f),
-              mw(0),
-              mh(0) {
-    }
+              z(configZoomFactor),
+              mapTilesX(0),
+              mapTilesY(0) {}
 
-    void mapSize(int mw, int mh) {
-        this->mw = mw;
-        this->mh = mh;
+    void setMapSize(int w, int h) {
+        this->mapTilesX = w;
+        this->mapTilesY = h;
     }
 
     void magnify(float factor) {
         this->z *= abs(factor);
-    }
-
-    void zoom(float increment) {
-        this->z += increment;
     }
 
     // rectangle in visible portion of screen?
@@ -50,16 +45,17 @@ public:
             return;
         }
 
+        // Adjust tile size to ziim factor
         float f = configTileSize * z;
 
-
         // Offsets: the pixels to move in each direction to center in on
-        // the tracked sprite
+        // the tracked sprite. Do not scroll past the map size. That's what
+        // the max and min are for.
         float dx = std::max((tracked->x * f) + (f / 2) - (configWindowWidth / 2), 0.0f);
         float dy = std::max((tracked->y * f) + (f / 2) - (configWindowHeight / 2), 0.0f);
 
-        dx = std::min(dx, (mw * configTileSize * z) - configWindowWidth);
-        dy = std::min(dy, (mh * configTileSize * z) - configWindowHeight);
+        dx = std::min(dx, (mapTilesX * configTileSize * z) - configWindowWidth);
+        dy = std::min(dy, (mapTilesY * configTileSize * z) - configWindowHeight);
 
         // If the zoom factor is out of bounds (more than the whole map can be seen at
         // once) we center the whole map
@@ -87,8 +83,8 @@ private:
     float w;
     float h;
     float z;
-    int mw;
-    int mh;
+    int mapTilesX;
+    int mapTilesY;
 };
 
 #endif
