@@ -21,6 +21,7 @@
 #include "src/ecs/Animation.h"
 #include "src/ecs/Transform.h"
 #include "src/ecs/Sprite.h"
+#include "src/ecs/Acceleration.h"
 #include "src/Map.h"
 
 void loop() {
@@ -37,9 +38,12 @@ void loop() {
 
     // Insert some sprite
     auto sprite = Manager::instance().addEntity(OBJECTS);
+
     sprite->addComponent<Transform>(2, 12);
-    sprite->addComponent<Sprite>(TILES, 0.75, 1);
+    sprite->addComponent<Sprite>(TILES, 0.75);
     sprite->addComponent<Animation>(200, true);
+    sprite->addComponent<Acceleration>(2.0f, 10);
+
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
     sprite->getComponent<Animation>()->addAnimationFrame(34, 10, 26, 18);

@@ -2,16 +2,16 @@
 #include "Entity.h"
 #include "Transform.h"
 #include "Animation.h"
+#include "Acceleration.h"
 
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
 #include "../alg/Color.h"
 
-Sprite::Sprite(Entity &parent, Asset id, float angle, float speed)
+Sprite::Sprite(Entity &parent, Asset id, float angle)
         : Component(parent),
           assetId(id),
-          trajectory(0, angle),
-          speed(speed) {}
+          trajectory(0, angle) {}
 
 void Sprite::pick(SDL_Rect &source) {
     auto texture = Assets::instance().getTexture(assetId);
@@ -46,6 +46,9 @@ void Sprite::render() {
 
 void Sprite::update(float dt) {
     auto transform = parent.getComponent<Transform>();
-    trajectory.radius = speed * (dt / 1000);
+    auto acceleration = parent.getComponent<Acceleration>();
+    acceleration->accelerate(dt);
+
+    trajectory.radius = acceleration->speed * (dt / 1000);
     trajectory.translate(&transform->p.x, &transform->p.y);
 }

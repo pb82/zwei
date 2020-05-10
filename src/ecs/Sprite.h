@@ -8,7 +8,7 @@
 
 class Sprite : public Component {
 public:
-    Sprite(Entity &parent, Asset id, float angle, float speed);
+    Sprite(Entity &parent, Asset id, float angle);
 
     void render() override;
 
@@ -19,7 +19,6 @@ private:
 
     Asset assetId;
     Vector trajectory;
-    float speed;
 };
 
 
