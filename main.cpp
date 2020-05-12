@@ -1,6 +1,7 @@
 #include <cassert>
 #include <chrono>
 #include <algorithm>
+#include <iostream>
 
 #include <SDL_image.h>
 #include <SDL_opengl.h>
@@ -12,6 +13,7 @@
 #include <ASSETS/Assets.h>
 #include <EMBEDDED/Font.h>
 #include <EMBEDDED/Tiles.h>
+#include <iostream>
 
 #include "./config.h"
 #include "src/Gfx.h"
@@ -23,6 +25,8 @@
 #include "src/ecs/Sprite.h"
 #include "src/ecs/Acceleration.h"
 #include "src/Map.h"
+
+#include "json/JSON/printer.h"
 
 void loop() {
     auto targetMillis = (1 / configTargetFramerate) * 1000;
@@ -42,7 +46,7 @@ void loop() {
     sprite->addComponent<Transform>(2, 12);
     sprite->addComponent<Sprite>(TILES);
     sprite->addComponent<Animation>(200, true);
-    sprite->addComponent<Acceleration>(3.0f, 5, 0.3f);
+    sprite->addComponent<Acceleration>(1.0f, 1, 0.3f);
 
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
@@ -77,8 +81,6 @@ void loop() {
             Manager::instance().render(UI);
         }
         ImGui::Render();
-
-        RT_Camera.magnify(0.998);
 
         // Flush
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
@@ -118,6 +120,7 @@ void initAssets() {
 }
 
 void initSdl() {
+
     auto sdlFlags = SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS;
 
     if (SDL_Init(sdlFlags) != 0) {
