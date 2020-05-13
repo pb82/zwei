@@ -69,7 +69,7 @@ void loop() {
                 RT_Stop();
             }
             if (event.type == SDL_KEYDOWN) {
-                acceleration->applyForce(M_PI, 5);
+                acceleration->applyForce(M_PI, 15);
             }
         }
 

@@ -14,14 +14,16 @@ void Acceleration::update(float dt) {
     trajectory.radius = speed * (dt / 1000);
     trajectory.translate(&transform->p.x, &transform->p.y);
 
-    forces.erase(std::remove_if(forces.begin(), forces.end(), [&](Force &f) {
-        f.update(100.0f, dt);
-        bool exhausted = f.apply(100.0f, &transform->p.x, &transform->p.y);
-        if (!exhausted) {
-            speed = 0;
-        }
-        return exhausted;
-    }), forces.end());
+    forces.erase(
+            std::remove_if(
+                    forces.begin(),
+                    forces.end(), [&](Force &f) {
+                        f.update(100.0f, dt);
+                        bool active = f.apply(100.0f, &transform->p.x, &transform->p.y);
+                        if (!active) speed = 0;
+                        return !active;
+                    }),
+            forces.end());
 }
 
 void Acceleration::accelerate(float dt) {
