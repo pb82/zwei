@@ -46,7 +46,7 @@ void loop() {
     sprite->addComponent<Transform>(2, 12);
     sprite->addComponent<Sprite>(TILES);
     sprite->addComponent<Animation>(200, true);
-    sprite->addComponent<Acceleration>(1.0f, 1, 0.3f);
+    sprite->addComponent<Acceleration>(3.0f, 10, 0);
 
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
@@ -55,6 +55,8 @@ void loop() {
     // Track the sprite
     auto transform = sprite->getComponent<Transform>();
     RT_Camera.track(&transform->p);
+
+    auto acceleration = sprite->getComponent<Acceleration>();
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();
@@ -65,6 +67,9 @@ void loop() {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 RT_Stop();
+            }
+            if (event.type == SDL_KEYDOWN) {
+                acceleration->applyForce(M_PI, 5);
             }
         }
 

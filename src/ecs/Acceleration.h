@@ -1,7 +1,10 @@
 #ifndef ZWEI_ACCELERATION_H
 #define ZWEI_ACCELERATION_H
 
+#include <vector>
+
 #include "../alg/Vector.h"
+#include "../alg/Force.h"
 
 #include "Component.h"
 
@@ -17,9 +20,13 @@ public:
 
     void decelerate(float dt);
 
+    void applyForce(float angle, float power);
+
     Vector trajectory;
 
 private:
+
+    std::vector<Force> forces;
 
     float acceleration;
 

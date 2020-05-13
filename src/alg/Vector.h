@@ -1,6 +1,8 @@
 #ifndef ZWEI_VECTOR_H
 #define ZWEI_VECTOR_H
 
+#include <vector>
+
 #include "Direction.h"
 
 #define M_0_PI              0
@@ -22,6 +24,7 @@ public:
 
     float radius;
     float angle;
+
 };
 
 #endif

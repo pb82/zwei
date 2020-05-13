@@ -5,9 +5,9 @@ class Force {
 public:
     Force(float angle, float power);
 
-    void apply(float weight, float *x, float *y);
+    bool apply(float weight, float *x, float *y);
 
-    void update(float dt);
+    void update(float weight, float dt);
 
 private:
 

@@ -4,6 +4,7 @@
 #include <ASSETS/Assets.h>
 
 #include "Component.h"
+
 #include "../alg/Vector.h"
 
 class Sprite : public Component {
