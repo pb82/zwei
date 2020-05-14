@@ -49,6 +49,14 @@ public:
         }
     }
 
+    void key(GameKeyEvent &key) {
+        if (!isActive) return;
+
+        for (const auto &component: components) {
+            component.second->key(key);
+        }
+    }
+
     void disable() {
         this->isActive = false;
     }

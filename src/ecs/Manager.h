@@ -24,6 +24,8 @@ public:
 
     void render(LayerType layer);
 
+    void key(GameKeyEvent &key);
+
 private:
     Manager() {}
 

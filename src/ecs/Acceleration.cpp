@@ -24,6 +24,7 @@ void Acceleration::update(float dt) {
                         return !active;
                     }),
             forces.end());
+
 }
 
 void Acceleration::accelerate(float dt) {

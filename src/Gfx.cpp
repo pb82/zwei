@@ -1,5 +1,7 @@
 #include "Gfx.h"
 
+#include <SDL2/SDL_image.h>
+
 Gfx::~Gfx() {
     SDL_GL_DeleteContext(glContext);
 
@@ -14,4 +16,5 @@ Gfx::~Gfx() {
     }
 
     SDL_Quit();
+    IMG_Quit();
 }

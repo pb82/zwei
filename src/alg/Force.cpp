@@ -5,8 +5,8 @@
 Force::Force(float angle, float power) : angle(angle), power(power) {}
 
 bool Force::apply(float weight, float *x, float *y) {
-    *x = (power / weight) * cos(angle) + *x;
-    *y = (power / weight) * sin(angle) + *y;
+    *x += (power / weight) * cos(angle);
+    *y -= (power / weight) * sin(angle);
     return power > 0;
 }
 

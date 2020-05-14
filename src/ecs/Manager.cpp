@@ -26,3 +26,9 @@ void Manager::render(LayerType layer) {
         entity->render();
     }
 }
+
+void Manager::key(GameKeyEvent &key) {
+    for (auto &entity : entities.at(OBJECTS)) {
+        entity->key(key);
+    }
+}

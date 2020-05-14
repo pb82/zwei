@@ -1,6 +1,8 @@
 #ifndef ZWEI_COMPONENT_H
 #define ZWEI_COMPONENT_H
 
+#include "../in/Input.h"
+
 enum LayerType {
     BACKGROUND = 0,
     FLOOR,
@@ -21,6 +23,8 @@ public:
     virtual void update(float dt) {}
 
     virtual void render() {}
+
+    virtual void key(GameKeyEvent &key) {}
 
 protected:
     Entity &parent;

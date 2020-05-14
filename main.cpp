@@ -2,6 +2,7 @@
 #include <chrono>
 #include <algorithm>
 #include <iostream>
+#include <csignal>
 
 #include <SDL_image.h>
 #include <SDL_opengl.h>
@@ -13,7 +14,6 @@
 #include <ASSETS/Assets.h>
 #include <EMBEDDED/Font.h>
 #include <EMBEDDED/Tiles.h>
-#include <iostream>
 
 #include "./config.h"
 #include "src/Gfx.h"
@@ -26,9 +26,16 @@
 #include "src/ecs/Acceleration.h"
 #include "src/Map.h"
 
-#include "json/JSON/printer.h"
+#include "src/in/Input.h"
 
 void loop() {
+    Input in;
+    GameKeyEvent controllerEvent;
+    bool controllerFound = in.scan();
+    if (!controllerFound) {
+        return;
+    }
+
     auto targetMillis = (1 / configTargetFramerate) * 1000;
     float millis = 0.0f;
 
@@ -46,7 +53,7 @@ void loop() {
     sprite->addComponent<Transform>(2, 12);
     sprite->addComponent<Sprite>(TILES);
     sprite->addComponent<Animation>(200, true);
-    sprite->addComponent<Acceleration>(3.0f, 10, 0);
+    sprite->addComponent<Acceleration>(0.0f, 10, VM_25_PI);
 
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
@@ -68,8 +75,8 @@ void loop() {
             if (event.type == SDL_QUIT) {
                 RT_Stop();
             }
-            if (event.type == SDL_KEYDOWN) {
-                acceleration->applyForce(M_PI, 15);
+            if (in.map(&event, &controllerEvent)) {
+                Manager::instance().key(controllerEvent);
             }
         }
 
@@ -126,7 +133,7 @@ void initAssets() {
 
 void initSdl() {
 
-    auto sdlFlags = SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS;
+    auto sdlFlags = SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER;
 
     if (SDL_Init(sdlFlags) != 0) {
         exit(1);
@@ -158,7 +165,16 @@ void initSdl() {
     Gfx_Tile_Size = configTileSize;
 }
 
+void onSignal(int sig) {
+    exit(sig);
+}
+
 int main(int, char **) {
+    signal(SIGABRT, onSignal);
+    signal(SIGTERM, onSignal);
+    signal(SIGINT, onSignal);
+    signal(SIGSEGV, onSignal);
+
     initSdl();
     initAssets();
     initImgui();
