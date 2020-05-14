@@ -23,6 +23,8 @@ public:
 
     bool repeat;
 
+    bool paused = false;
+
 private:
 
     void addFrameForDirection(Direction d, int frame);

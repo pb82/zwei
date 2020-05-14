@@ -14,6 +14,8 @@ public:
 
     float speed = 0.0f;
 
+    float maxSpeed;
+
     void update(float dt) override;
 
     void accelerate(float dt);
@@ -30,7 +32,6 @@ private:
 
     float acceleration;
 
-    float maxSpeed;
 };
 
 #endif

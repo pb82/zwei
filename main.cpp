@@ -24,12 +24,15 @@
 #include "src/ecs/Transform.h"
 #include "src/ecs/Sprite.h"
 #include "src/ecs/Acceleration.h"
+#include "src/ecs/Controller.h"
+
 #include "src/Map.h"
 
 #include "src/in/Input.h"
 
 void loop() {
     Input in;
+    SDL_Event event;
     GameKeyEvent controllerEvent;
     bool controllerFound = in.scan();
     if (!controllerFound) {
@@ -54,11 +57,12 @@ void loop() {
     sprite->addComponent<Sprite>(TILES);
     sprite->addComponent<Animation>(200, true);
     sprite->addComponent<Acceleration>(0.0f, 10, VM_25_PI);
+    sprite->addComponent<Controller>();
 
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
     sprite->getComponent<Animation>()->addAnimationFrame(34, 10, 26, 18);
-
+    sprite->getComponent<Animation>()->paused = true;
     // Track the sprite
     auto transform = sprite->getComponent<Transform>();
     RT_Camera.track(&transform->p);
@@ -70,7 +74,6 @@ void loop() {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        SDL_Event event;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 RT_Stop();
