@@ -26,6 +26,8 @@
 #include "src/ecs/Acceleration.h"
 #include "src/ecs/Controller.h"
 
+#include "src/ecs/ui/Tweak.h"
+
 #include "src/Map.h"
 
 #include "src/in/Input.h"
@@ -56,7 +58,7 @@ void loop() {
     sprite->addComponent<Transform>(2, 12);
     sprite->addComponent<Sprite>(TILES);
     sprite->addComponent<Animation>(200, true);
-    sprite->addComponent<Acceleration>(0.0f, 10, VM_25_PI);
+    sprite->addComponent<Acceleration>(3.0f, 10, VM_25_PI);
     sprite->addComponent<Controller>();
 
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
@@ -67,7 +69,8 @@ void loop() {
     auto transform = sprite->getComponent<Transform>();
     RT_Camera.track(&transform->p);
 
-    auto acceleration = sprite->getComponent<Acceleration>();
+    auto tweakUi = Manager::instance().addEntity(UI);
+    tweakUi->addComponent<Tweak>(sprite);
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();

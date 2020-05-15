@@ -6,7 +6,8 @@
 Acceleration::Acceleration(Entity &parent, float maxSpeed, float acceleration, float angle)
         : Component(parent),
           trajectory(0, angle),
-          maxSpeed(maxSpeed),
+          maxSpeed(0),
+          resetSpeed(maxSpeed),
           acceleration(acceleration) {}
 
 void Acceleration::update(float dt) {

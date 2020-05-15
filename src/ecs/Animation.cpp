@@ -27,7 +27,7 @@ int Animation::getCurrentFrame(Direction d) {
 }
 
 void Animation::update(float dt) {
-    if (paused) return;
+    if (paused && currentIndex == 0) return;
 
     // Animations can be one offs and not repeat after reaching
     // their last frame
