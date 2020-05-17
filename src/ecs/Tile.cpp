@@ -22,10 +22,7 @@ void Tile::pick(SDL_Rect &source) {
 
     // Tile position in the tilemap
     int scalar = animation->getCurrentFrame();
-    source.x = (scalar * Gfx_Tile_Size) % texture->w;
-    source.y = (scalar * Gfx_Tile_Size) / texture->w * Gfx_Tile_Size;
-    source.w = Gfx_Tile_Size;
-    source.h = Gfx_Tile_Size;
+    Gfx::pick(source, scalar, texture->w);
 }
 
 void Tile::render() {
@@ -48,7 +45,10 @@ void Tile::render() {
     if (Debug::drawBoundingBoxes) {
         if (parent.hasComponent<Collider>()) {
             auto collider = parent.getComponent<Collider>();
-            Draw::instance().rect(color_Red, collider->boundingBox);
+
+            SDL_Rect source;
+            Gfx::pick(source, 53, texture->w);
+            Draw::instance().draw(texture->mem, source, collider->boundingBox);
         }
     }
 }

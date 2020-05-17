@@ -3,9 +3,11 @@
 #include "Transform.h"
 #include "Animation.h"
 #include "Acceleration.h"
+#include "Collider.h"
 
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
+#include "../Debug.h"
 
 Sprite::Sprite(Entity &parent, Asset id)
         : Component(parent),
@@ -19,10 +21,7 @@ void Sprite::pick(SDL_Rect &source) {
     // Tile position in the tilemap
     Direction d = acceleration->trajectory.getDirection();
     int scalar = animation->getCurrentFrame(d);
-    source.x = (scalar * Gfx_Tile_Size) % texture->w;
-    source.y = (scalar * Gfx_Tile_Size) / texture->w * Gfx_Tile_Size;
-    source.w = Gfx_Tile_Size;
-    source.h = Gfx_Tile_Size;
+    Gfx::pick(source, scalar, texture->w);
 }
 
 void Sprite::render() {
@@ -41,6 +40,16 @@ void Sprite::render() {
     }
 
     Draw::instance().draw(texture->mem, source, target);
+
+    if (Debug::drawBoundingBoxes) {
+        if (parent.hasComponent<Collider>()) {
+            auto collider = parent.getComponent<Collider>();
+
+            SDL_Rect source;
+            Gfx::pick(source, 53, texture->w);
+            Draw::instance().draw(texture->mem, source, collider->boundingBox);
+        }
+    }
 }
 
 void Sprite::update(float dt) {

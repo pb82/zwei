@@ -1,7 +1,7 @@
 #include "Collider.h"
 
 #include "Entity.h"
-#include "../Draw.h"
+#include "../Debug.h"
 
 Collider::Collider(Entity &parent, std::shared_ptr<Transform> tracked, float dx, float dy) :
         Component(parent),

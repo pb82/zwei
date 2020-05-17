@@ -1,7 +1,6 @@
 #include <cassert>
 #include <chrono>
 #include <algorithm>
-#include <iostream>
 #include <csignal>
 
 #include <SDL_image.h>
@@ -25,6 +24,7 @@
 #include "src/ecs/Sprite.h"
 #include "src/ecs/Acceleration.h"
 #include "src/ecs/Controller.h"
+#include "src/ecs/Collider.h"
 
 #include "src/ecs/ui/Tweak.h"
 
@@ -69,8 +69,12 @@ void loop() {
     auto transform = sprite->getComponent<Transform>();
     RT_Camera.track(&transform->p);
 
+    // Make the sprite collision aware
+    sprite->addComponent<Collider>(transform, 0.1, 0.1);
+
     auto tweakUi = Manager::instance().addEntity(UI);
     tweakUi->addComponent<Tweak>(sprite);
+
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();

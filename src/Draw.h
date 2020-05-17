@@ -20,8 +20,6 @@ public:
 
     void line(Color &c, int x1, int y1, int x2, int y2);
 
-    void rect(Color &c, SDL_Rect &r);
-
 private:
     Draw() {}
 };
