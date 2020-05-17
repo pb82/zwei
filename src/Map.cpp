@@ -4,6 +4,7 @@
 #include "ecs/Tile.h"
 #include "ecs/Transform.h"
 #include "ecs/Animation.h"
+#include "ecs/Collider.h"
 
 void Tileset::load(const char *file) {
     using namespace JSON;
@@ -111,11 +112,22 @@ void Layer::load(JSON::Value &layer) {
         // -1 because of the way tiled reserves id 0
         int tileId = data[i].as<int>() - 1;
 
+        // Not all tiles have to be set on a map, skip the
+        // empty ones
+        if (tileId < 0) {
+            continue;
+        }
+
         auto entity = Manager::instance().addEntity(type);
         entity->addComponent<Transform>(x, y);
         entity->addComponent<Tile>(asset);
         entity->addComponent<Animation>(100.0, true);
         entity->getComponent<Animation>()->addAnimationFrame(tileId);
+
+        if (type == WALLS) {
+            auto transform = entity->getComponent<Transform>();
+            entity->addComponent<Collider>(transform);
+        }
 
         if (tileset && tileset->hasProps(tileId)) {
             int speed;

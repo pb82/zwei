@@ -5,9 +5,11 @@
 #include "Entity.h"
 #include "Transform.h"
 #include "Animation.h"
+#include "Collider.h"
 
-#include "../src/Gfx.h"
-#include "../src/Draw.h"
+#include "../Gfx.h"
+#include "../Draw.h"
+#include "../Debug.h"
 
 Tile::Tile(Entity &parent, Asset id)
         : Component(parent),
@@ -42,4 +44,11 @@ void Tile::render() {
     }
 
     Draw::instance().draw(texture->mem, source, target);
+
+    if (Debug::drawBoundingBoxes) {
+        if (parent.hasComponent<Collider>()) {
+            auto collider = parent.getComponent<Collider>();
+            Draw::instance().rect(color_Red, collider->boundingBox);
+        }
+    }
 }

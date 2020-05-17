@@ -5,11 +5,11 @@
 
 enum LayerType {
     BACKGROUND = 0,
-    FLOOR,
-    WALLS,
-    OBJECTS,
-    FOREGROUND,
-    UI
+    FLOOR = 1,
+    WALLS = 2,
+    OBJECTS = 3,
+    FOREGROUND = 4,
+    UI = 5
 };
 
 class Entity;

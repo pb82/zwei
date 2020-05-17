@@ -3,6 +3,7 @@
 #include <IMGUI/imgui.h>
 
 #include "../../Rt.h"
+#include "../../Debug.h"
 #include "../Entity.h"
 #include "../Acceleration.h"
 
@@ -35,6 +36,7 @@ void Tweak::render() {
     ImGui::SliderFloat("Acceleration", &acceleration->acceleration, 0.1f, 50.0f);
     ImGui::SliderFloat("Max. Speed", &acceleration->resetSpeed, 1.0f, 10.0f);
     ImGui::SliderFloat("Zoom", &RT_Camera.z, 1.0f, 10.0f);
+    ImGui::Checkbox("Draw bounding boxes", &Debug::drawBoundingBoxes);
 
     ImGui::End();
 }
