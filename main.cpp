@@ -117,6 +117,11 @@ void loop() {
     }
 }
 
+void initStyles() {
+    ImGuiStyle &style = ImGui::GetStyle();
+    style.WindowRounding = 2.0f;
+}
+
 void initImgui() {
     assert(Gfx_Window);
     assert(Gfx_Renderer);
@@ -184,5 +189,6 @@ int main(int, char **) {
     initSdl();
     initAssets();
     initImgui();
+    initStyles();
     loop();
 }

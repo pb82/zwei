@@ -80,11 +80,12 @@ public:
         tracked = p;
     }
 
+    float z;
+
 private:
     Position *tracked;
     float w;
     float h;
-    float z;
     int mapTilesX;
     int mapTilesY;
 };
