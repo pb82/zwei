@@ -12,7 +12,7 @@ Collider::Collider(Entity &parent, std::shared_ptr<Transform> tracked, float dx,
 }
 
 void Collider::updateBoundingBox() {
-    RT_Camera.project(boundingBox, tracked->p.x, tracked->p.y);
+    RT_Camera.project(boundingBox, tracked->p.x, tracked->p.y, dx, dy);
 }
 
 void Collider::update(float dt) {

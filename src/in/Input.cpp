@@ -19,6 +19,35 @@ void Input::mapHatEvent(SDL_Event *e, GameKeyEvent *g) {
     else if (e->jhat.value == 8) g->key = GK_LEFT;
 }
 
+bool Input::mapKeyboardEvent(SDL_Event *e, GameKeyEvent *g) {
+    g->state = e->type == SDL_KEYUP ? GK_RELEASED : GK_PUSHED;
+    if (g->state == GK_RELEASED) {
+        g->key = GK_NONE;
+        return true;
+    }
+    switch (e->key.keysym.sym) {
+        case SDLK_UP:
+            if (g->key == GK_UP) return false;
+            g->key = GK_UP;
+            return true;
+        case SDLK_RIGHT:
+            if (g->key == GK_RIGHT) return false;
+            g->key = GK_RIGHT;
+            return true;
+        case SDLK_DOWN:
+            if (g->key == GK_DOWN) return false;
+            g->key = GK_DOWN;
+            return true;
+        case SDLK_LEFT:
+            if (g->key == GK_LEFT) return false;
+            g->key = GK_LEFT;
+            return true;
+        default:
+            g->key = GK_NONE;
+            return false;
+    }
+}
+
 bool Input::map(SDL_Event *e, GameKeyEvent *g) {
     if (e->type == SDL_JOYHATMOTION) {
         mapHatEvent(e, g);
@@ -26,6 +55,9 @@ bool Input::map(SDL_Event *e, GameKeyEvent *g) {
     }
     if (e->type == SDL_JOYBUTTONDOWN) {
         return false;
+    }
+    if (e->type == SDL_KEYDOWN || e->type == SDL_KEYUP) {
+        return mapKeyboardEvent(e, g);
     }
     return false;
 }

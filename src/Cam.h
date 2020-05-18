@@ -42,7 +42,7 @@ public:
 
     // adjust the position and size of a rectangle according to the camera position
     // and zoom
-    void project(SDL_Rect &target, float x, float y) const {
+    void project(SDL_Rect &target, float x, float y, float ox = 0, float oy = 0) const {
         if (!tracked) {
             return;
         }
@@ -64,14 +64,16 @@ public:
         if (dx < 0) dx /= 2;
         if (dy < 0) dy /= 2;
 
-        target.x = (x * f) - dx;
-        target.y = (y * f) - dy;
+        // ox and oy are offesets only used for bounding boxes. Remove them if the
+        // bounding box should always be the same size as the tile or sprite itself
+        target.x = (x * f) - dx + (ox * f / 2);
+        target.y = (y * f) - dy + (oy * f);
 
         // Calculate the width of the tile by calculating the position of the
         // next tile and then subtracting the current position. This has the
         // advantage of being immune to rounding / off by one pixel errors
         // when zooming
-        target.w = ((1 + x) * f - dx) - target.x;
+        target.w = ((1 + x) * f - dx) - target.x - (ox * f / 2);
         target.h = ((1 + y) * f - dy) - target.y;
     }
 

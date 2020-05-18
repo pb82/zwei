@@ -13,6 +13,7 @@
 #include <ASSETS/Assets.h>
 #include <EMBEDDED/Font.h>
 #include <EMBEDDED/Tiles.h>
+#include <iostream>
 
 #include "./config.h"
 #include "src/Gfx.h"
@@ -70,7 +71,7 @@ void loop() {
     RT_Camera.track(&transform->p);
 
     // Make the sprite collision aware
-    sprite->addComponent<Collider>(transform, 0.1, 0.1);
+    sprite->addComponent<Collider>(transform, 0.2, 0.4);
 
     auto tweakUi = Manager::instance().addEntity(UI);
     tweakUi->addComponent<Tweak>(sprite);

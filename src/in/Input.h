@@ -44,6 +44,8 @@ public:
 private:
     void mapHatEvent(SDL_Event *e, GameKeyEvent *g);
 
+    bool mapKeyboardEvent(SDL_Event *e, GameKeyEvent *g);
+
     SDL_Joystick *controller;
 };
 
