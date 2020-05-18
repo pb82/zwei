@@ -1,5 +1,7 @@
 #include "Manager.h"
 
+#include "Collider.h"
+
 std::shared_ptr<Entity> Manager::addEntity(LayerType layer) {
     auto entity = std::make_shared<Entity>();
     if (entities.find(layer) == entities.end()) {
@@ -30,5 +32,18 @@ void Manager::render(LayerType layer) {
 void Manager::key(GameKeyEvent &key) {
     for (auto &entity : entities.at(OBJECTS)) {
         entity->key(key);
+    }
+}
+
+void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
+    for (auto &entity : entities.at(WALLS)) {
+        if (entity->hasComponent<Collider>()) {
+            target.push_back(entity->getComponent<Collider>());
+        }
+    }
+    for (auto &entity : entities.at(OBJECTS)) {
+        if (entity->hasComponent<Collider>()) {
+            target.push_back(entity->getComponent<Collider>());
+        }
     }
 }

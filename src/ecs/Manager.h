@@ -7,6 +7,8 @@
 
 #include "Entity.h"
 
+class Collider;
+
 class Manager {
 public:
     static Manager &instance() {
@@ -19,6 +21,8 @@ public:
     void operator=(Manager const &) = delete;
 
     std::shared_ptr<Entity> addEntity(LayerType layer);
+
+    void getColliders(std::vector<std::shared_ptr<Collider>> &target);
 
     void update(float dt);
 
