@@ -28,10 +28,9 @@
 #include "src/ecs/Collider.h"
 
 #include "src/ecs/ui/Tweak.h"
-
 #include "src/Map.h"
-
 #include "src/in/Input.h"
+#include "src/Col.h"
 
 void loop() {
     Input in;
@@ -71,7 +70,7 @@ void loop() {
     RT_Camera.track(&transform->p);
 
     // Make the sprite collision aware
-    sprite->addComponent<Collider>(transform, 0.2, 0.4);
+    sprite->addComponent<Collider>(transform, CT_PLAYER, 0.2, 0.4);
 
     auto tweakUi = Manager::instance().addEntity(UI);
     tweakUi->addComponent<Tweak>(sprite);
@@ -119,6 +118,7 @@ void loop() {
         }
 
         Manager::instance().update(std::max(millis, delay));
+        Col::collide();
     }
 }
 

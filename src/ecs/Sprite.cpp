@@ -44,10 +44,10 @@ void Sprite::render() {
     if (Debug::drawBoundingBoxes) {
         if (parent.hasComponent<Collider>()) {
             auto collider = parent.getComponent<Collider>();
-
-            SDL_Rect source;
-            Gfx::pick(source, 53, texture->w);
-            Draw::instance().draw(texture->mem, source, collider->boundingBox);
+            Draw::instance().rect(color_Red, collider->boundingBox);
+            // SDL_Rect source;
+            // Gfx::pick(source, 53, texture->w);
+            // Draw::instance().draw(texture->mem, source, collider->boundingBox);
         }
     }
 }

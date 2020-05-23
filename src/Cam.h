@@ -40,6 +40,10 @@ public:
                && target.y <= configWindowHeight;
     }
 
+    float scale(float px) {
+        return (px / z) / configTileSize;
+    }
+
     // adjust the position and size of a rectangle according to the camera position
     // and zoom
     void project(SDL_Rect &target, float x, float y, float ox = 0, float oy = 0) const {

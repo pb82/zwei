@@ -126,7 +126,7 @@ void Layer::load(JSON::Value &layer) {
 
         if (type == WALLS) {
             auto transform = entity->getComponent<Transform>();
-            entity->addComponent<Collider>(transform);
+            entity->addComponent<Collider>(transform, CT_WALL);
         }
 
         if (tileset && tileset->hasProps(tileId)) {
