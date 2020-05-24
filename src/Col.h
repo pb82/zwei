@@ -11,7 +11,7 @@ static bool intersects(SDL_Rect &a, SDL_Rect &b);
 class Col {
 public:
 
-    static void collide();
+    static void collide(float dt);
 
 };
 

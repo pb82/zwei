@@ -5,6 +5,7 @@
 
 #include "../alg/Vector.h"
 #include "../alg/Force.h"
+#include "../alg/Position.h"
 
 #include "Component.h"
 
@@ -35,6 +36,8 @@ public:
     void applyForce(float angle, float power);
 
     Vector trajectory;
+
+    Position last;
 
 private:
 

@@ -27,19 +27,19 @@ public:
 
     void update(float dt) override;
 
-    void collide(std::shared_ptr<Collider> other, SDL_Rect &intersection);
+    void collide(std::shared_ptr<Collider> other);
 
     ColliderTag tag;
 
     bool checked = false;
 
+    std::shared_ptr<Transform> tracked;
+
 private:
 
     void updateBoundingBox();
 
-    Direction inRelationTo(std::shared_ptr<Collider> other);
-
-    std::shared_ptr<Transform> tracked;
+    void collideWall(std::shared_ptr<Collider> other, float bounce);
 
     float dx;
     float dy;

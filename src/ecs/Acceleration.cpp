@@ -6,12 +6,17 @@
 Acceleration::Acceleration(Entity &parent, float maxSpeed, float acceleration, float angle)
         : Component(parent),
           trajectory(0, angle),
+          last(0, 0),
           maxSpeed(0),
           resetSpeed(maxSpeed),
           acceleration(acceleration) {}
 
 void Acceleration::update(float dt) {
     auto transform = parent.getComponent<Transform>();
+
+    // Remember the current position before mutating it
+    last = transform->p;
+
     trajectory.radius = speed * (dt / 1000);
     trajectory.translate(&transform->p.x, &transform->p.y);
 

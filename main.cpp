@@ -117,8 +117,10 @@ void loop() {
             SDL_Delay(delay);
         }
 
-        Manager::instance().update(std::max(millis, delay));
-        Col::collide();
+        float dt = std::max(millis, delay);
+
+        Col::collide(dt);
+        Manager::instance().update(dt);
     }
 }
 
