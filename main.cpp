@@ -32,6 +32,8 @@
 #include "src/in/Input.h"
 #include "src/Col.h"
 
+#include "src/alg/Path.h"
+
 void loop() {
     Input in;
     SDL_Event event;
@@ -51,6 +53,9 @@ void loop() {
     int mapSizeX, mapSizeY;
     m.getSize(FLOOR, &mapSizeX, &mapSizeY);
     RT_Camera.setMapSize(mapSizeX, mapSizeY);
+
+    Topology topology(mapSizeX, mapSizeY);
+    m.topology(topology.topology);
 
     // Insert some sprite
     auto sprite = Manager::instance().addEntity(OBJECTS);

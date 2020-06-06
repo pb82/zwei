@@ -31,8 +31,6 @@ public:
 
     ColliderTag tag;
 
-    bool checked = false;
-
     std::shared_ptr<Transform> tracked;
 
 private:

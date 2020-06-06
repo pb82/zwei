@@ -39,17 +39,12 @@ void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
     for (auto &entity : entities.at(WALLS)) {
         if (entity->hasComponent<Collider>()) {
             auto collider = entity->getComponent<Collider>();
-
-            // Reset the checked flag every time, otherwise every entity
-            // would only get checked once
-            collider->checked = false;
             target.push_back(collider);
         }
     }
     for (auto &entity : entities.at(OBJECTS)) {
         if (entity->hasComponent<Collider>()) {
             auto collider = entity->getComponent<Collider>();
-            collider->checked = false;
             target.push_back(collider);
         }
     }

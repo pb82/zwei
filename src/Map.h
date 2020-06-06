@@ -38,6 +38,8 @@ public:
 
     std::shared_ptr<Entity> getTile(int x, int y);
 
+    void topology(std::vector<bool> &t);
+
     int w;
     int h;
     LayerType type;
@@ -62,6 +64,8 @@ public:
     Map(const char *baseDir);
 
     bool load(const char *file);
+
+    void topology(std::vector<bool> &t);
 
     std::shared_ptr<Entity> getTile(LayerType layer, int x, int y);
 

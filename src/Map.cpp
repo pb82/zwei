@@ -115,6 +115,7 @@ void Layer::load(JSON::Value &layer) {
         // Not all tiles have to be set on a map, skip the
         // empty ones
         if (tileId < 0) {
+            tiles.push_back(nullptr);
             continue;
         }
 
@@ -205,4 +206,27 @@ bool Map::load(const char *file) {
     }
 
     return true;
+}
+
+void Layer::topology(std::vector<bool> &t) {
+    int max = this->w * this->h;
+    t.resize(max);
+
+    for (int x = 0; x < this->w; x++) {
+        for (int y = 0; y < this->h; y++) {
+            int pos = (y * w) + x;
+            auto tile = this->getTile(x, y);
+            if (tile != nullptr) {
+                t.at(pos) = true;
+            } else {
+                t.at(pos) = false;
+            }
+        }
+    }
+}
+
+void Map::topology(std::vector<bool> &t) {
+    if (layers.find(WALLS) == layers.end()) return;
+    auto layer = layers.at(WALLS);
+    layer->topology(t);
 }
