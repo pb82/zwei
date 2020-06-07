@@ -6,6 +6,7 @@
 #include "../../Debug.h"
 #include "../Entity.h"
 #include "../Acceleration.h"
+#include "../Transform.h"
 
 Tweak::Tweak(Entity &parent, std::shared_ptr<Entity> client)
         : Component(parent), client(client) {}
@@ -31,11 +32,16 @@ void Tweak::render() {
     ImGui::SetNextWindowSize(size);
 
     auto acceleration = client->getComponent<Acceleration>();
+    auto transform = client->getComponent<Transform>();
 
     ImGui::Begin("Tweak", nullptr, ImGuiWindowFlags_NoResize);
     ImGui::SliderFloat("Acceleration", &acceleration->acceleration, 0.1f, 50.0f);
     ImGui::SliderFloat("Max. Speed", &acceleration->resetSpeed, 1.0f, 10.0f);
     ImGui::SliderFloat("Zoom", &RT_Camera.z, 1.0f, 10.0f);
+    ImGui::Text("Pos. X: %02f", transform->p.x);
+    ImGui::Text("Pos. Y: %02f", transform->p.y);
+    ImGui::Text("Angle: %02f", acceleration->trajectory.angle);
+    ImGui::Text("Speed: %02f", acceleration->trajectory.radius);
     ImGui::Checkbox("Draw bounding boxes", &Debug::drawBoundingBoxes);
 
     ImGui::End();

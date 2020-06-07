@@ -40,7 +40,7 @@ class Path {
 public:
     Path(std::shared_ptr<Topology> topology);
 
-    bool calculate(const Position start, const Position goal, std::vector<Position> &path);
+    bool calculate(const Position &start, const Position &goal, std::vector<Position> &path);
 
 private:
     void replay(std::vector<Position> &path, const Position &start, const Position &goal);

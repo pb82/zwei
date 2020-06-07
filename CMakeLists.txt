@@ -27,7 +27,7 @@ add_executable(
         src/ecs/Sprite.cpp src/ecs/Sprite.h src/alg/Vector.h src/alg/Vector.cpp src/alg/Direction.h
         src/alg/Color.h src/alg/Color.cpp src/ecs/Acceleration.h src/ecs/Acceleration.cpp
         src/alg/Force.cpp src/alg/Force.h src/in/Input.cpp src/in/Input.h src/ecs/Controller.cpp
-        src/ecs/Controller.h src/ecs/ui/Tweak.cpp src/ecs/ui/Tweak.h src/ecs/Collider.cpp src/ecs/Collider.h src/Debug.h src/Debug.cpp src/Col.cpp src/Col.h src/alg/Path.cpp src/alg/Path.h)
+        src/ecs/Controller.h src/ecs/ui/Tweak.cpp src/ecs/ui/Tweak.h src/ecs/Collider.cpp src/ecs/Collider.h src/Debug.h src/Debug.cpp src/Col.cpp src/Col.h src/alg/Path.cpp src/alg/Path.h src/ecs/Ai.cpp src/ecs/Ai.h)
 
 INCLUDE(FindPkgConfig)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${zwei_SOURCE_DIR}/cmake")

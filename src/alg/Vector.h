@@ -24,6 +24,8 @@ public:
 
     Direction getDirection();
 
+    float normalize();
+
     float radius;
     float angle;
 
