@@ -4,6 +4,8 @@
 #include <memory>
 
 #include "Component.h"
+#include "Collider.h"
+
 #include "../alg/Path.h"
 
 class Ai : public Component {
@@ -13,6 +15,8 @@ public:
     void update(float dt) override;
 
     void render() override;
+
+    void collide(std::shared_ptr<Collider> other);
 
 private:
 

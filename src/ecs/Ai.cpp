@@ -28,21 +28,24 @@ void Ai::update(float dt) {
     plan(dt);
 }
 
+void Ai::collide(std::shared_ptr<Collider> other) {
+}
+
 void Ai::plan(float dt) {
-    Path p(topology);
 
     auto transform = parent.getComponent<Transform>();
     auto acceleration = parent.getComponent<Acceleration>();
     auto animation = parent.getComponent<Animation>();
 
-    Position goal = {12, 4};
+    Path p(topology);
+    Position goal = {1, 1};
     Position start;
     transform->p.nearestTile(start);
 
     route.clear();
     if (p.calculate(start, goal, route)) {
-        if (route.size() < 2) return;
-        auto next = route.at(route.size() - 2);
+        if (route.size() < 1) return;
+        auto next = route.at(route.size() - 1);
 
         float angle = start.angle(next);
 
@@ -57,7 +60,6 @@ void Ai::plan(float dt) {
 }
 
 void Ai::render() {
-
     auto texture = Assets::instance().getTexture(TILES);
 
     if (route.size() > 0) {
