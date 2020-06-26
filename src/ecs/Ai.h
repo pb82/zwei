@@ -5,6 +5,7 @@
 
 #include "Component.h"
 #include "Collider.h"
+#include "minds/Mind.h"
 
 #include "../alg/Path.h"
 

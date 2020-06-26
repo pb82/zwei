@@ -38,7 +38,7 @@ void Ai::plan(float dt) {
     auto animation = parent.getComponent<Animation>();
 
     Path p(topology);
-    Position goal = {1, 1};
+    Position goal = {24, 2};
     Position start;
     transform->p.nearestTile(start);
 

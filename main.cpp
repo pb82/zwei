@@ -66,7 +66,7 @@ void loop() {
     sprite->addComponent<Animation>(200, true);
     sprite->addComponent<Acceleration>(3.0f, 10, VM_25_PI);
     sprite->addComponent<Controller>();
-    sprite->addComponent<Ai>(500, std::make_shared<Topology>(topology));
+    // sprite->addComponent<Ai>(500, std::make_shared<Topology>(topology));
 
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
@@ -110,6 +110,8 @@ void loop() {
             Manager::instance().render(UI);
         }
         ImGui::Render();
+
+        // RT_Camera.magnify(1.003);
 
         // Flush
         ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());

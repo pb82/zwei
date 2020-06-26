@@ -29,7 +29,7 @@ void Collider::collideWall(std::shared_ptr<Collider> other, float bounce) {
 
         if (bounce > 0) {
             // Bounce in opposite direction
-            float angle = acceleration->trajectory.angle - M_PI;
+            float angle = acceleration->trajectory.angle - VM_175_PI;
             acceleration->applyForce(angle, bounce);
         }
     }
@@ -42,7 +42,7 @@ void Collider::collideWall(std::shared_ptr<Collider> other, float bounce) {
 
 void Collider::collide(std::shared_ptr<Collider> other) {
     if (this->tag == CT_WALL) {
-        collideWall(other, 0.0f);
+        collideWall(other, 20.0f);
     }
 }
 
