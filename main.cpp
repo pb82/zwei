@@ -60,6 +60,7 @@ void loop() {
 
     // Insert some sprite
     auto sprite = Manager::instance().addEntity(OBJECTS);
+    RT_Context.setPlayer(sprite);
 
     sprite->addComponent<Transform>(2, 12);
     sprite->addComponent<Sprite>(TILES);

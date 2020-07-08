@@ -6,6 +6,7 @@
 
 #include "../Gfx.h"
 #include "../Draw.h"
+#include "../Rt.h"
 
 #include "Entity.h"
 #include "Transform.h"
@@ -32,6 +33,8 @@ void Ai::collide(std::shared_ptr<Collider> other) {
 }
 
 void Ai::plan(float dt) {
+
+    auto player = RT_Context.getPlayer();
 
     auto transform = parent.getComponent<Transform>();
     auto acceleration = parent.getComponent<Acceleration>();

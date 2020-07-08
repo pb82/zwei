@@ -2,10 +2,12 @@
 #define ZWEI_RT_H
 
 #include "Cam.h"
+#include "Ctx.h"
 
 #define RT_Running Rt::instance().running
 #define RT_Stop Rt::instance().stop
 #define RT_Camera Rt::instance().camera
+#define RT_Context Rt::instance().context
 
 // Shared runtime state
 class Rt {
@@ -21,6 +23,7 @@ public:
 
     bool running;
     Camera camera;
+    Ctx context;
 
     void stop() {
         this->running = false;

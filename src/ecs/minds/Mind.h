@@ -8,15 +8,15 @@ class Mind {
 public:
     Mind(Entity &parent) : parent(parent) {}
 
-    virtual ~Mind();
+    virtual ~Mind() {}
 
     virtual void collide(std::shared_ptr<Collider> other) {}
 
-    virtual void plan(float dt);
+    virtual void plan(float dt) {}
 
     virtual int delay() { return 1000; }
 
-private:
+protected:
 
     Entity &parent;
 
