@@ -1,6 +1,15 @@
 #include "Path.h"
 
-Topology::Topology(int w, int h) : w(w), h(h) {}
+Topology::Topology() {}
+
+void Topology::make(int w, int h) {
+    this->w = w;
+    this->h = h;
+}
+
+std::vector<bool> &Topology::data() {
+    return this->topology;
+}
 
 int Topology::index(int x, int y) const {
     return (y * w) + x;

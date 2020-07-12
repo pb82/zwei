@@ -34,6 +34,7 @@
 #include "src/Col.h"
 
 #include "src/alg/Path.h"
+#include "src/ecs/minds/Skeleton.h"
 
 void loop() {
     Input in;
@@ -55,8 +56,9 @@ void loop() {
     m.getSize(FLOOR, &mapSizeX, &mapSizeY);
     RT_Camera.setMapSize(mapSizeX, mapSizeY);
 
-    Topology topology(mapSizeX, mapSizeY);
-    m.topology(topology.topology);
+    // Topology topology(mapSizeX, mapSizeY);
+    RT_Context.getTopology().make(mapSizeX, mapSizeY);
+    m.topology(RT_Context.getTopology().data());
 
     // Insert some sprite
     auto sprite = Manager::instance().addEntity(OBJECTS);
@@ -67,7 +69,10 @@ void loop() {
     sprite->addComponent<Animation>(200, true);
     sprite->addComponent<Acceleration>(3.0f, 10, VM_25_PI);
     sprite->addComponent<Controller>();
-    // sprite->addComponent<Ai>(500, std::make_shared<Topology>(topology));
+    sprite->addComponent<Ai>();
+
+    auto ai = sprite->getComponent<Ai>();
+    ai->brainify<Skeleton>();
 
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);

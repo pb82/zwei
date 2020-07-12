@@ -11,27 +11,23 @@
 
 class Ai : public Component {
 public:
-    Ai(Entity &parent, float delay, std::shared_ptr<Topology> t);
+    Ai(Entity &parent);
 
     void update(float dt) override;
 
-    void render() override;
-
     void collide(std::shared_ptr<Collider> other);
+
+    template<typename T>
+    void brainify() {
+        this->mind = std::make_shared<T>(this->parent);
+    }
 
 private:
 
-    void plan(float dt);
-
-    float delay;
-
     float time = 0.0f;
 
-    std::shared_ptr<Topology> topology;
-
-    std::vector<Position> route;
+    std::shared_ptr<Mind> mind;
 
 };
-
 
 #endif

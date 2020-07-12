@@ -11,19 +11,23 @@
 class Topology {
 public:
 
-    Topology(int w, int h);
+    Topology();
+
+    void make(int w, int h);
+
+    std::vector<bool> &data();
 
     bool accessible(int x, int y) const;
 
     void neighbours(int x, int y, std::vector<Position> &n);
-
-    std::vector<bool> topology;
 
     int index(int x, int y) const;
 
     int index(const Position &p) const;
 
 private:
+
+    std::vector<bool> topology;
 
     int w;
     int h;

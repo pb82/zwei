@@ -8,6 +8,8 @@ public:
 
     Skeleton(Entity &parent);
 
+    ~Skeleton();
+
     int delay() override;
 
     void plan(float dt) override;
@@ -15,7 +17,5 @@ public:
     void collide(std::shared_ptr<Collider> other) override;
 
 };
-
-
 
 #endif

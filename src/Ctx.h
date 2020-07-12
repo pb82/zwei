@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "ecs/Entity.h"
+#include "alg/Path.h"
 
 // Shared between all entities
 class Ctx {
@@ -12,8 +13,14 @@ public:
 
     std::shared_ptr<Entity> getPlayer();
 
+    Topology &getTopology() {
+        return topology;
+    }
+
 private:
     std::shared_ptr<Entity> player;
+
+    Topology topology;
 };
 
 
