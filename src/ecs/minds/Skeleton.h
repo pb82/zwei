@@ -16,6 +16,13 @@ public:
 
     void collide(std::shared_ptr<Collider> other) override;
 
+    bool activate() override;
+
+private:
+
+    // You need to get closer than 3 tiles for it to activate
+    float activationRange = 100.0f;
+
 };
 
 #endif

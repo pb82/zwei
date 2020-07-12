@@ -28,21 +28,23 @@ bool Topology::accessible(int x, int y) const {
     return topology.at(i) == 0;
 }
 
-void Topology::neighbours(int x, int y, std::vector<Position> &n) {
+void Topology::neighbours(int x, int y, std::vector<Position> &n) const {
     if (accessible(x - 1, y)) n.push_back({(float) x - 1, (float) y});
     if (accessible(x + 1, y)) n.push_back({(float) x + 1, (float) y});
     if (accessible(x, y - 1)) n.push_back({(float) x, (float) y - 1});
     if (accessible(x, y + 1)) n.push_back({(float) x, (float) y + 1});
 }
 
-Path::Path(std::shared_ptr<Topology> topology) : topology(topology) {}
+Path::Path(const Topology &t) : topology(t) {}
 
 void Path::replay(std::vector<Position> &path, const Position &start, const Position &goal) {
     auto current = goal;
     path.push_back(current);
 
-    while (true) {
-        current = cameFrom[topology->index(current)];
+    int length = cameFrom.size();
+
+    while (length--) {
+        current = cameFrom[topology.index(current)];
 
         if (current == start) {
             break;
@@ -56,7 +58,7 @@ bool Path::calculate(const Position &start, const Position &goal, std::vector<Po
     frontier.push(start);
 
     std::map<int, float> costSoFar;
-    costSoFar[topology->index(start)] = 0;
+    costSoFar[topology.index(start)] = 0;
 
     while (!frontier.empty() && !finished) {
         auto current = frontier.top();
@@ -67,13 +69,13 @@ bool Path::calculate(const Position &start, const Position &goal, std::vector<Po
             break;
         }
 
-        int currentIndex = topology->index(current);
+        int currentIndex = topology.index(current);
 
         std::vector<Position> neighbours;
-        topology->neighbours(current.x, current.y, neighbours);
+        topology.neighbours(current.x, current.y, neighbours);
 
         for (auto next: neighbours) {
-            int nextIndex = topology->index(next);
+            int nextIndex = topology.index(next);
             int newCost = costSoFar[currentIndex] + 1;
 
             if (costSoFar.find(nextIndex) == costSoFar.end() || newCost < costSoFar[nextIndex]) {

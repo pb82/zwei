@@ -16,6 +16,8 @@ public:
 
     virtual int delay() { return 1000; }
 
+    virtual bool activate() { return false; }
+
 protected:
 
     Entity &parent;

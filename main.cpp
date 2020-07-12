@@ -36,6 +36,26 @@
 #include "src/alg/Path.h"
 #include "src/ecs/minds/Skeleton.h"
 
+void placeSkeleton() {
+    auto skeleton = Manager::instance().addEntity(OBJECTS);
+    skeleton->addComponent<Transform>(13, 20);
+    skeleton->addComponent<Sprite>(TILES);
+    skeleton->addComponent<Animation>(200, true);
+    skeleton->addComponent<Acceleration>(3.0f, 1, 0);
+    skeleton->addComponent<Ai>();
+
+    skeleton->getComponent<Animation>()->addAnimationFrame(40);
+    skeleton->getComponent<Animation>()->addAnimationFrame(41);
+    skeleton->getComponent<Animation>()->addAnimationFrame(42);
+    skeleton->getComponent<Animation>()->paused = true;
+
+    auto transform = skeleton->getComponent<Transform>();
+    skeleton->addComponent<Collider>(transform, CT_ENEMY, 0.2, 0.4);
+
+    auto ai = skeleton->getComponent<Ai>();
+    ai->brainify<Skeleton>();
+}
+
 void loop() {
     Input in;
     SDL_Event event;
@@ -69,10 +89,6 @@ void loop() {
     sprite->addComponent<Animation>(200, true);
     sprite->addComponent<Acceleration>(3.0f, 10, VM_25_PI);
     sprite->addComponent<Controller>();
-    sprite->addComponent<Ai>();
-
-    auto ai = sprite->getComponent<Ai>();
-    ai->brainify<Skeleton>();
 
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
@@ -88,6 +104,7 @@ void loop() {
     auto tweakUi = Manager::instance().addEntity(UI);
     tweakUi->addComponent<Tweak>(sprite);
 
+    placeSkeleton();
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();

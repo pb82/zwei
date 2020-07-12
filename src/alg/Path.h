@@ -19,7 +19,7 @@ public:
 
     bool accessible(int x, int y) const;
 
-    void neighbours(int x, int y, std::vector<Position> &n);
+    void neighbours(int x, int y, std::vector<Position> &n) const;
 
     int index(int x, int y) const;
 
@@ -42,14 +42,14 @@ public:
 
 class Path {
 public:
-    Path(std::shared_ptr<Topology> topology);
+    Path(const Topology &t);
 
     bool calculate(const Position &start, const Position &goal, std::vector<Position> &path);
 
 private:
     void replay(std::vector<Position> &path, const Position &start, const Position &goal);
 
-    std::shared_ptr<Topology> topology;
+    const Topology &topology;
 
     std::priority_queue<Position, std::vector<Position>, PositionCompare> frontier;
 
