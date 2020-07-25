@@ -19,27 +19,48 @@ void Input::mapHatEvent(SDL_Event *e, GameKeyEvent *g) {
     else if (e->jhat.value == 8) g->key = GK_LEFT;
 }
 
+GameKey Input::fromSdlKey(const SDL_Event *e) const {
+    switch (e->key.keysym.sym) {
+        case SDLK_UP:
+            return GK_UP;
+        case SDLK_DOWN:
+            return GK_DOWN;
+        case SDLK_LEFT:
+            return GK_LEFT;
+        case SDLK_RIGHT:
+            return GK_RIGHT;
+        default:
+            return GK_NONE;
+    }
+}
+
 bool Input::mapKeyboardEvent(SDL_Event *e, GameKeyEvent *g) {
     g->state = e->type == SDL_KEYUP ? GK_RELEASED : GK_PUSHED;
     if (g->state == GK_RELEASED) {
-        g->key = GK_NONE;
+        g->key = fromSdlKey(e);
+        locked = false;
         return true;
     }
+
     switch (e->key.keysym.sym) {
         case SDLK_UP:
-            if (g->key == GK_UP) return false;
+            if (g->key == GK_UP && locked) return false;
+            locked = true;
             g->key = GK_UP;
             return true;
         case SDLK_RIGHT:
-            if (g->key == GK_RIGHT) return false;
+            if (g->key == GK_RIGHT && locked) return false;
+            locked = true;
             g->key = GK_RIGHT;
             return true;
         case SDLK_DOWN:
-            if (g->key == GK_DOWN) return false;
+            if (g->key == GK_DOWN && locked) return false;
+            locked = true;
             g->key = GK_DOWN;
             return true;
         case SDLK_LEFT:
-            if (g->key == GK_LEFT) return false;
+            if (g->key == GK_LEFT && locked) return false;
+            locked = true;
             g->key = GK_LEFT;
             return true;
         default:

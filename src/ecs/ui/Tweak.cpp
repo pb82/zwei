@@ -40,8 +40,6 @@ void Tweak::render() {
     ImGui::SliderFloat("Zoom", &RT_Camera.z, 1.0f, 10.0f);
     ImGui::Text("Pos. X: %02f", transform->p.x);
     ImGui::Text("Pos. Y: %02f", transform->p.y);
-    ImGui::Text("Angle: %02f", acceleration->trajectory.angle);
-    ImGui::Text("Speed: %02f", acceleration->trajectory.radius);
     ImGui::Checkbox("Draw bounding boxes", &Debug::drawBoundingBoxes);
 
     ImGui::End();

@@ -41,7 +41,7 @@ void placeSkeleton() {
     skeleton->addComponent<Transform>(13, 20);
     skeleton->addComponent<Sprite>(TILES);
     skeleton->addComponent<Animation>(200, true);
-    skeleton->addComponent<Acceleration>(3.0f, 1, 0);
+    skeleton->addComponent<Acceleration>(3.0f, 10, 0);
     skeleton->addComponent<Ai>();
 
     skeleton->getComponent<Animation>()->addAnimationFrame(40);
@@ -53,7 +53,7 @@ void placeSkeleton() {
     skeleton->addComponent<Collider>(transform, CT_ENEMY, 0.2, 0.4);
 
     auto ai = skeleton->getComponent<Ai>();
-    ai->brainify<Skeleton>();
+    // ai->brainify<Skeleton>();
 }
 
 void loop() {
@@ -62,7 +62,7 @@ void loop() {
     GameKeyEvent controllerEvent;
     bool controllerFound = in.scan();
     if (!controllerFound) {
-        return;
+        // return;
     }
 
     auto targetMillis = (1 / configTargetFramerate) * 1000;

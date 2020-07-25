@@ -46,7 +46,11 @@ private:
 
     bool mapKeyboardEvent(SDL_Event *e, GameKeyEvent *g);
 
+    GameKey fromSdlKey(const SDL_Event *e) const;
+
     SDL_Joystick *controller;
+
+    bool locked = false;
 };
 
 #endif
