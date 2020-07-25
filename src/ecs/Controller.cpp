@@ -44,7 +44,14 @@ void Controller::key(GameKeyEvent &key) {
     auto animation = parent.getComponent<Animation>();
 
     if (key.state == GK_RELEASED) {
-        activeKeys[key.key] = false;
+        if (key.key == GK_NONE) {
+            activeKeys[GK_UP] = false;
+            activeKeys[GK_DOWN] = false;
+            activeKeys[GK_LEFT] = false;
+            activeKeys[GK_RIGHT] = false;
+        } else {
+            activeKeys[key.key] = false;
+        }
     } else {
         activeKeys[key.key] = true;
     }
@@ -57,7 +64,7 @@ void Controller::key(GameKeyEvent &key) {
     }
 
     animation->paused = false;
-    acceleration->speed = acceleration->speed / 2;
+    acceleration->speed = acceleration->speed * 0.6;
     acceleration->maxSpeed = acceleration->resetSpeed;
     acceleration->trajectory.angle = angleFromKeys(acceleration->trajectory.angle);
 }

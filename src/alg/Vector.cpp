@@ -26,17 +26,3 @@ Direction Vector::getDirection() {
             return S;
     }
 }
-
-float Vector::normalize() {
-    auto direction = getDirection();
-    switch (direction) {
-        case N:
-            return VM_50_PI;
-        case S:
-            return VM_150_PI;
-        case E:
-            return VM_0_PI;
-        case W:
-            return VM_100_PI;
-    }
-}

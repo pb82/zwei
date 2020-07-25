@@ -61,7 +61,7 @@ void loop() {
     GameKeyEvent controllerEvent;
     bool controllerFound = in.scan();
     if (!controllerFound) {
-        // return;
+        return;
     }
 
     auto targetMillis = (1 / configTargetFramerate) * 1000;
