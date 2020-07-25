@@ -13,7 +13,6 @@
 #include <ASSETS/Assets.h>
 #include <EMBEDDED/Font.h>
 #include <EMBEDDED/Tiles.h>
-#include <iostream>
 
 #include "./config.h"
 #include "src/Gfx.h"

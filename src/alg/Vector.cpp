@@ -10,10 +10,21 @@ void Vector::translate(float *x, float *y) {
 }
 
 Direction Vector::getDirection() {
-    if (BETWEEN(angle, VM_25_PI, VM_75_PI)) return N;
-    if (BETWEEN(angle, VM_75_PI, VM_125_PI)) return W;
-    if (BETWEEN(angle, VM_125_PI, VM_175_PI)) return S;
-    return E;
+    int compass = (((int) round(angle / (2 * VM_100_PI / 8))) + 8) % 8;
+    switch (compass) {
+        case 0:
+        case 1:
+        case 7:
+            return E;
+        case 2:
+            return N;
+        case 3:
+        case 4:
+        case 5:
+            return W;
+        case 6:
+            return S;
+    }
 }
 
 float Vector::normalize() {
