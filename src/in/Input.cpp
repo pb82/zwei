@@ -63,6 +63,11 @@ bool Input::mapKeyboardEvent(SDL_Event *e, GameKeyEvent *g) {
             locked = true;
             g->key = GK_LEFT;
             return true;
+        case SDLK_a:
+            if (g->key == SDLK_a && locked) return false;
+            locked = true;
+            g->key = GK_A;
+            return true;
         default:
             g->key = GK_NONE;
             return false;

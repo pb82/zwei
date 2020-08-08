@@ -9,6 +9,7 @@ Controller::Controller(Entity &parent) : Component(parent) {
     activeKeys[GK_DOWN] = false;
     activeKeys[GK_LEFT] = false;
     activeKeys[GK_RIGHT] = false;
+    activeKeys[GK_A] = false;
 }
 
 float Controller::angleFromKeys(float angle) {
@@ -35,6 +36,9 @@ float Controller::angleFromKeys(float angle) {
     }
     if (P_DOWN && P_RIGHT) {
         angle = VM_175_PI;
+    }
+    if (P_A) {
+
     }
     return angle;
 }
