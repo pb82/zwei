@@ -22,16 +22,31 @@ void Animation::addAnimationFrame(int n, int s, int e, int w) {
     frameCount++;
 }
 
+void Animation::addMixinFrame(int a) {
+    addMixinFrame(a, a, a, a);
+}
+
+void Animation::addMixinFrame(int n, int s, int e, int w) {
+    x[N] = n;
+    x[S] = n;
+    x[E] = n;
+    x[W] = n;
+}
+
 int Animation::getCurrentFrame(Direction d) {
     return frames[d].at(currentIndex);
 }
 
 void Animation::update(float dt) {
-    if (paused && currentIndex == 0) return;
+    if (paused && currentIndex == 0 && x.empty()) return;
 
     // Animations can be one offs and not repeat after reaching
     // their last frame
     if (!repeat && currentIndex == (frameCount - 1)) {
+        return;
+    }
+
+    if (!x.empty()) {
         return;
     }
 

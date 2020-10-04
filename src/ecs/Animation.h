@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <stack>
 
 #include "Component.h"
 #include "../alg/Direction.h"
@@ -16,6 +17,10 @@ public:
     void addAnimationFrame(int a);
 
     void addAnimationFrame(int n, int s, int e, int w);
+
+    void addMixinFrame(int a);
+
+    void addMixinFrame(int n, int s, int e, int w);
 
     int getCurrentFrame(Direction d = N);
 
@@ -36,6 +41,8 @@ private:
     int frameCount = 0;
 
     std::unordered_map<Direction, std::vector<int>> frames;
+
+    std::unordered_map<Direction, int> x;
 };
 
 

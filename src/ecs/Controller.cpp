@@ -37,9 +37,6 @@ float Controller::angleFromKeys(float angle) {
     if (P_DOWN && P_RIGHT) {
         angle = VM_175_PI;
     }
-    if (P_A) {
-
-    }
     return angle;
 }
 
@@ -53,11 +50,18 @@ void Controller::key(GameKeyEvent &key) {
             activeKeys[GK_DOWN] = false;
             activeKeys[GK_LEFT] = false;
             activeKeys[GK_RIGHT] = false;
+            activeKeys[GK_A] = false;
         } else {
             activeKeys[key.key] = false;
         }
     } else {
         activeKeys[key.key] = true;
+    }
+
+    if (P_A) {
+        animation->addMixinFrame(52);
+        animation->addMixinFrame(60);
+        return;
     }
 
     if (!P_UP && !P_DOWN && !P_LEFT && !P_RIGHT) {
