@@ -59,8 +59,9 @@ void Controller::key(GameKeyEvent &key) {
     }
 
     if (P_A) {
-        animation->addMixinFrame(52);
-        animation->addMixinFrame(60);
+        animation->addMixinFrame(9);
+        animation->addMixinFrame(10);
+        activeKeys[GK_A] = false;
         return;
     }
 

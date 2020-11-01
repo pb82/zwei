@@ -8,6 +8,11 @@
 #include "Component.h"
 #include "../alg/Direction.h"
 
+struct MixinFrame {
+    std::unordered_map<Direction, int> frames;
+    float duration = 0.0f;
+};
+
 class Animation : public Component {
 public:
     Animation(Entity &parent, float speed, bool repeat);
@@ -42,7 +47,7 @@ private:
 
     std::unordered_map<Direction, std::vector<int>> frames;
 
-    std::unordered_map<Direction, int> x;
+    std::stack<MixinFrame> mixinFrames;
 };
 
 

@@ -29,6 +29,8 @@ GameKey Input::fromSdlKey(const SDL_Event *e) const {
             return GK_LEFT;
         case SDLK_RIGHT:
             return GK_RIGHT;
+        case SDLK_a:
+            return GK_A;
         default:
             return GK_NONE;
     }
@@ -64,7 +66,9 @@ bool Input::mapKeyboardEvent(SDL_Event *e, GameKeyEvent *g) {
             g->key = GK_LEFT;
             return true;
         case SDLK_a:
-            if (g->key == SDLK_a && locked) return false;
+            if (g->key == GK_A && locked) {
+                return false;
+            }
             locked = true;
             g->key = GK_A;
             return true;

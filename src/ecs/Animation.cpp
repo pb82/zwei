@@ -27,18 +27,28 @@ void Animation::addMixinFrame(int a) {
 }
 
 void Animation::addMixinFrame(int n, int s, int e, int w) {
-    x[N] = n;
-    x[S] = n;
-    x[E] = n;
-    x[W] = n;
+    auto f = MixinFrame();
+    f.frames[N] = n;
+    f.frames[S] = s;
+    f.frames[E] = e;
+    f.frames[W] = w;
+    f.duration = 100;
+    mixinFrames.push(f);
 }
 
 int Animation::getCurrentFrame(Direction d) {
+    if (!mixinFrames.empty()) {
+        auto f = mixinFrames.top();
+        if (f.duration <= 0) {
+            mixinFrames.pop();
+        }
+        return f.frames[d];
+    }
     return frames[d].at(currentIndex);
 }
 
 void Animation::update(float dt) {
-    if (paused && currentIndex == 0 && x.empty()) return;
+    if (paused && currentIndex == 0 && mixinFrames.empty()) return;
 
     // Animations can be one offs and not repeat after reaching
     // their last frame
@@ -46,8 +56,8 @@ void Animation::update(float dt) {
         return;
     }
 
-    if (!x.empty()) {
-        return;
+    if (!mixinFrames.empty()) {
+        mixinFrames.top().duration -= dt;
     }
 
     animationCount += dt;
