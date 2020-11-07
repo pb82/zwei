@@ -17,6 +17,8 @@ void Attack::attack() {
     animation->addMixinFrame(24);
 
     auto position = parent.getComponent<Transform>();
+    auto player = parent.getComponent<Acceleration>();
+
 
     auto p = std::make_shared<Entity>();
     p->addComponent<Transform>(position->p.x, position->p.y);
@@ -24,7 +26,7 @@ void Attack::attack() {
 
     auto t = p->getComponent<Transform>();
     p->addComponent<Collider>(t, CT_PROJECTILE, 0.4, 0.4);
-    p->addComponent<Acceleration>(3.0f, 10, VM_25_PI);
+    p->addComponent<Acceleration>(5.0f, 20, player->trajectory.angle);
 
     // Self destruct after 5 tiles traveled
     p->addComponent<SelfDestruct>(DISTANCE, 5);
