@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "Acceleration.h"
 #include "Animation.h"
+#include "Attack.h"
 
 Controller::Controller(Entity &parent) : Component(parent) {
     activeKeys[GK_UP] = false;
@@ -59,10 +60,11 @@ void Controller::key(GameKeyEvent &key) {
     }
 
     if (P_A) {
-        animation->addMixinFrame(9);
-        animation->addMixinFrame(10);
-        activeKeys[GK_A] = false;
-        return;
+        if (parent.hasComponent<Attack>()) {
+            auto attack = parent.getComponent<Attack>();
+            attack->attack();
+            return;
+        }
     }
 
     if (!P_UP && !P_DOWN && !P_LEFT && !P_RIGHT) {

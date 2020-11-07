@@ -53,3 +53,7 @@ void Acceleration::applyForce(float angle, float power) {
     if (forces.size() >= 5) return;
     forces.push_back(Force(angle, power));
 }
+
+void Acceleration::go() {
+    this->maxSpeed = this->resetSpeed;
+}

@@ -20,6 +20,13 @@ void Assets::addTexture(Asset id, EmbeddedAsset &asset) {
     textures.emplace(id, storage);
 }
 
+void Assets::addTexture(Asset id, const char *file) {
+    auto *texture = IMG_LoadTexture(Gfx_Renderer, file);
+    auto storage = std::make_shared<Texture>(texture);
+    SDL_QueryTexture(texture, nullptr, nullptr, &storage->w, &storage->h);
+    textures.emplace(id, storage);
+}
+
 void *Assets::getFont(Asset id) {
     auto font = fonts.find(id);
     if (font == fonts.end()) {

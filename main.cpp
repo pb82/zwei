@@ -26,6 +26,7 @@
 #include "src/ecs/Controller.h"
 #include "src/ecs/Collider.h"
 #include "src/ecs/Ai.h"
+#include "src/ecs/Attack.h"
 
 #include "src/ecs/ui/Tweak.h"
 #include "src/Map.h"
@@ -88,6 +89,7 @@ void loop() {
     sprite->addComponent<Animation>(200, true);
     sprite->addComponent<Acceleration>(3.0f, 10, VM_25_PI);
     sprite->addComponent<Controller>();
+    sprite->addComponent<Attack>();
 
     sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
@@ -107,6 +109,8 @@ void loop() {
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();
+
+        Manager::instance().collect();
 
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -177,7 +181,8 @@ void initAssets() {
     assert(Gfx_Renderer);
 
     Assets::instance().addFont(FONT, assets_Font);
-    Assets::instance().addTexture(TILES, assets_Tiles);
+    // Assets::instance().addTexture(TILES, assets_Tiles);
+    Assets::instance().addTexture(TILES, "assets/RAW/tiles.png");
 }
 
 void initSdl() {

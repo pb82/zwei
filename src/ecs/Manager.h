@@ -4,10 +4,16 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <queue>
 
 #include "Entity.h"
 
 class Collider;
+
+struct QueueEntity {
+    std::shared_ptr<Entity> entity;
+    LayerType layer;
+};
 
 class Manager {
 public:
@@ -22,6 +28,11 @@ public:
 
     std::shared_ptr<Entity> addEntity(LayerType layer);
 
+    void enqueue(std::shared_ptr<Entity> entity, LayerType layer);
+
+    // add new entities and garbage collect disabled ones
+    void collect();
+
     void getColliders(std::vector<std::shared_ptr<Collider>> &target);
 
     void update(float dt);
@@ -34,6 +45,8 @@ private:
     Manager() {}
 
     std::unordered_map<LayerType, std::vector<std::shared_ptr<Entity>>> entities;
+
+    std::queue<QueueEntity> pendingEntities;
 };
 
 #endif

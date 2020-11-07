@@ -61,6 +61,10 @@ public:
         this->isActive = false;
     }
 
+    bool disabled() {
+        return !this->isActive;
+    }
+
 private:
     std::unordered_map<std::type_index, std::shared_ptr<Component>> components;
     bool isActive;

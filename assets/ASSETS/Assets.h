@@ -41,6 +41,8 @@ public:
 
     void addTexture(Asset id, EmbeddedAsset &asset);
 
+    void addTexture(Asset id, const char *file);
+
     void *getFont(Asset id);
 
     std::shared_ptr<Texture> getTexture(Asset id);

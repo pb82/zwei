@@ -35,6 +35,8 @@ public:
 
     void applyForce(float angle, float power);
 
+    void go();
+
     Vector trajectory;
 
     Position last;
