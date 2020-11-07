@@ -6,6 +6,7 @@
 #include "Collider.h"
 #include "Acceleration.h"
 #include "NonSprite.h"
+#include "SelfDestruct.h"
 
 Attack::Attack(Entity &parent) : Component(parent) {}
 
@@ -24,6 +25,9 @@ void Attack::attack() {
     auto t = p->getComponent<Transform>();
     p->addComponent<Collider>(t, CT_PROJECTILE, 0.4, 0.4);
     p->addComponent<Acceleration>(3.0f, 10, VM_25_PI);
+
+    // Self destruct after 5 tiles traveled
+    p->addComponent<SelfDestruct>(DISTANCE, 5);
 
     auto a = p->getComponent<Acceleration>();
     a->go();
