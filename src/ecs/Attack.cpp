@@ -12,9 +12,11 @@ Attack::Attack(Entity &parent) : Component(parent) {}
 
 void Attack::attack() {
     auto animation = parent.getComponent<Animation>();
-    animation->addMixinFrame(17);
-    animation->addMixinFrame(32);
-    animation->addMixinFrame(24);
+    animation->addMixinFrame(37);
+    animation->addMixinFrame(36);
+    animation->addMixinFrame(35);
+    animation->addMixinFrame(36);
+
 
     auto position = parent.getComponent<Transform>();
     auto player = parent.getComponent<Acceleration>();

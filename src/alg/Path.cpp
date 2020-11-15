@@ -28,6 +28,15 @@ bool Topology::accessible(int x, int y) const {
     return topology.at(i) == 0;
 }
 
+bool Topology::allAccessible(std::vector<Position> &line) {
+    for (auto& segment : line) {
+        if (!accessible(segment.x, segment.y)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void Topology::neighbours(int x, int y, std::vector<Position> &n) const {
     if (accessible(x - 1, y)) n.push_back({(float) x - 1, (float) y});
     if (accessible(x + 1, y)) n.push_back({(float) x + 1, (float) y});

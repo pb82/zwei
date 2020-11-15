@@ -12,7 +12,6 @@
 
 #include <ASSETS/Assets.h>
 #include <EMBEDDED/Font.h>
-#include <EMBEDDED/Tiles.h>
 
 #include "./config.h"
 #include "src/Gfx.h"
@@ -33,20 +32,19 @@
 #include "src/in/Input.h"
 #include "src/Col.h"
 
-#include "src/alg/Path.h"
 #include "src/ecs/minds/Skeleton.h"
 
 void placeSkeleton() {
     auto skeleton = Manager::instance().addEntity(OBJECTS);
     skeleton->addComponent<Transform>(13, 20);
-    skeleton->addComponent<Sprite>(TILES);
+    skeleton->addComponent<Sprite>(SPRITES);
     skeleton->addComponent<Animation>(200, true);
     skeleton->addComponent<Acceleration>(1.0f, 10, 0);
     skeleton->addComponent<Ai>();
 
-    skeleton->getComponent<Animation>()->addAnimationFrame(40);
-    skeleton->getComponent<Animation>()->addAnimationFrame(41);
-    skeleton->getComponent<Animation>()->addAnimationFrame(42);
+    skeleton->getComponent<Animation>()->addAnimationFrame(64);
+    skeleton->getComponent<Animation>()->addAnimationFrame(65);
+    skeleton->getComponent<Animation>()->addAnimationFrame(66);
     skeleton->getComponent<Animation>()->paused = true;
 
     auto transform = skeleton->getComponent<Transform>();
@@ -85,15 +83,15 @@ void loop() {
     RT_Context.setPlayer(sprite);
 
     sprite->addComponent<Transform>(2, 12);
-    sprite->addComponent<Sprite>(TILES);
+    sprite->addComponent<Sprite>(SPRITES);
     sprite->addComponent<Animation>(200, true);
     sprite->addComponent<Acceleration>(3.0f, 10, VM_25_PI);
     sprite->addComponent<Controller>();
     sprite->addComponent<Attack>();
 
-    sprite->getComponent<Animation>()->addAnimationFrame(32, 8, 24, 16);
-    sprite->getComponent<Animation>()->addAnimationFrame(33, 9, 25, 17);
-    sprite->getComponent<Animation>()->addAnimationFrame(34, 10, 26, 18);
+    sprite->getComponent<Animation>()->addAnimationFrame(48, 0, 32, 16);
+    sprite->getComponent<Animation>()->addAnimationFrame(49, 1, 33, 17);
+    sprite->getComponent<Animation>()->addAnimationFrame(50, 2, 34, 18);
     sprite->getComponent<Animation>()->paused = true;
     // Track the sprite
     auto transform = sprite->getComponent<Transform>();
@@ -183,6 +181,7 @@ void initAssets() {
     Assets::instance().addFont(FONT, assets_Font);
     // Assets::instance().addTexture(TILES, assets_Tiles);
     Assets::instance().addTexture(TILES, "assets/RAW/tiles.png");
+    Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
 }
 
 void initSdl() {

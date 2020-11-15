@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <limits>
+#include <vector>
 
 class Position {
 public:
@@ -54,6 +55,47 @@ public:
 
     float angle(const Position &other) {
         return std::atan2(y - other.y, other.x - x);
+    }
+
+    void bresenham(Position other, std::vector<Position> &points) {
+        int x1 = this->x;
+        int y1 = this->y;
+        int x2 = other.x;
+        int y2 = other.y;
+
+        const bool steep = (fabs(y2 - y1) > fabs(x2 - x1));
+        if (steep) {
+            std::swap(x1, y1);
+            std::swap(x2, y2);
+        }
+
+        if (x1 > x2) {
+            std::swap(x1, x2);
+            std::swap(y1, y2);
+        }
+
+        const float dx = x2 - x1;
+        const float dy = fabs(y2 - y1);
+
+        float error = dx / 2.0f;
+        const int ystep = (y1 < y2) ? 1 : -1;
+        int y = (int) y1;
+
+        const int maxX = (int) x2;
+
+        for (int x = (int) x1; x <= maxX; x++) {
+            if (steep) {
+                points.push_back({(float) y, (float) x, 0});
+            } else {
+                points.push_back({(float) x, (float) y, 0});
+            }
+
+            error -= dy;
+            if (error < 0) {
+                y += ystep;
+                error += dx;
+            }
+        }
     }
 
     float x;

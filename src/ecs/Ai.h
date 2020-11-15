@@ -17,6 +17,8 @@ public:
 
     void collide(std::shared_ptr<Collider> other);
 
+    void render() override;
+
     template<typename T>
     void brainify() {
         this->mind = std::make_shared<T>(this->parent);

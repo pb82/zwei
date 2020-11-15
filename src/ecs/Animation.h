@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 #include <vector>
-#include <stack>
+#include <queue>
 
 #include "Component.h"
 #include "../alg/Direction.h"
@@ -47,7 +47,7 @@ private:
 
     std::unordered_map<Direction, std::vector<int>> frames;
 
-    std::stack<MixinFrame> mixinFrames;
+    std::queue<MixinFrame> mixinFrames;
 };
 
 

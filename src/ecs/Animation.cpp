@@ -38,7 +38,7 @@ void Animation::addMixinFrame(int n, int s, int e, int w) {
 
 int Animation::getCurrentFrame(Direction d) {
     if (!mixinFrames.empty()) {
-        auto f = mixinFrames.top();
+        auto f = mixinFrames.front();
         if (f.duration <= 0) {
             mixinFrames.pop();
         }
@@ -57,7 +57,7 @@ void Animation::update(float dt) {
     }
 
     if (!mixinFrames.empty()) {
-        mixinFrames.top().duration -= dt;
+        mixinFrames.front().duration -= dt;
     }
 
     animationCount += dt;

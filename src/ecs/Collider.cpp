@@ -43,7 +43,15 @@ void Collider::collideWall(std::shared_ptr<Collider> other, float bounce) {
 
 void Collider::collideEnemy(std::shared_ptr<Collider> other) {
     stop(*other);
-    stop(*this);
+
+    if (other->tag == CT_PROJECTILE) {
+        auto a = this->parent.getComponent<Acceleration>();
+        a->applyForce(VM_0_PI, 20);
+        other->parent.disable();
+    } else {
+        stop(*this);
+    }
+
     notify(*other);
     notify(*this);
 }

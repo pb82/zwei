@@ -27,3 +27,9 @@ void Ai::collide(std::shared_ptr<Collider> other) {
         mind->collide(other);
     }
 }
+
+void Ai::render() {
+    if (mind) {
+        mind->render();
+    }
+}

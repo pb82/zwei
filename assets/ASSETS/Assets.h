@@ -11,7 +11,8 @@
 
 enum Asset {
     FONT = 0,
-    TILES
+    TILES,
+    SPRITES
 };
 
 class Texture {

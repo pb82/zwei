@@ -19,6 +19,8 @@ public:
 
     bool accessible(int x, int y) const;
 
+    bool allAccessible(std::vector<Position> &line);
+
     void neighbours(int x, int y, std::vector<Position> &n) const;
 
     int index(int x, int y) const;

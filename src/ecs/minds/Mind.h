@@ -18,6 +18,8 @@ public:
 
     virtual bool activate() { return false; }
 
+    virtual void render() { return; }
+
 protected:
 
     Entity &parent;
