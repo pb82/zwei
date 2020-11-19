@@ -6,7 +6,6 @@
 #include "Skeleton.h"
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
-#include "../src/alg/Color.h"
 
 Skeleton::Skeleton(Entity &parent) : Mind(parent) {}
 
