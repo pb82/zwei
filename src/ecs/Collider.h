@@ -9,6 +9,7 @@
 #include "Component.h"
 #include "Transform.h"
 #include "../alg/Direction.h"
+#include "../alg/Vector.h"
 
 enum ColliderTag {
     CT_PLAYER,
@@ -36,15 +37,11 @@ public:
 private:
 
     // Stop the motion of the parent of the given collider
-    static void stop(const Collider& c);
+    static void stop(const Collider &c);
 
-    void notify(const Collider& c);
+    void notify(std::shared_ptr<Collider> other);
 
     void updateBoundingBox();
-
-    void collideWall(std::shared_ptr<Collider> other, float bounce);
-
-    void collideEnemy(std::shared_ptr<Collider> other);
 
     float dx;
     float dy;

@@ -60,3 +60,8 @@ float Acceleration::getAngle() {
 Direction Acceleration::getDirection() {
     return this->trajectory.getDirection();
 }
+
+bool Acceleration::sameAngle(float other) {
+    auto epsilon = std::numeric_limits<float>::epsilon();
+    return std::abs(this->trajectory.angle - other) < epsilon;
+}

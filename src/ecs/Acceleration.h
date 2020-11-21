@@ -33,9 +33,11 @@ public:
 
     void turn(float angle);
 
-    void reset(Position& target);
+    void reset(Position &target);
 
     float getAngle();
+
+    bool sameAngle(float other);
 
     Direction getDirection();
 

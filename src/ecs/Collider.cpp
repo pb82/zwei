@@ -22,6 +22,7 @@ void Collider::update(float dt) {
     updateBoundingBox();
 }
 
+// Stop a mobile target
 void Collider::stop(const Collider &c) {
     if (c.parent.hasComponent<Acceleration>()) {
         auto acceleration = c.parent.getComponent<Acceleration>();
@@ -30,38 +31,27 @@ void Collider::stop(const Collider &c) {
     }
 }
 
-void Collider::notify(const Collider &c) {
-    if (c.parent.hasComponent<Ai>()) {
-        auto ai = c.parent.getComponent<Ai>();
-        ai->collide(std::make_shared<Collider>(*this));
+// Notify an AI-enabled entity that it collided with something
+void Collider::notify(std::shared_ptr<Collider> other) {
+    if (this->parent.hasComponent<Ai>()) {
+        auto ai = this->parent.getComponent<Ai>();
+        ai->collide(other);
     }
 }
 
-void Collider::collideWall(std::shared_ptr<Collider> other, float bounce) {
-    stop(*other);
-    notify(*other);
-}
-
-void Collider::collideEnemy(std::shared_ptr<Collider> other) {
-    stop(*other);
-
-    if (other->tag == CT_PROJECTILE) {
-        auto a = this->parent.getComponent<Acceleration>();
-        a->applyForce(VM_0_PI, 20);
-        other->parent.disable();
-    } else {
-        stop(*this);
-    }
-
-    notify(*other);
-    notify(*this);
-}
 
 void Collider::collide(std::shared_ptr<Collider> other) {
-    if (this->tag == CT_WALL) {
-        collideWall(other, 0.0f);
-    } else if (this->tag == CT_ENEMY) {
-        collideEnemy(other);
+    // Player / Wall collisions: stop player
+    if (this->tag == CT_PLAYER) {
+        if (other->tag == CT_WALL) {
+            stop(*this);
+        }
+        return;
+    }
+
+    // Enemy / <any> collisions: inform about the collision with <other>
+    if (this->tag == CT_ENEMY) {
+        notify(other);
     }
 }
 

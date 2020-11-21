@@ -6,13 +6,15 @@
 #include "Skeleton.h"
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
+#include "../../Debug.h"
+#include "../../alg/Rand.h"
 
 Skeleton::Skeleton(Entity &parent) : Mind(parent) {}
 
 Skeleton::~Skeleton() noexcept {}
 
 int Skeleton::delay() {
-    return 100;
+    return 500;
 }
 
 bool Skeleton::activate() {
@@ -34,7 +36,19 @@ bool Skeleton::activate() {
 }
 
 void Skeleton::collide(std::shared_ptr<Collider> other) {
+    if (other->tag == CT_ENEMY || other->tag == CT_WALL) {
+        auto acceleration = parent.getComponent<Acceleration>();
+        float currentAngle = acceleration->getAngle();
 
+        // Turn around
+        acceleration->turn(currentAngle + getRandomFloat(VM_100_PI));
+        return;
+    }
+
+    if (other->tag == CT_PLAYER) {
+        auto acceleration = parent.getComponent<Acceleration>();
+        acceleration->decelerate();
+    }
 }
 
 void Skeleton::plan(float dt) {
@@ -72,7 +86,7 @@ void Skeleton::plan(float dt) {
 
         float angle = start.angle(next);
 
-        if (acceleration->getAngle() != angle) {
+        if (acceleration->sameAngle(angle)) {
             acceleration->decelerate();
         }
 
@@ -86,6 +100,7 @@ void Skeleton::plan(float dt) {
 }
 
 void Skeleton::render() {
+    if (!Debug::drawBoundingBoxes) return;
     if (route.empty()) return;
     auto texture = Assets::instance().getTexture(TILES);
     for (auto &p: route) {

@@ -20,6 +20,21 @@ class Vector {
 public:
     Vector(float radius, float angle);
 
+    Vector(const Vector &other) noexcept {
+        this->radius = other.radius;
+        this->angle = other.angle;
+    }
+
+    Vector(const Vector &&other) noexcept
+            : radius(other.radius),
+              angle(other.angle) {}
+
+    Vector &operator=(const Vector &other) {
+        this->radius = other.radius;
+        this->angle = other.angle;
+        return *this;
+    }
+
     void translate(float *x, float *y);
 
     Direction getDirection();

@@ -24,5 +24,7 @@ Direction Vector::getDirection() {
             return W;
         case 6:
             return S;
+        default:
+            return S;
     }
 }

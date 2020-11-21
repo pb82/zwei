@@ -231,6 +231,9 @@ int main(int, char **) {
     signal(SIGINT, onSignal);
     signal(SIGSEGV, onSignal);
 
+    // Seed random number generator
+    srand((unsigned int) time(nullptr));
+
     initSdl();
     initAssets();
     initImgui();
