@@ -13,7 +13,8 @@ Controller::Controller(Entity &parent) : Component(parent) {
     activeKeys[GK_A] = false;
 }
 
-float Controller::angleFromKeys(float angle) {
+float Controller::angleFromKeys() {
+    float angle = 0.0f;
     if (P_UP) {
         angle = VM_50_PI;
     }
@@ -68,14 +69,12 @@ void Controller::key(GameKeyEvent &key) {
     }
 
     if (!P_UP && !P_DOWN && !P_LEFT && !P_RIGHT) {
-        acceleration->maxSpeed = 0;
-        acceleration->speed = 0;
-        animation->paused = true;
+        acceleration->decelerate();
+        animation->stop();
         return;
     }
 
-    animation->paused = false;
-    acceleration->speed = acceleration->speed * 0.6;
-    acceleration->maxSpeed = acceleration->resetSpeed;
-    acceleration->trajectory.angle = angleFromKeys(acceleration->trajectory.angle);
+    acceleration->turn(angleFromKeys());
+    acceleration->accelerate();
+    animation->start();
 }

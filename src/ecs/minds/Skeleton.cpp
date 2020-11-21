@@ -12,7 +12,7 @@ Skeleton::Skeleton(Entity &parent) : Mind(parent) {}
 Skeleton::~Skeleton() noexcept {}
 
 int Skeleton::delay() {
-    return 500;
+    return 100;
 }
 
 bool Skeleton::activate() {
@@ -27,9 +27,8 @@ bool Skeleton::activate() {
     auto acceleration = parent.getComponent<Acceleration>();
     auto animation = parent.getComponent<Animation>();
 
-    acceleration->maxSpeed = 0;
-    acceleration->speed = 0;
-    animation->paused = true;
+    animation->stop();
+    acceleration->decelerate();
 
     return false;
 }
@@ -52,9 +51,9 @@ void Skeleton::plan(float dt) {
 
     if (RT_Context.getTopology().allAccessible(route)) {
         float angle = transform->p.angle(playerTransform->p);
-        acceleration->trajectory.angle = angle;
-        acceleration->maxSpeed = acceleration->resetSpeed;
-        animation->paused = false;
+        acceleration->turn(angle);
+        acceleration->accelerate();
+        animation->start();
         return;
     }
 
@@ -73,18 +72,16 @@ void Skeleton::plan(float dt) {
 
         float angle = start.angle(next);
 
-        if (acceleration->trajectory.angle != angle) {
-            acceleration->maxSpeed = 0;
-            acceleration->speed = 0;
+        if (acceleration->getAngle() != angle) {
+            acceleration->decelerate();
         }
 
-        acceleration->trajectory.angle = angle;
-        acceleration->maxSpeed = acceleration->resetSpeed;
-        animation->paused = false;
+        acceleration->turn(angle);
+        acceleration->accelerate();
+        animation->start();
     } else {
-        acceleration->maxSpeed = 0;
-        acceleration->speed = 0;
-        animation->paused = true;
+        acceleration->decelerate();
+        animation->stop();
     }
 }
 

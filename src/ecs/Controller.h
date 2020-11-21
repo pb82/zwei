@@ -24,7 +24,7 @@ private:
 
     // void removeKey(GameKey key);
 
-    float angleFromKeys(float angle);
+    float angleFromKeys();
 
     // std::vector<GameKey> activeKeys;
 

@@ -34,18 +34,18 @@
 
 #include "src/ecs/minds/Skeleton.h"
 
-void placeSkeleton() {
+void placeSkeleton(int x, int y) {
     auto skeleton = Manager::instance().addEntity(OBJECTS);
-    skeleton->addComponent<Transform>(13, 20);
+    skeleton->addComponent<Transform>(x, y);
     skeleton->addComponent<Sprite>(SPRITES);
     skeleton->addComponent<Animation>(200, true);
-    skeleton->addComponent<Acceleration>(1.0f, 10, 0);
+    skeleton->addComponent<Acceleration>(1.0f, 0);
     skeleton->addComponent<Ai>();
 
     skeleton->getComponent<Animation>()->addAnimationFrame(64);
     skeleton->getComponent<Animation>()->addAnimationFrame(65);
     skeleton->getComponent<Animation>()->addAnimationFrame(66);
-    skeleton->getComponent<Animation>()->paused = true;
+    skeleton->getComponent<Animation>()->stop();
 
     auto transform = skeleton->getComponent<Transform>();
     skeleton->addComponent<Collider>(transform, CT_ENEMY, 0.2, 0.4);
@@ -85,14 +85,14 @@ void loop() {
     sprite->addComponent<Transform>(2, 12);
     sprite->addComponent<Sprite>(SPRITES);
     sprite->addComponent<Animation>(200, true);
-    sprite->addComponent<Acceleration>(3.0f, 10, VM_25_PI);
+    sprite->addComponent<Acceleration>(3.0f, VM_25_PI);
     sprite->addComponent<Controller>();
     sprite->addComponent<Attack>();
 
     sprite->getComponent<Animation>()->addAnimationFrame(48, 0, 32, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(49, 1, 33, 17);
     sprite->getComponent<Animation>()->addAnimationFrame(50, 2, 34, 18);
-    sprite->getComponent<Animation>()->paused = true;
+    sprite->getComponent<Animation>()->stop();
     // Track the sprite
     auto transform = sprite->getComponent<Transform>();
     RT_Camera.track(&transform->p);
@@ -103,7 +103,10 @@ void loop() {
     auto tweakUi = Manager::instance().addEntity(UI);
     tweakUi->addComponent<Tweak>(sprite);
 
-    placeSkeleton();
+    placeSkeleton(13, 20);
+    placeSkeleton(15, 20);
+    placeSkeleton(13, 22);
+    placeSkeleton(15, 22);
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();

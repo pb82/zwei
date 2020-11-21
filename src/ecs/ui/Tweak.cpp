@@ -35,8 +35,6 @@ void Tweak::render() {
     auto transform = client->getComponent<Transform>();
 
     ImGui::Begin("Tweak", nullptr, ImGuiWindowFlags_NoResize);
-    ImGui::SliderFloat("Acceleration", &acceleration->acceleration, 0.1f, 50.0f);
-    ImGui::SliderFloat("Max. Speed", &acceleration->resetSpeed, 1.0f, 10.0f);
     ImGui::SliderFloat("Zoom", &RT_Camera.z, 1.0f, 10.0f);
     ImGui::Text("Pos. X: %02f", transform->p.x);
     ImGui::Text("Pos. Y: %02f", transform->p.y);

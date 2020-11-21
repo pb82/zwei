@@ -11,7 +11,7 @@
 
 class Acceleration : public Component {
 public:
-    Acceleration(Entity &parent, float maxSpeed, float acceleration, float angle);
+    Acceleration(Entity &parent, float maxSpeed, float angle);
 
     // Acceleration in tiles/s²
     float acceleration = 0.0f;
@@ -23,25 +23,27 @@ public:
     // stop movement
     float maxSpeed;
 
-    // The value the max speed is reset to (the actual
-    // max speed)
-    float resetSpeed;
-
     void update(float dt) override;
 
-    void accelerate(float dt);
+    void accelerate();
 
-    void decelerate(float dt);
+    void decelerate();
 
     void applyForce(float angle, float power);
 
-    void go();
+    void turn(float angle);
+
+    void reset(Position& target);
+
+    float getAngle();
+
+    Direction getDirection();
+
+private:
 
     Vector trajectory;
 
     Position last;
-
-private:
 
     std::vector<Force> forces;
 

@@ -63,3 +63,11 @@ void Animation::update(float dt) {
     animationCount += dt;
     currentIndex = long(animationCount / speed) % frameCount;
 }
+
+void Animation::start() {
+    paused = false;
+}
+
+void Animation::stop() {
+    paused = true;
+}

@@ -25,7 +25,8 @@ void Collider::update(float dt) {
 void Collider::stop(const Collider &c) {
     if (c.parent.hasComponent<Acceleration>()) {
         auto acceleration = c.parent.getComponent<Acceleration>();
-        c.tracked->p = acceleration->last;
+        acceleration->decelerate();
+        acceleration->reset(c.tracked->p);
     }
 }
 

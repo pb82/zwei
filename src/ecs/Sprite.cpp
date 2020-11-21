@@ -19,7 +19,7 @@ void Sprite::pick(SDL_Rect &source) {
     auto acceleration = parent.getComponent<Acceleration>();
 
     // Tile position in the tilemap
-    Direction d = acceleration->trajectory.getDirection();
+    Direction d = acceleration->getDirection();
     int scalar = animation->getCurrentFrame(d);
     Gfx::pick(source, scalar, texture->w);
 }
@@ -52,6 +52,4 @@ void Sprite::render() {
 }
 
 void Sprite::update(float dt) {
-    auto acceleration = parent.getComponent<Acceleration>();
-    acceleration->accelerate(dt);
 }

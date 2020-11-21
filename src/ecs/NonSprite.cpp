@@ -23,6 +23,4 @@ void NonSprite::render() {
 }
 
 void NonSprite::update(float dt) {
-    auto acceleration = parent.getComponent<Acceleration>();
-    acceleration->accelerate(dt);
 }

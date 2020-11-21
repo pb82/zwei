@@ -28,13 +28,13 @@ void Attack::attack() {
 
     auto t = p->getComponent<Transform>();
     p->addComponent<Collider>(t, CT_PROJECTILE, 0.4, 0.4);
-    p->addComponent<Acceleration>(5.0f, 20, player->trajectory.angle);
+    p->addComponent<Acceleration>(5.0f, player->getAngle());
 
     // Self destruct after 5 tiles traveled
     p->addComponent<SelfDestruct>(DISTANCE, 5);
 
     auto a = p->getComponent<Acceleration>();
-    a->go();
+    a->accelerate();
 
     Manager::instance().enqueue(p, OBJECTS);
 }

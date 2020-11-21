@@ -3,12 +3,11 @@
 #include "Entity.h"
 #include "Transform.h"
 
-Acceleration::Acceleration(Entity &parent, float maxSpeed, float acceleration, float angle)
+Acceleration::Acceleration(Entity &parent, float maxSpeed, float angle)
         : Component(parent),
           trajectory(0, angle),
-          last(0, 0),
-          maxSpeed(0),
-          resetSpeed(maxSpeed),
+          maxSpeed(maxSpeed),
+          speed(0),
           acceleration(acceleration) {}
 
 void Acceleration::update(float dt) {
@@ -33,20 +32,12 @@ void Acceleration::update(float dt) {
 
 }
 
-void Acceleration::accelerate(float dt) {
-    if (speed >= maxSpeed) {
-        speed = maxSpeed;
-        return;
-    }
-    speed += acceleration * (dt / 1000);
+void Acceleration::accelerate() {
+    speed = maxSpeed;
 }
 
-void Acceleration::decelerate(float dt) {
-    if (speed <= 0) {
-        speed = 0.0f;
-        return;
-    }
-    speed -= acceleration * (dt / 1000);
+void Acceleration::decelerate() {
+    speed = 0;
 }
 
 void Acceleration::applyForce(float angle, float power) {
@@ -54,6 +45,18 @@ void Acceleration::applyForce(float angle, float power) {
     forces.push_back(Force(angle, power));
 }
 
-void Acceleration::go() {
-    this->maxSpeed = this->resetSpeed;
+void Acceleration::turn(float angle) {
+    this->trajectory.angle = angle;
+}
+
+void Acceleration::reset(Position &target) {
+    target = last;
+}
+
+float Acceleration::getAngle() {
+    return this->trajectory.angle;
+}
+
+Direction Acceleration::getDirection() {
+    return this->trajectory.getDirection();
 }

@@ -29,13 +29,17 @@ public:
 
     int getCurrentFrame(Direction d = N);
 
+    void start();
+
+    void stop();
+
     float speed;
 
     bool repeat;
 
-    bool paused = false;
-
 private:
+
+    bool paused = false;
 
     void addFrameForDirection(Direction d, int frame);
 
