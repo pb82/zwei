@@ -42,11 +42,12 @@ void Sprite::render() {
     Draw::instance().draw(texture->mem, source, target);
 
     if (Debug::drawBoundingBoxes) {
+        auto tiles = Assets::instance().getTexture(TILES);
         if (parent.hasComponent<Collider>()) {
             auto collider = parent.getComponent<Collider>();
             SDL_Rect source;
-            Gfx::pick(source, 53, texture->w);
-            Draw::instance().draw(texture->mem, source, collider->boundingBox);
+            Gfx::pick(source, 53, tiles->w);
+            Draw::instance().draw(tiles->mem, source, collider->boundingBox);
         }
     }
 }

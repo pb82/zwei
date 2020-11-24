@@ -63,6 +63,7 @@ void Controller::key(GameKeyEvent &key) {
     if (P_A) {
         if (parent.hasComponent<Attack>()) {
             auto attack = parent.getComponent<Attack>();
+            acceleration->decelerate();
             attack->attack();
             return;
         }

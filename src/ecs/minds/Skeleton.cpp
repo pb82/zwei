@@ -14,7 +14,7 @@ Skeleton::Skeleton(Entity &parent) : Mind(parent) {}
 Skeleton::~Skeleton() noexcept {}
 
 int Skeleton::delay() {
-    return 500;
+    return 100;
 }
 
 bool Skeleton::activate() {
@@ -36,11 +36,11 @@ bool Skeleton::activate() {
 }
 
 void Skeleton::collide(std::shared_ptr<Collider> other) {
-    if (other->tag == CT_ENEMY || other->tag == CT_WALL) {
+    if (other->tag == CT_ENEMY) {
         auto acceleration = parent.getComponent<Acceleration>();
         float currentAngle = acceleration->getAngle();
 
-        // Turn around
+        // Random direction
         acceleration->turn(currentAngle + getRandomFloat(VM_100_PI));
         return;
     }
@@ -74,7 +74,6 @@ void Skeleton::plan(float dt) {
     route.clear();
     Path p(RT_Context.getTopology());
 
-    Position goal;
     Position start;
     transform->p.nearestTile(start);
     playerTransform->p.nearestTile(goal);
@@ -101,8 +100,17 @@ void Skeleton::plan(float dt) {
 
 void Skeleton::render() {
     if (!Debug::drawBoundingBoxes) return;
-    if (route.empty()) return;
+
+    /*
     auto texture = Assets::instance().getTexture(TILES);
+
+    SDL_Rect box;
+    RT_Camera.project(box, goal.x, goal.y);
+    SDL_Rect source;
+    Gfx::pick(source, 54, texture->w);
+    Draw::instance().draw(texture->mem, source, box);
+
+    if (route.empty()) return;
     for (auto &p: route) {
         SDL_Rect box;
         RT_Camera.project(box, p.x, p.y);
@@ -110,4 +118,5 @@ void Skeleton::render() {
         Gfx::pick(source, 53, texture->w);
         Draw::instance().draw(texture->mem, source, box);
     }
+    */
 }

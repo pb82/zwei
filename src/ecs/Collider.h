@@ -30,9 +30,13 @@ public:
 
     void collide(std::shared_ptr<Collider> other);
 
+    void stop();
+
     ColliderTag tag;
 
     std::shared_ptr<Transform> tracked;
+
+    bool checked;
 
 private:
 
@@ -46,6 +50,5 @@ private:
     float dx;
     float dy;
 };
-
 
 #endif

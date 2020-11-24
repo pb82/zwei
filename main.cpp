@@ -42,9 +42,10 @@ void placeSkeleton(int x, int y) {
     skeleton->addComponent<Acceleration>(1.0f, 0);
     skeleton->addComponent<Ai>();
 
-    skeleton->getComponent<Animation>()->addAnimationFrame(64);
-    skeleton->getComponent<Animation>()->addAnimationFrame(65);
-    skeleton->getComponent<Animation>()->addAnimationFrame(66);
+    skeleton->getComponent<Animation>()->addAnimationFrame(64, 112, 80, 96);
+    skeleton->getComponent<Animation>()->addAnimationFrame(65, 113, 81, 97);
+    skeleton->getComponent<Animation>()->addAnimationFrame(66, 114, 82, 98);
+
     skeleton->getComponent<Animation>()->stop();
 
     auto transform = skeleton->getComponent<Transform>();

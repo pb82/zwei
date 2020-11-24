@@ -31,6 +31,14 @@ void Collider::stop(const Collider &c) {
     }
 }
 
+void Collider::stop() {
+    if (this->parent.hasComponent<Acceleration>()) {
+        auto acceleration = this->parent.getComponent<Acceleration>();
+        acceleration->decelerate();
+        acceleration->reset(this->tracked->p);
+    }
+}
+
 // Notify an AI-enabled entity that it collided with something
 void Collider::notify(std::shared_ptr<Collider> other) {
     if (this->parent.hasComponent<Ai>()) {
@@ -42,11 +50,8 @@ void Collider::notify(std::shared_ptr<Collider> other) {
 
 void Collider::collide(std::shared_ptr<Collider> other) {
     // Player / Wall collisions: stop player
-    if (this->tag == CT_PLAYER) {
-        if (other->tag == CT_WALL) {
-            stop(*this);
-        }
-        return;
+    if (this->tag == CT_WALL) {
+        stop(*other);
     }
 
     // Enemy / <any> collisions: inform about the collision with <other>

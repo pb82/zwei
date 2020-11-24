@@ -24,6 +24,8 @@ private:
 
     std::vector<Position> route;
 
+    Position goal;
+
     // You need to get closer than 3 tiles for it to activate
     float activationRange = 10.0f;
 
