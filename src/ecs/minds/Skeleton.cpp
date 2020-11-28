@@ -14,7 +14,7 @@ Skeleton::Skeleton(Entity &parent) : Mind(parent) {}
 Skeleton::~Skeleton() noexcept {}
 
 int Skeleton::delay() {
-    return 100;
+    return 50;
 }
 
 bool Skeleton::activate() {
@@ -77,6 +77,8 @@ void Skeleton::plan(float dt) {
     Position start;
     transform->p.nearestTile(start);
     playerTransform->p.nearestTile(goal);
+
+    goal = RT_Context.getTopology().nearestAccessible(goal);
 
     if (p.calculate(start, goal, route)) {
         if (route.size() < 1) return;

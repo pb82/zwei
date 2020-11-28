@@ -15,6 +15,17 @@ void ColliderGroup::collidesWith(std::shared_ptr<Collider> colliding) {
     involved[colliding->tag].push_back(colliding);
 }
 
+void ColliderGroup::stopInvolved(ColliderTag tag) {
+    if (!has(tag)) return;
+    for (auto &col : this->involved.at(tag)) {
+        col->stop();
+    }
+}
+
+bool ColliderGroup::has(ColliderTag tag) {
+    return this->involved.find(tag) != this->involved.end();
+}
+
 void Col::collide(float dt) {
     std::vector<std::shared_ptr<Collider>> colliders;
     Manager::instance().getColliders(colliders);
@@ -22,6 +33,8 @@ void Col::collide(float dt) {
     std::stack<ColliderGroup> collisions;
 
     for (auto &a : colliders) {
+
+        if (a->tag == CT_WALL) continue;
 
         ColliderGroup group(a);
         collisions.push(group);
@@ -34,7 +47,7 @@ void Col::collide(float dt) {
             b->update(dt);
             if (SDL_HasIntersection(&a->boundingBox, &b->boundingBox)) {
                 collisions.top().collidesWith(b);
-                // b->checked = true;
+                b->checked = true;
             }
         }
 
@@ -47,28 +60,57 @@ void Col::collide(float dt) {
         while (!collisions.empty()) {
             ColliderGroup &group = collisions.top();
 
-            // Whatever collides with a wall gets stopped
-            if (group.subject->tag == CT_WALL) {
-                if (group.involved.find(CT_PLAYER) != group.involved.end()) {
-                    for (auto &involved : group.involved.at(CT_PLAYER)) {
-                        involved->stop();
+            // An enemy collides with something
+            if (group.subject->tag == CT_ENEMY) {
+                // Enemy collides with wall: stop it
+                if (group.has(CT_WALL)) {
+                    group.subject->stop();
+                    group.subject->pause(1000);
+                    if (group.has(CT_ENEMY)) {
+                        for (auto &involved : group.involved.at(CT_ENEMY)) {
+                            involved->stop();
+                            involved->pause(1000);
+                            involved->kick(group.subject);
+                        }
                     }
                 }
-            }
 
-            if (group.subject->tag == CT_ENEMY) {
-                if (group.involved.find(CT_ENEMY) != group.involved.end()) {
-                    // group.subject->stop();
+                // Enemy collides with player: stop it
+                if (group.has(CT_PLAYER)) {
+                    group.subject->stop();
+                    group.subject->pause(100);
+                    if (group.has(CT_ENEMY)) {
+                        for (auto &involved : group.involved.at(CT_ENEMY)) {
+                            involved->stop();
+                            involved->pause(1000);
+                        }
+                    }
+                }
+
+                // Enemy collides with other enemy(ies): conflict resulotion strategy
+                if (group.has(CT_ENEMY)) {
+                    group.subject->stop();
+                    // group.subject->pause(300);
                     for (auto &involved : group.involved.at(CT_ENEMY)) {
                         involved->stop();
+                        involved->pause(300);
+                        // group.subject->kick(involved);
+                        involved->kick(group.subject);
                     }
+
                 }
             }
 
             if (group.subject->tag == CT_PLAYER) {
-                if (group.involved.find(CT_ENEMY) != group.involved.end()) {
+                if (group.has(CT_WALL)) {
+                    group.subject->stop();
+                }
+
+                if (group.has(CT_ENEMY)) {
+                    group.subject->stop();
                     for (auto &involved : group.involved.at(CT_ENEMY)) {
                         involved->stop();
+                        involved->pause(1000);
                     }
                 }
             }
@@ -76,19 +118,4 @@ void Col::collide(float dt) {
             collisions.pop();
         }
     }
-
-    /*
-    for (auto &a : colliders) {
-        if (!RT_Camera.visible(a->boundingBox)) continue;
-        for (auto &b : colliders) {
-            if (a == b) continue;
-            if (!RT_Camera.visible(b->boundingBox)) continue;
-            a->update(dt);
-            b->update(dt);
-            if (SDL_HasIntersection(&a->boundingBox, &b->boundingBox)) {
-                a->collide(b);
-            }
-        }
-    }
-    */
 }

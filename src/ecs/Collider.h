@@ -32,6 +32,12 @@ public:
 
     void stop();
 
+    void turn();
+
+    void pause(float duration);
+
+    void kick(std::shared_ptr<Collider> other);
+
     ColliderTag tag;
 
     std::shared_ptr<Transform> tracked;

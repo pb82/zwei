@@ -12,6 +12,10 @@ public:
 
     void collidesWith(std::shared_ptr<Collider> colliding);
 
+    void stopInvolved(ColliderTag tag);
+
+    bool has(ColliderTag tag);
+
     int size = 0;
 
     std::shared_ptr<Collider> subject;

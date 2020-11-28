@@ -39,6 +39,29 @@ void Collider::stop() {
     }
 }
 
+void Collider::pause(float duration) {
+    if (this->parent.hasComponent<Ai>()) {
+        auto ai = this->parent.getComponent<Ai>();
+        ai->pause(duration);
+    }
+}
+
+void Collider::turn() {
+    if (this->parent.hasComponent<Acceleration>()) {
+        auto acceleration = this->parent.getComponent<Acceleration>();
+        acceleration->turn(acceleration->getAngle() - VM_100_PI);
+    }
+}
+
+void Collider::kick(std::shared_ptr<Collider> other) {
+    auto a1 = this->parent.getComponent<Acceleration>();
+    auto a2 = other->parent.getComponent<Acceleration>();
+
+    float angle = a1->getPosition().angle(a2->getPosition());
+
+    a2->applyForce(angle, 10);
+}
+
 // Notify an AI-enabled entity that it collided with something
 void Collider::notify(std::shared_ptr<Collider> other) {
     if (this->parent.hasComponent<Ai>()) {

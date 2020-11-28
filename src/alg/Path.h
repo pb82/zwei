@@ -21,15 +21,21 @@ public:
 
     bool allAccessible(std::vector<Position> &line);
 
+    Position nearestAccessible(Position &p);
+
     void neighbours(int x, int y, std::vector<Position> &n) const;
 
     int index(int x, int y) const;
 
     int index(const Position &p) const;
 
+    void registerMobile(Position *position);
+
 private:
 
     std::vector<bool> topology;
+
+    std::vector<Position *> mobiles;
 
     int w;
     int h;

@@ -10,6 +10,15 @@ void Ai::update(float dt) {
         return;
     }
 
+    if (_pause > 0) {
+        _pause -= dt;
+        if (_pause < 0) {
+            _pause = 0.0f;
+        } else {
+            return;
+        }
+    }
+
     time += dt;
 
     if (time < mind->delay()) {
@@ -20,6 +29,10 @@ void Ai::update(float dt) {
     if (mind->activate()) {
         mind->plan(dt);
     }
+}
+
+void Ai::pause(float duration) {
+    this->_pause = duration;
 }
 
 void Ai::collide(std::shared_ptr<Collider> other) {

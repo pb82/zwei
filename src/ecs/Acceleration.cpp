@@ -57,6 +57,10 @@ float Acceleration::getAngle() {
     return this->trajectory.angle;
 }
 
+Position &Acceleration::getPosition() {
+    return this->last;
+}
+
 Direction Acceleration::getDirection() {
     return this->trajectory.getDirection();
 }

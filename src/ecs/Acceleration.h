@@ -37,6 +37,8 @@ public:
 
     float getAngle();
 
+    Position& getPosition();
+
     bool sameAngle(float other);
 
     Direction getDirection();

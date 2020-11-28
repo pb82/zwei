@@ -34,22 +34,23 @@
 
 #include "src/ecs/minds/Skeleton.h"
 
-void placeSkeleton(int x, int y) {
+void placeSkeleton(int x, int y, Topology &top) {
     auto skeleton = Manager::instance().addEntity(OBJECTS);
     skeleton->addComponent<Transform>(x, y);
     skeleton->addComponent<Sprite>(SPRITES);
     skeleton->addComponent<Animation>(200, true);
-    skeleton->addComponent<Acceleration>(1.0f, 0);
+    skeleton->addComponent<Acceleration>(2.0f, 0);
     skeleton->addComponent<Ai>();
 
-    skeleton->getComponent<Animation>()->addAnimationFrame(64, 112, 80, 96);
-    skeleton->getComponent<Animation>()->addAnimationFrame(65, 113, 81, 97);
-    skeleton->getComponent<Animation>()->addAnimationFrame(66, 114, 82, 98);
+    skeleton->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
+    skeleton->getComponent<Animation>()->addAnimationFrame(113, 65, 97, 81);
+    skeleton->getComponent<Animation>()->addAnimationFrame(114, 66, 98, 82);
 
     skeleton->getComponent<Animation>()->stop();
 
     auto transform = skeleton->getComponent<Transform>();
     skeleton->addComponent<Collider>(transform, CT_ENEMY, 0.2, 0.4);
+    top.registerMobile(&transform->p);
 
     auto ai = skeleton->getComponent<Ai>();
     ai->brainify<Skeleton>();
@@ -104,10 +105,10 @@ void loop() {
     auto tweakUi = Manager::instance().addEntity(UI);
     tweakUi->addComponent<Tweak>(sprite);
 
-    placeSkeleton(13, 20);
-    placeSkeleton(15, 20);
-    placeSkeleton(13, 22);
-    placeSkeleton(15, 22);
+    placeSkeleton(13, 20, RT_Context.getTopology());
+    placeSkeleton(15, 20, RT_Context.getTopology());
+    placeSkeleton(13, 22, RT_Context.getTopology());
+    placeSkeleton(15, 22, RT_Context.getTopology());
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();

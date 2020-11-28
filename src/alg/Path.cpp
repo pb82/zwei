@@ -19,22 +19,48 @@ int Topology::index(const Position &p) const {
     return index(p.x, p.y);
 }
 
+void Topology::registerMobile(Position *position) {
+    this->mobiles.push_back(position);
+}
+
 bool Topology::accessible(int x, int y) const {
     if (x < 0) return false;
     if (y < 0) return false;
     int i = index(x, y);
     if (i < 0) return false;
     if (i >= topology.size()) return false;
+
+    // Is an enemy or other mobile object at this position?
+    for (auto ptr : this->mobiles) {
+        int _x = std::ceil(ptr->x);
+        int _y = std::ceil(ptr->y);
+        if (_x == x && _y == y) return false;
+    }
     return topology.at(i) == 0;
 }
 
 bool Topology::allAccessible(std::vector<Position> &line) {
-    for (auto& segment : line) {
+    for (auto &segment : line) {
         if (!accessible(segment.x, segment.y)) {
             return false;
         }
     }
     return true;
+}
+
+Position Topology::nearestAccessible(Position &p) {
+    if (accessible(p.x, p.y)) {
+        return p;
+    }
+
+    std::vector<Position> n;
+    neighbours(p.x, p.y, n);
+
+    // Get next accessible neighbour
+    if (!n.empty()) return n.at(0);
+
+    // None accessible
+    return p;
 }
 
 void Topology::neighbours(int x, int y, std::vector<Position> &n) const {

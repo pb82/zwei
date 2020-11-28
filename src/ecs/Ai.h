@@ -19,12 +19,16 @@ public:
 
     void render() override;
 
+    void pause(float duration);
+
     template<typename T>
     void brainify() {
         this->mind = std::make_shared<T>(this->parent);
     }
 
 private:
+
+    float _pause = 0.0f;
 
     float time = 0.0f;
 
