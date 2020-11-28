@@ -27,7 +27,7 @@ add_executable(
         src/ecs/Sprite.cpp src/ecs/Sprite.h src/alg/Vector.h src/alg/Vector.cpp src/alg/Direction.h
         src/alg/Color.h src/alg/Color.cpp src/ecs/Acceleration.h src/ecs/Acceleration.cpp
         src/alg/Force.cpp src/alg/Force.h src/in/Input.cpp src/in/Input.h src/ecs/Controller.cpp
-        src/ecs/Controller.h src/ecs/ui/Tweak.cpp src/ecs/ui/Tweak.h src/ecs/Collider.cpp src/ecs/Collider.h src/Debug.h src/Debug.cpp src/Col.cpp src/Col.h src/alg/Path.cpp src/alg/Path.h src/ecs/Ai.cpp src/ecs/Ai.h src/ecs/minds/Mind.h src/ecs/minds/Skeleton.cpp src/ecs/minds/Skeleton.h src/Ctx.cpp src/Ctx.h src/ecs/arms/Weapon.h src/ecs/Stats.cpp src/ecs/Stats.h src/ecs/Attack.cpp src/ecs/Attack.h src/ecs/NonSprite.cpp src/ecs/NonSprite.h src/ecs/SelfDestruct.cpp src/ecs/SelfDestruct.h src/alg/Rand.h)
+        src/ecs/Controller.h src/ecs/ui/Tweak.cpp src/ecs/ui/Tweak.h src/ecs/Collider.cpp src/ecs/Collider.h src/Debug.h src/Debug.cpp src/Col.cpp src/Col.h src/alg/Path.cpp src/alg/Path.h src/ecs/Ai.cpp src/ecs/Ai.h src/ecs/minds/Mind.h src/ecs/minds/Skeleton.cpp src/ecs/minds/Skeleton.h src/Ctx.cpp src/Ctx.h src/ecs/arms/Weapon.h src/ecs/Stats.cpp src/ecs/Stats.h src/ecs/Attack.cpp src/ecs/Attack.h src/ecs/NonSprite.cpp src/ecs/NonSprite.h src/ecs/SelfDestruct.cpp src/ecs/SelfDestruct.h src/alg/Rand.h src/ecs/filters/Filter.h src/ecs/filters/Halo.cpp src/ecs/filters/Halo.h)
 
 INCLUDE(FindPkgConfig)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${zwei_SOURCE_DIR}/cmake")

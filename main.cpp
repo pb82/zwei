@@ -33,6 +33,7 @@
 #include "src/Col.h"
 
 #include "src/ecs/minds/Skeleton.h"
+#include "src/ecs/filters/Halo.h"
 
 void placeSkeleton(int x, int y, Topology &top) {
     auto skeleton = Manager::instance().addEntity(OBJECTS);

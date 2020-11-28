@@ -7,6 +7,8 @@
 #include "Acceleration.h"
 #include "NonSprite.h"
 #include "SelfDestruct.h"
+#include "Sprite.h"
+#include "filters/Halo.h"
 
 Attack::Attack(Entity &parent) : Component(parent) {}
 
@@ -21,6 +23,8 @@ void Attack::attack() {
     auto position = parent.getComponent<Transform>();
     auto player = parent.getComponent<Acceleration>();
 
+    auto sprite = parent.getComponent<Sprite>();
+    sprite->addFilter(std::make_shared<Halo>(500));
 
     auto p = std::make_shared<Entity>();
     p->addComponent<Transform>(position->p.x, position->p.y);

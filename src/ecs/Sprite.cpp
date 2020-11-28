@@ -39,7 +39,12 @@ void Sprite::render() {
         return;
     }
 
+    if (!filters.empty()) {
+        filters.front()->render(texture->mem);
+    }
+
     Draw::instance().draw(texture->mem, source, target);
+    SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
 
     if (Debug::drawBoundingBoxes) {
         auto tiles = Assets::instance().getTexture(TILES);
@@ -53,4 +58,14 @@ void Sprite::render() {
 }
 
 void Sprite::update(float dt) {
+    if (!filters.empty()) {
+        bool active = filters.front()->upate(dt);
+        if (!active) {
+            filters.pop();
+        }
+    }
+}
+
+void Sprite::addFilter(std::shared_ptr<Filter> f) {
+    filters.push(f);
 }

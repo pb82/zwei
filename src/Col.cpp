@@ -102,6 +102,7 @@ void Col::collide(float dt) {
             }
 
             if (group.subject->tag == CT_PLAYER) {
+
                 if (group.has(CT_WALL)) {
                     group.subject->stop();
                 }

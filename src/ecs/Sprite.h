@@ -3,7 +3,10 @@
 
 #include <ASSETS/Assets.h>
 
+#include <queue>
+
 #include "Component.h"
+#include "filters/Filter.h"
 
 #include "../alg/Vector.h"
 
@@ -15,8 +18,12 @@ public:
 
     void update(float dt) override;
 
+    void addFilter(std::shared_ptr<Filter> f);
+
 private:
     void pick(SDL_Rect &source);
+
+    std::queue<std::shared_ptr<Filter>> filters;
 
     Asset assetId;
 };
