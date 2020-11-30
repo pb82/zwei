@@ -54,10 +54,10 @@ void Collider::turn() {
 }
 
 void Collider::kick(std::shared_ptr<Collider> other) {
-    auto a1 = this->parent.getComponent<Acceleration>();
+    auto a1 = this->parent.getComponent<Transform>();
     auto a2 = other->parent.getComponent<Acceleration>();
 
-    float angle = a1->getPosition().angle(a2->getPosition());
+    float angle = a1->p.angle(a2->getPosition());
 
     a2->applyForce(angle, 10);
 }

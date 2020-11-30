@@ -65,11 +65,14 @@ void Col::collide(float dt) {
                 // Enemy collides with wall: stop it
                 if (group.has(CT_WALL)) {
                     group.subject->stop();
-                    group.subject->pause(1000);
+                    group.subject->pause(300);
+                    for (auto &involved : group.involved.at(CT_WALL)) {
+                        involved->kick(group.subject);
+                    }
                     if (group.has(CT_ENEMY)) {
                         for (auto &involved : group.involved.at(CT_ENEMY)) {
                             involved->stop();
-                            involved->pause(1000);
+                            involved->pause(300);
                             involved->kick(group.subject);
                         }
                     }

@@ -63,7 +63,7 @@ void loop() {
     GameKeyEvent controllerEvent;
     bool controllerFound = in.scan();
     if (!controllerFound) {
-        return;
+        // return;
     }
 
     auto targetMillis = (1 / configTargetFramerate) * 1000;
@@ -215,7 +215,7 @@ void initSdl() {
             SDL_WINDOWPOS_CENTERED,
             configWindowWidth,
             configWindowHeight,
-            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI
+            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_INIT_GAMECONTROLLER
     );
 
     Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);

@@ -49,8 +49,20 @@ public:
     }
 
     void nearestTile(Position &other) {
-        other.x = std::ceil(x);
-        other.y = std::ceil(y);
+        float cx = std::ceil(x);
+        float cy = std::ceil(y);
+
+        if ((cx - x) <= 0.5f) {
+            other.x = cx;
+        } else {
+            other.x = std::floor(x);
+        }
+
+        if ((cy - y) <= 0.5f) {
+            other.y = cy;
+        } else {
+            other.y = std::floor(y);
+        }
     }
 
     float angle(const Position &other) {

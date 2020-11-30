@@ -103,7 +103,6 @@ void Skeleton::plan(float dt) {
 void Skeleton::render() {
     if (!Debug::drawBoundingBoxes) return;
 
-    /*
     auto texture = Assets::instance().getTexture(TILES);
 
     SDL_Rect box;
@@ -120,5 +119,4 @@ void Skeleton::render() {
         Gfx::pick(source, 53, texture->w);
         Draw::instance().draw(texture->mem, source, box);
     }
-    */
 }
