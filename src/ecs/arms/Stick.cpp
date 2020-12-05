@@ -17,3 +17,5 @@ int Stick::recharge() {
 float Stick::power() {
     return 50;
 }
+
+Stick weapon_Stick = Stick();

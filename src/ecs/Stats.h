@@ -10,9 +10,11 @@ class Stats : public Component {
 public:
     Stats(Entity &parent);
 
+    void equipWeapon(const Weapon* w);
+
 private:
 
-
+    const Weapon* weapon;
 
 };
 
