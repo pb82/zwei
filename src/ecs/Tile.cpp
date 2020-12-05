@@ -46,7 +46,7 @@ void Tile::render() {
         if (parent.hasComponent<Collider>()) {
             auto collider = parent.getComponent<Collider>();
             SDL_Rect source;
-            Gfx::pick(source, 53, texture->w);
+            Gfx::pick(source, 7, texture->w);
             Draw::instance().draw(texture->mem, source, collider->boundingBox);
         }
     }

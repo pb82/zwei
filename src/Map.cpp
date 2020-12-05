@@ -5,6 +5,7 @@
 #include "ecs/Transform.h"
 #include "ecs/Animation.h"
 #include "ecs/Collider.h"
+#include "ecs/filters/Twilight.h"
 
 void Tileset::load(const char *file) {
     using namespace JSON;
@@ -105,6 +106,7 @@ void Layer::load(JSON::Value &layer) {
     }
 
     auto data = layer["data"].as<JSON::Array>();
+
     for (int i = 0; i < data.size(); ++i) {
         int x, y;
         toPos(w, i, &x, &y);

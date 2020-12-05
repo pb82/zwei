@@ -10,8 +10,6 @@ public:
 
     virtual ~Mind() {}
 
-    virtual void collide(std::shared_ptr<Collider> other) {}
-
     virtual void plan(float dt) {}
 
     virtual int delay() { return 1000; }

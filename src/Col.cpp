@@ -93,11 +93,9 @@ void Col::collide(float dt) {
                 // Enemy collides with other enemy(ies): conflict resulotion strategy
                 if (group.has(CT_ENEMY)) {
                     group.subject->stop();
-                    // group.subject->pause(300);
                     for (auto &involved : group.involved.at(CT_ENEMY)) {
                         involved->stop();
                         involved->pause(300);
-                        // group.subject->kick(involved);
                         involved->kick(group.subject);
                     }
 

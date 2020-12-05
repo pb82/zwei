@@ -14,11 +14,32 @@ Attack::Attack(Entity &parent) : Component(parent) {}
 
 void Attack::attack() {
     auto animation = parent.getComponent<Animation>();
-    animation->addMixinFrame(37);
-    animation->addMixinFrame(36);
-    animation->addMixinFrame(35);
-    animation->addMixinFrame(36);
+    auto acc = parent.getComponent<Acceleration>();
 
+    auto direction = acc->getDirection();
+
+    switch (direction) {
+        case N:
+            animation->addMixinFrame(51);
+            animation->addMixinFrame(52);
+            animation->addMixinFrame(53);
+            break;
+        case W:
+            animation->addMixinFrame(19);
+            animation->addMixinFrame(20);
+            animation->addMixinFrame(21);
+            break;
+        case E:
+            animation->addMixinFrame(35);
+            animation->addMixinFrame(36);
+            animation->addMixinFrame(37);
+            break;
+        case S:
+            animation->addMixinFrame(3);
+            animation->addMixinFrame(4);
+            animation->addMixinFrame(5);
+            break;
+    }
 
     auto position = parent.getComponent<Transform>();
     auto player = parent.getComponent<Acceleration>();

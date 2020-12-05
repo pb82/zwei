@@ -15,8 +15,6 @@ public:
 
     void update(float dt) override;
 
-    void collide(std::shared_ptr<Collider> other);
-
     void render() override;
 
     void pause(float duration);

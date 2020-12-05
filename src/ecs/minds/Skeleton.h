@@ -14,8 +14,6 @@ public:
 
     void plan(float dt) override;
 
-    void collide(std::shared_ptr<Collider> other) override;
-
     bool activate() override;
 
     void render() override;

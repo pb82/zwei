@@ -35,12 +35,6 @@ void Ai::pause(float duration) {
     this->_pause = duration;
 }
 
-void Ai::collide(std::shared_ptr<Collider> other) {
-    if (mind) {
-        mind->collide(other);
-    }
-}
-
 void Ai::render() {
     if (mind) {
         mind->render();

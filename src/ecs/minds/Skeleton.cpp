@@ -35,22 +35,6 @@ bool Skeleton::activate() {
     return false;
 }
 
-void Skeleton::collide(std::shared_ptr<Collider> other) {
-    if (other->tag == CT_ENEMY) {
-        auto acceleration = parent.getComponent<Acceleration>();
-        float currentAngle = acceleration->getAngle();
-
-        // Random direction
-        acceleration->turn(currentAngle + getRandomFloat(VM_100_PI));
-        return;
-    }
-
-    if (other->tag == CT_PLAYER) {
-        auto acceleration = parent.getComponent<Acceleration>();
-        acceleration->decelerate();
-    }
-}
-
 void Skeleton::plan(float dt) {
     auto player = RT_Context.getPlayer();
 

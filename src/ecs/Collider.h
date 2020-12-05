@@ -28,8 +28,6 @@ public:
 
     void update(float dt) override;
 
-    void collide(std::shared_ptr<Collider> other);
-
     void stop();
 
     void turn();
@@ -48,8 +46,6 @@ private:
 
     // Stop the motion of the parent of the given collider
     static void stop(const Collider &c);
-
-    void notify(std::shared_ptr<Collider> other);
 
     void updateBoundingBox();
 

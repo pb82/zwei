@@ -61,25 +61,3 @@ void Collider::kick(std::shared_ptr<Collider> other) {
 
     a2->applyForce(angle, 10);
 }
-
-// Notify an AI-enabled entity that it collided with something
-void Collider::notify(std::shared_ptr<Collider> other) {
-    if (this->parent.hasComponent<Ai>()) {
-        auto ai = this->parent.getComponent<Ai>();
-        ai->collide(other);
-    }
-}
-
-
-void Collider::collide(std::shared_ptr<Collider> other) {
-    // Player / Wall collisions: stop player
-    if (this->tag == CT_WALL) {
-        stop(*other);
-    }
-
-    // Enemy / <any> collisions: inform about the collision with <other>
-    if (this->tag == CT_ENEMY) {
-        notify(other);
-    }
-}
-

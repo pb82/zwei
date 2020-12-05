@@ -3,7 +3,6 @@
 #include "Transform.h"
 #include "Animation.h"
 #include "Acceleration.h"
-#include "Collider.h"
 
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
@@ -34,35 +33,23 @@ void Sprite::render() {
     auto transform = parent.getComponent<Transform>();
     auto texture = Assets::instance().getTexture(assetId);
 
+    // On screen?
     RT_Camera.project(target, transform->p.x, transform->p.y);
     if (!RT_Camera.visible(target)) {
         return;
     }
 
-    if (!filters.empty()) {
-        filters.front()->render(texture->mem);
-    }
+    // Render filter?
+    if (!filters.empty()) filters.front()->render(texture->mem, &transform->p);
 
+    // Draw
     Draw::instance().draw(texture->mem, source, target);
     SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
-
-    if (Debug::drawBoundingBoxes) {
-        auto tiles = Assets::instance().getTexture(TILES);
-        if (parent.hasComponent<Collider>()) {
-            auto collider = parent.getComponent<Collider>();
-            SDL_Rect source;
-            Gfx::pick(source, 53, tiles->w);
-            Draw::instance().draw(tiles->mem, source, collider->boundingBox);
-        }
-    }
 }
 
 void Sprite::update(float dt) {
-    if (!filters.empty()) {
-        bool active = filters.front()->upate(dt);
-        if (!active) {
-            filters.pop();
-        }
+    if (!filters.empty() && !filters.front()->upate(dt)) {
+        filters.pop();
     }
 }
 

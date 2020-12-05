@@ -3,11 +3,11 @@
 
 #include "Filter.h"
 
-class Halo : public Filter{
+class Halo : public Filter {
 public :
     Halo(float duration);
 
-    void render(SDL_Texture *t) override;
+    void render(SDL_Texture *t, const Position *) override;
 };
 
 

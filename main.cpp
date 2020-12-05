@@ -34,6 +34,7 @@
 
 #include "src/ecs/minds/Skeleton.h"
 #include "src/ecs/filters/Halo.h"
+#include "src/ecs/filters/Twilight.h"
 
 void placeSkeleton(int x, int y, Topology &top) {
     auto skeleton = Manager::instance().addEntity(OBJECTS);
@@ -70,7 +71,7 @@ void loop() {
     float millis = 0.0f;
 
     Map m("./assets/RAW");
-    m.load("map.json");
+    m.load("dungeon.json");
 
     // Set map boundaries for the camera
     int mapSizeX, mapSizeY;
@@ -85,7 +86,7 @@ void loop() {
     auto sprite = Manager::instance().addEntity(OBJECTS);
     RT_Context.setPlayer(sprite);
 
-    sprite->addComponent<Transform>(2, 12);
+    sprite->addComponent<Transform>(7, 14);
     sprite->addComponent<Sprite>(SPRITES);
     sprite->addComponent<Animation>(200, true);
     sprite->addComponent<Acceleration>(3.0f, VM_25_PI);
@@ -105,11 +106,6 @@ void loop() {
 
     auto tweakUi = Manager::instance().addEntity(UI);
     tweakUi->addComponent<Tweak>(sprite);
-
-    placeSkeleton(13, 20, RT_Context.getTopology());
-    placeSkeleton(15, 20, RT_Context.getTopology());
-    placeSkeleton(13, 22, RT_Context.getTopology());
-    placeSkeleton(15, 22, RT_Context.getTopology());
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();
@@ -186,7 +182,7 @@ void initAssets() {
 
     Assets::instance().addFont(FONT, assets_Font);
     // Assets::instance().addTexture(TILES, assets_Tiles);
-    Assets::instance().addTexture(TILES, "assets/RAW/tiles.png");
+    Assets::instance().addTexture(TILES, "assets/RAW/dungeon.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
 }
 
