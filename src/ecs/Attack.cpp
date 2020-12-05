@@ -5,10 +5,10 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "Acceleration.h"
-#include "NonSprite.h"
 #include "SelfDestruct.h"
 #include "Sprite.h"
 #include "filters/Halo.h"
+#include "Analytics.h"
 
 Attack::Attack(Entity &parent) : Component(parent) {}
 
@@ -49,7 +49,7 @@ void Attack::attack() {
 
     auto p = std::make_shared<Entity>();
     p->addComponent<Transform>(position->p.x, position->p.y);
-    p->addComponent<NonSprite>();
+    p->addComponent<Analytics>();
 
     auto t = p->getComponent<Transform>();
     p->addComponent<Collider>(t, CT_PROJECTILE, 0.4, 0.4);

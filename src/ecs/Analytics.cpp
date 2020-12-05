@@ -1,0 +1,26 @@
+#include <ASSETS/Assets.h>
+#include "Analytics.h"
+#include "../Debug.h"
+#include "../Gfx.h"
+#include "../Draw.h"
+#include "Entity.h"
+#include "Collider.h"
+
+Analytics::Analytics(Entity &parent) : Component(parent) {}
+
+void Analytics::update(float dt) {}
+
+void Analytics::render() {
+    if (Debug::drawBoundingBoxes) {
+        if (parent.hasComponent<Collider>()) {
+            auto collider = parent.getComponent<Collider>();
+            SDL_Rect source;
+
+            auto texture = Assets::instance().getTexture(TILES);
+
+            Gfx::pick(source, 7, texture->w);
+            Draw::instance().draw(texture->mem, source, collider->boundingBox);
+        }
+    }
+
+}

@@ -1,15 +1,10 @@
-#include <cassert>
-#include <algorithm>
-
 #include "Tile.h"
 #include "Entity.h"
 #include "Transform.h"
 #include "Animation.h"
-#include "Collider.h"
 
 #include "../Gfx.h"
 #include "../Draw.h"
-#include "../Debug.h"
 
 Tile::Tile(Entity &parent, Asset id)
         : Component(parent),
@@ -33,21 +28,12 @@ void Tile::render() {
     // Screen rect
     SDL_Rect target;
     auto transform = parent.getComponent<Transform>();
-    auto texture = Assets::instance().getTexture(id);
 
     RT_Camera.project(target, transform->p.x, transform->p.y);
     if (!RT_Camera.visible(target)) {
         return;
     }
 
+    auto texture = Assets::instance().getTexture(id);
     Draw::instance().draw(texture->mem, source, target);
-
-    if (Debug::drawBoundingBoxes) {
-        if (parent.hasComponent<Collider>()) {
-            auto collider = parent.getComponent<Collider>();
-            SDL_Rect source;
-            Gfx::pick(source, 7, texture->w);
-            Draw::instance().draw(texture->mem, source, collider->boundingBox);
-        }
-    }
 }
