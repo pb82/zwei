@@ -48,7 +48,7 @@ public:
             return;
         }
 
-        // Adjust tile size to ziim factor
+        // Adjust tile size to zoom factor
         float f = configTileSize * z;
 
         // Offsets: the pixels to move in each direction to center in on

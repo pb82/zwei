@@ -17,47 +17,50 @@ void Attack::attack() {
     auto acc = parent.getComponent<Acceleration>();
 
     auto direction = acc->getDirection();
+    float projectileOffsetX, projectileOffsetY;
 
     switch (direction) {
         case N:
             animation->addMixinFrame(51);
             animation->addMixinFrame(52);
             animation->addMixinFrame(53);
+            projectileOffsetY = -1;
             break;
         case W:
             animation->addMixinFrame(19);
             animation->addMixinFrame(20);
             animation->addMixinFrame(21);
+            projectileOffsetX = -1;
             break;
         case E:
             animation->addMixinFrame(35);
             animation->addMixinFrame(36);
             animation->addMixinFrame(37);
+            projectileOffsetX = 1;
             break;
         case S:
             animation->addMixinFrame(3);
             animation->addMixinFrame(4);
             animation->addMixinFrame(5);
+            projectileOffsetY = 1;
             break;
     }
 
     auto position = parent.getComponent<Transform>();
-    auto player = parent.getComponent<Acceleration>();
     auto sprite = parent.getComponent<Sprite>();
 
     auto p = std::make_shared<Entity>();
-    p->addComponent<Transform>(position->p.x, position->p.y);
+    p->addComponent<Transform>(
+            position->p.x + projectileOffsetX,
+            position->p.y + projectileOffsetY);
+
     p->addComponent<Analytics>();
 
     auto t = p->getComponent<Transform>();
-    p->addComponent<Collider>(t, CT_PROJECTILE, 0.4, 0.4);
-    p->addComponent<Acceleration>(5.0f, player->getAngle());
+    p->addComponent<Collider>(t, CT_PROJECTILE);
 
     // Self destruct after 5 tiles traveled
-    p->addComponent<SelfDestruct>(DISTANCE, 5);
-
-    auto a = p->getComponent<Acceleration>();
-    a->accelerate();
+    p->addComponent<SelfDestruct>(TIMER, 500);
 
     Manager::instance().enqueue(p, OBJECTS);
 }
