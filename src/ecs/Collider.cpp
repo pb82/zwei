@@ -5,17 +5,16 @@
 #include "Ai.h"
 
 Collider::Collider(Entity &parent, std::shared_ptr<Transform> tracked, ColliderTag tag,
-                   float dx, float dy) :
+                   Padding p) :
         Component(parent),
         tracked(tracked),
         tag(tag),
-        dx(dx),
-        dy(dy) {
+        padding(p) {
     updateBoundingBox();
 }
 
 void Collider::updateBoundingBox() {
-    RT_Camera.project(boundingBox, tracked->p.x, tracked->p.y, dx, dy);
+    RT_Camera.project(boundingBox, tracked->p.x, tracked->p.y, padding);
 }
 
 void Collider::update(float dt) {

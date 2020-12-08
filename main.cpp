@@ -35,6 +35,7 @@
 #include "src/ecs/minds/Skeleton.h"
 #include "src/ecs/filters/Halo.h"
 #include "src/ecs/filters/Twilight.h"
+#include "src/ecs/Analytics.h"
 
 void placeSkeleton(int x, int y, Topology &top) {
     auto skeleton = Manager::instance().addEntity(OBJECTS);
@@ -51,7 +52,7 @@ void placeSkeleton(int x, int y, Topology &top) {
     skeleton->getComponent<Animation>()->stop();
 
     auto transform = skeleton->getComponent<Transform>();
-    skeleton->addComponent<Collider>(transform, CT_ENEMY, 0.2, 0.4);
+    skeleton->addComponent<Collider>(transform, CT_ENEMY);
     top.registerMobile(&transform->p);
 
     auto ai = skeleton->getComponent<Ai>();
@@ -92,6 +93,7 @@ void loop() {
     sprite->addComponent<Acceleration>(3.0f, VM_25_PI);
     sprite->addComponent<Controller>();
     sprite->addComponent<Attack>();
+    sprite->addComponent<Analytics>();
 
     sprite->getComponent<Animation>()->addAnimationFrame(48, 0, 32, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(49, 1, 33, 17);
@@ -102,7 +104,8 @@ void loop() {
     RT_Camera.track(&transform->p);
 
     // Make the sprite collision aware
-    sprite->addComponent<Collider>(transform, CT_PLAYER, 0.2, 0.4);
+    sprite->addComponent<Collider>(transform, CT_PLAYER,
+                                   Padding{.5, .5, 1, 0});
 
     auto tweakUi = Manager::instance().addEntity(UI);
     tweakUi->addComponent<Tweak>(sprite);

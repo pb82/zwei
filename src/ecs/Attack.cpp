@@ -57,7 +57,7 @@ void Attack::attack() {
     p->addComponent<Analytics>();
 
     auto t = p->getComponent<Transform>();
-    p->addComponent<Collider>(t, CT_PROJECTILE);
+    p->addComponent<Collider>(t, CT_PROJECTILE, Padding{0, 0, 0, 0});
 
     // Self destruct after 5 tiles traveled
     p->addComponent<SelfDestruct>(TIMER, 500);

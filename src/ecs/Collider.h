@@ -22,7 +22,7 @@ enum ColliderTag {
 class Collider : public Component {
 public:
     Collider(Entity &parent, std::shared_ptr<Transform> tracked, ColliderTag tag,
-             float dx = 0.0f, float dy = 0.0f);
+             Padding p = {0, 0, 0, 0});
 
     SDL_Rect boundingBox;
 
@@ -49,8 +49,7 @@ private:
 
     void updateBoundingBox();
 
-    float dx;
-    float dy;
+    Padding padding;
 };
 
 #endif
