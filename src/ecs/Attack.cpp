@@ -17,7 +17,7 @@ void Attack::attack() {
     auto acc = parent.getComponent<Acceleration>();
 
     auto direction = acc->getDirection();
-    float projectileOffsetX, projectileOffsetY;
+    float projectileOffsetX = 0, projectileOffsetY = 0;
 
     switch (direction) {
         case N:
