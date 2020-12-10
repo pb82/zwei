@@ -10,11 +10,13 @@ class Stats : public Component {
 public:
     Stats(Entity &parent);
 
-    void equipWeapon(const Weapon* w);
+    void equipWeapon(std::shared_ptr<Weapon> weapon);
 
-private:
+    void dropWeapon();
 
-    const Weapon* weapon;
+    bool hasWeapon();
+
+    std::shared_ptr<Weapon> weapon;
 
 };
 

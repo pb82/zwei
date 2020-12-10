@@ -5,4 +5,4 @@ const int configWindowWidth = 1024;
 const int configWindowHeight = 768;
 const unsigned int configTileSize = 16;
 const float configTargetFramerate = 60.0f;
-const float configZoomFactor = 3.0f;
+const float configZoomFactor = 6.0f;

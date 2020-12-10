@@ -12,6 +12,10 @@ public:
     int recharge() override;
 
     float power() override;
+
+    float speed() override;
+
+    bool isProjectile() override;
 };
 
 extern Stick weapon_Stick;

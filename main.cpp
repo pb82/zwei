@@ -26,6 +26,7 @@
 #include "src/ecs/Collider.h"
 #include "src/ecs/Ai.h"
 #include "src/ecs/Attack.h"
+#include "src/ecs/Stats.h"
 
 #include "src/ecs/ui/Tweak.h"
 #include "src/Map.h"
@@ -33,9 +34,8 @@
 #include "src/Col.h"
 
 #include "src/ecs/minds/Skeleton.h"
-#include "src/ecs/filters/Halo.h"
-#include "src/ecs/filters/Twilight.h"
 #include "src/ecs/Analytics.h"
+#include "src/ecs/arms/Stick.h"
 
 void placeSkeleton(int x, int y, Topology &top) {
     auto skeleton = Manager::instance().addEntity(OBJECTS);
@@ -94,6 +94,7 @@ void loop() {
     sprite->addComponent<Controller>();
     sprite->addComponent<Attack>();
     sprite->addComponent<Analytics>();
+    sprite->addComponent<Stats>();
 
     sprite->getComponent<Animation>()->addAnimationFrame(48, 0, 32, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(49, 1, 33, 17);
@@ -109,6 +110,9 @@ void loop() {
 
     auto tweakUi = Manager::instance().addEntity(UI);
     tweakUi->addComponent<Tweak>(sprite);
+
+    auto stats = sprite->getComponent<Stats>();
+    stats->equipWeapon(std::make_shared<Stick>());
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();

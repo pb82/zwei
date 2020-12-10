@@ -6,7 +6,9 @@ public:
 
     virtual float range() { return 0.0f; }
 
-    virtual int recharge() { return 100; }
+    virtual float speed() { return 1.0f; }
+
+    virtual int recharge() { return 500; }
 
     virtual float power() { return 0.0f; }
 
