@@ -8,10 +8,11 @@
 
 class Transform : public Component {
 public:
-    Transform(Entity &parent, float x, float y)
-            : Component(parent), p(x, y) {}
+    Transform(Entity &parent, float x, float y, Padding padding = {0, 0, 0, 0})
+            : Component(parent), p(x, y), padding(padding) {}
 
     Position p;
+    Padding padding;
 };
 
 #endif

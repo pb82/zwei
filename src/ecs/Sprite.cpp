@@ -34,7 +34,7 @@ void Sprite::render() {
     auto texture = Assets::instance().getTexture(assetId);
 
     // On screen?
-    RT_Camera.project(target, transform->p.x, transform->p.y);
+    RT_Camera.project(target, transform->p.x, transform->p.y, transform->padding);
     if (!RT_Camera.visible(target)) {
         return;
     }
