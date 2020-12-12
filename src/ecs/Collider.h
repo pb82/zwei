@@ -30,9 +30,9 @@ public:
 
     void stop();
 
-    void turn();
-
     void pause(float duration);
+
+    void disable();
 
     void kick(std::shared_ptr<Collider> other);
 

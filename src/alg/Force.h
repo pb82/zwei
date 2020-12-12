@@ -9,6 +9,8 @@ public:
 
     void update(float weight, float dt);
 
+    void set(float angle, float power);
+
 private:
 
     float angle;

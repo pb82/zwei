@@ -1,7 +1,3 @@
-//
-// Created by peter on 28.11.20.
-//
-
 #include "Stick.h"
 
 Stick::Stick() {}
@@ -11,7 +7,7 @@ float Stick::range() {
 }
 
 int Stick::recharge() {
-    return 1000;
+    return 500;
 }
 
 float Stick::power() {
@@ -24,6 +20,10 @@ float Stick::speed() {
 
 bool Stick::isProjectile() {
     return false;
+}
+
+float Stick::throwback() {
+    return 5.0f;
 }
 
 Stick weapon_Stick = Stick();

@@ -117,6 +117,16 @@ void Col::collide(float dt) {
                 }
             }
 
+            if (group.subject->tag == CT_PROJECTILE) {
+                if (group.has(CT_ENEMY)) {
+                    group.subject->disable();
+                    for (auto &involved : group.involved.at(CT_ENEMY)) {
+
+                    }
+
+                }
+            }
+
             collisions.pop();
         }
     }

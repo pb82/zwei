@@ -15,6 +15,8 @@ public:
 
     float speed() override;
 
+    float throwback() override;
+
     bool isProjectile() override;
 };
 

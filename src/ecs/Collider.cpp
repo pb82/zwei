@@ -45,13 +45,6 @@ void Collider::pause(float duration) {
     }
 }
 
-void Collider::turn() {
-    if (this->parent.hasComponent<Acceleration>()) {
-        auto acceleration = this->parent.getComponent<Acceleration>();
-        acceleration->turn(acceleration->getAngle() - VM_100_PI);
-    }
-}
-
 void Collider::kick(std::shared_ptr<Collider> other) {
     auto a1 = this->parent.getComponent<Transform>();
     auto a2 = other->parent.getComponent<Acceleration>();
@@ -59,4 +52,8 @@ void Collider::kick(std::shared_ptr<Collider> other) {
     float angle = a1->p.angle(a2->getPosition());
 
     a2->applyForce(angle, 10);
+}
+
+void Collider::disable() {
+    this->parent.disable();
 }

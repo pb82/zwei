@@ -12,6 +12,8 @@ public:
 
     virtual float power() { return 0.0f; }
 
+    virtual float throwback() { return 0.0f; }
+
     virtual bool isProjectile() { return false; }
 
 private:

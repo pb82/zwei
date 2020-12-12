@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "filters/Halo.h"
 #include "Analytics.h"
+#include "Projectile.h"
 
 Attack::Attack(Entity &parent) : Component(parent) {}
 
@@ -106,6 +107,11 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
     auto t = p->getComponent<Transform>();
     p->addComponent<Collider>(t, CT_PROJECTILE, padding);
     p->addComponent<Acceleration>(stats->weapon->speed(), angle);
+    p->addComponent<Projectile>();
+
+    auto projectile = p->getComponent<Projectile>();
+    projectile->power = stats->weapon->power();
+    projectile->force.set(acc->getAngle(), stats->weapon->throwback());
 
     // Self destruct weapon projectile
     p->addComponent<SelfDestruct>(DISTANCE, 0.75);

@@ -13,3 +13,8 @@ bool Force::apply(float weight, float *x, float *y) {
 void Force::update(float weight, float dt) {
     power -= ((dt * weight) / 1000);
 }
+
+void Force::set(float angle, float power) {
+    this->angle = angle;
+    this->power = power;
+}
