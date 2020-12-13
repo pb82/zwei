@@ -15,10 +15,15 @@ Sprite::Sprite(Entity &parent, Asset id)
 void Sprite::pick(SDL_Rect &source) {
     auto texture = Assets::instance().getTexture(assetId);
     auto animation = parent.getComponent<Animation>();
-    auto acceleration = parent.getComponent<Acceleration>();
 
     // Tile position in the tilemap
-    Direction d = acceleration->getDirection();
+    Direction d = N;
+
+    if (parent.hasComponent<Acceleration>()) {
+        auto acceleration = parent.getComponent<Acceleration>();
+        d = acceleration->getDirection();
+    }
+
     int scalar = animation->getCurrentFrame(d);
     Gfx::pick(source, scalar, texture->w);
 }
@@ -54,5 +59,5 @@ void Sprite::update(float dt) {
 }
 
 void Sprite::addFilter(std::shared_ptr<Filter> f) {
-    filters.push(f);
+    if (filters.empty()) filters.push(f);
 }

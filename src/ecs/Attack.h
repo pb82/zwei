@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "Stats.h"
+#include "Projectile.h"
 
 class Attack : public Component {
 public:
@@ -11,6 +12,8 @@ public:
     void update(float dt) override;
 
     void attack();
+
+    void defend(std::shared_ptr<Projectile> projectile);
 
 private:
 

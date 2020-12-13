@@ -1,3 +1,3 @@
 #include "Debug.h"
 
-bool Debug::drawBoundingBoxes = true;
+bool Debug::drawBoundingBoxes = false;

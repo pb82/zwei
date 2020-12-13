@@ -100,10 +100,17 @@ void Col::collide(float dt) {
                     }
 
                 }
+
+                // Enemy projectile (weapon) collision
+                if (group.has(CT_PROJECTILE)) {
+                    for (auto &projectile : group.involved.at(CT_PROJECTILE)) {
+                        projectile->disable();
+                        group.subject->defend(projectile);
+                    }
+                }
             }
 
             if (group.subject->tag == CT_PLAYER) {
-
                 if (group.has(CT_WALL)) {
                     group.subject->stop();
                 }
@@ -123,7 +130,6 @@ void Col::collide(float dt) {
                     for (auto &involved : group.involved.at(CT_ENEMY)) {
 
                     }
-
                 }
             }
 

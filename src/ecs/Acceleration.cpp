@@ -32,17 +32,22 @@ void Acceleration::update(float dt) {
 
 }
 
+void Acceleration::applyForce(const Force &force) {
+    if (forces.size() >= 5) return;
+    forces.push_back(force);
+}
+
+void Acceleration::applyForce(float angle, float power) {
+    if (forces.size() >= 5) return;
+    forces.push_back(Force(angle, power));
+}
+
 void Acceleration::accelerate() {
     speed = maxSpeed;
 }
 
 void Acceleration::decelerate() {
     speed = 0;
-}
-
-void Acceleration::applyForce(float angle, float power) {
-    if (forces.size() >= 5) return;
-    forces.push_back(Force(angle, power));
 }
 
 void Acceleration::turn(float angle) {

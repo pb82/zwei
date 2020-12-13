@@ -44,20 +44,55 @@ void placeSkeleton(int x, int y, Topology &top) {
     skeleton->addComponent<Animation>(200, true);
     skeleton->addComponent<Acceleration>(2.0f, 0);
     skeleton->addComponent<Ai>();
+    skeleton->addComponent<Attack>();
 
     skeleton->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
     skeleton->getComponent<Animation>()->addAnimationFrame(113, 65, 97, 81);
     skeleton->getComponent<Animation>()->addAnimationFrame(114, 66, 98, 82);
-
     skeleton->getComponent<Animation>()->stop();
+    skeleton->addComponent<Analytics>();
+
+    skeleton->addComponent<Stats>();
+    auto stats = skeleton->getComponent<Stats>();
+    stats->maxLife = 50;
+    stats->life = 50;
 
     auto transform = skeleton->getComponent<Transform>();
-    skeleton->addComponent<Collider>(transform, CT_ENEMY);
+    skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 1, 0});
     top.registerMobile(&transform->p);
 
     auto ai = skeleton->getComponent<Ai>();
     ai->brainify<Skeleton>();
 }
+
+void placeSpider(int x, int y, Topology &top) {
+    auto skeleton = Manager::instance().addEntity(OBJECTS);
+    skeleton->addComponent<Transform>(x, y);
+    skeleton->addComponent<Sprite>(SPRITES);
+    skeleton->addComponent<Animation>(200, true);
+    skeleton->addComponent<Acceleration>(2.0f, 0);
+    skeleton->addComponent<Ai>();
+    skeleton->addComponent<Attack>();
+
+    skeleton->getComponent<Animation>()->addAnimationFrame(144);
+    skeleton->getComponent<Animation>()->addAnimationFrame(145);
+    skeleton->getComponent<Animation>()->addAnimationFrame(146);
+    skeleton->getComponent<Animation>()->stop();
+    skeleton->addComponent<Analytics>();
+
+    skeleton->addComponent<Stats>();
+    auto stats = skeleton->getComponent<Stats>();
+    stats->maxLife = 50;
+    stats->life = 50;
+
+    auto transform = skeleton->getComponent<Transform>();
+    skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 1, 0});
+    top.registerMobile(&transform->p);
+
+    auto ai = skeleton->getComponent<Ai>();
+    ai->brainify<Skeleton>();
+}
+
 
 void loop() {
     Input in;
@@ -87,6 +122,7 @@ void loop() {
     auto sprite = Manager::instance().addEntity(OBJECTS);
     RT_Context.setPlayer(sprite);
 
+
     sprite->addComponent<Transform>(7, 14);
     sprite->addComponent<Sprite>(SPRITES);
     sprite->addComponent<Animation>(200, true);
@@ -109,10 +145,15 @@ void loop() {
                                    Padding{.5, .5, 1, 0});
 
     auto tweakUi = Manager::instance().addEntity(UI);
-    tweakUi->addComponent<Tweak>(sprite);
+    // tweakUi->addComponent<Tweak>(sprite);
 
     auto stats = sprite->getComponent<Stats>();
     stats->equipWeapon(std::make_shared<Stick>());
+    stats->life = 100;
+    stats->maxLife = 100;
+
+    // placeSkeleton(10, 10, RT_Context.getTopology());
+    placeSpider(10, 10, RT_Context.getTopology());
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();

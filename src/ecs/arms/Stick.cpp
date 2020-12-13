@@ -3,7 +3,7 @@
 Stick::Stick() {}
 
 float Stick::range() {
-    return 0.5;
+    return 0.2;
 }
 
 int Stick::recharge() {
@@ -11,11 +11,11 @@ int Stick::recharge() {
 }
 
 float Stick::power() {
-    return 50;
+    return 20;
 }
 
 float Stick::speed() {
-    return 2;
+    return 5;
 }
 
 bool Stick::isProjectile() {
@@ -23,7 +23,7 @@ bool Stick::isProjectile() {
 }
 
 float Stick::throwback() {
-    return 5.0f;
+    return 15.0f;
 }
 
 Stick weapon_Stick = Stick();

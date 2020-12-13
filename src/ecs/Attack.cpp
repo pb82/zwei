@@ -20,6 +20,20 @@ void Attack::update(float dt) {
     if (wait < 0) wait = 0;
 }
 
+// You are being attacked
+void Attack::defend(std::shared_ptr<Projectile> projectile) {
+    auto acc = this->parent.getComponent<Acceleration>();
+    acc->applyForce(projectile->force);
+
+    auto sprite = this->parent.getComponent<Sprite>();
+    sprite->addFilter(std::make_shared<Halo>(500));
+
+    if (this->parent.hasComponent<Stats>()) {
+        auto stats = this->parent.getComponent<Stats>();
+        stats->life -= projectile->power;
+    }
+}
+
 void Attack::attack() {
     // Weapon needs recharge?
     if (this->wait > 0) return;

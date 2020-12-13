@@ -31,13 +31,15 @@ public:
 
     void applyForce(float angle, float power);
 
+    void applyForce(const Force &force);
+
     void turn(float angle);
 
     void reset(Position &target);
 
     float getAngle();
 
-    Position& getPosition();
+    Position &getPosition();
 
     bool sameAngle(float other);
 

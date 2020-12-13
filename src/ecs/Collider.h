@@ -10,6 +10,7 @@
 #include "Transform.h"
 #include "../alg/Direction.h"
 #include "../alg/Vector.h"
+#include "Projectile.h"
 
 enum ColliderTag {
     CT_PLAYER,
@@ -33,6 +34,8 @@ public:
     void pause(float duration);
 
     void disable();
+
+    void defend(std::shared_ptr<Collider> projectile);
 
     void kick(std::shared_ptr<Collider> other);
 

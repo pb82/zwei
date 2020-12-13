@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "Acceleration.h"
 #include "Ai.h"
+#include "Attack.h"
 
 Collider::Collider(Entity &parent, std::shared_ptr<Transform> tracked, ColliderTag tag,
                    Padding p) :
@@ -52,6 +53,16 @@ void Collider::kick(std::shared_ptr<Collider> other) {
     float angle = a1->p.angle(a2->getPosition());
 
     a2->applyForce(angle, 10);
+}
+
+void Collider::defend(std::shared_ptr<Collider> projectile) {
+    if (projectile->parent.hasComponent<Projectile>()) {
+        if (parent.hasComponent<Attack>()) {
+            auto p = projectile->parent.getComponent<Projectile>();
+            auto a = parent.getComponent<Attack>();
+            a->defend(p);
+        }
+    }
 }
 
 void Collider::disable() {

@@ -36,7 +36,7 @@ public:
     float speed;
 
     bool repeat;
-
+    
 private:
 
     bool paused = false;
