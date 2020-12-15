@@ -11,11 +11,11 @@ int Stick::recharge() {
 }
 
 float Stick::power() {
-    return 20;
+    return 10;
 }
 
 float Stick::speed() {
-    return 5;
+    return 3;
 }
 
 bool Stick::isProjectile() {
@@ -25,5 +25,3 @@ bool Stick::isProjectile() {
 float Stick::throwback() {
     return 15.0f;
 }
-
-Stick weapon_Stick = Stick();

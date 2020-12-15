@@ -19,7 +19,7 @@ public:
 
     bool accessible(int x, int y) const;
 
-    bool allAccessible(std::vector<Position> &line);
+    bool allAccessible(std::vector<Position> &line, Position &own);
 
     Position nearestAccessible(Position &p);
 
@@ -29,7 +29,11 @@ public:
 
     int index(const Position &p) const;
 
+    // Register mobile barrier (moving object that blocks the way)
     void registerMobile(Position *position);
+
+    // Unregister mobile barrier
+    void unregisterMobile(Position *position);
 
 private:
 

@@ -22,6 +22,11 @@ void Manager::collect() {
     // New entities?
     if (!pendingEntities.empty()) {
         auto layer = pendingEntities.front().layer;
+
+        if (entities.find(layer) == entities.end()) {
+            entities.emplace(layer, std::vector<std::shared_ptr<Entity>>());
+        }
+
         entities.at(layer).push_back(pendingEntities.front().entity);
         pendingEntities.pop();
     }

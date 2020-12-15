@@ -1,3 +1,5 @@
+#include <string>
+
 #include "Attack.h"
 #include "Entity.h"
 #include "Animation.h"
@@ -20,6 +22,43 @@ void Attack::update(float dt) {
     if (wait < 0) wait = 0;
 }
 
+int Attack::frameForChar(char c) {
+    switch (c) {
+        case '0':
+            return 68;
+        case '1':
+            return 69;
+        case '2':
+            return 70;
+        default:
+            return 68;
+    }
+}
+
+void Attack::printDamage(float damage, float x, float y) {
+    std::string number = std::to_string((int) damage);
+    float offset = x;
+
+    for (const char digit : number) {
+        auto entity = std::make_shared<Entity>();
+        entity->addComponent<Transform>(offset, y, Padding{0.5, 0.5, 0.5, 0.5});
+        entity->addComponent<Acceleration>(1.0f, VM_50_PI);
+        entity->addComponent<Sprite>(SPRITES);
+        entity->addComponent<Animation>(0, false);
+        entity->addComponent<SelfDestruct>(DISTANCE, 1);
+
+        auto animation = entity->getComponent<Animation>();
+        animation->addAnimationFrame(this->frameForChar(digit));
+
+        auto acceleration = entity->getComponent<Acceleration>();
+        acceleration->accelerate();
+
+        Manager::instance().enqueue(entity, FOREGROUND);
+
+        offset += 0.3;
+    }
+}
+
 // You are being attacked
 void Attack::defend(std::shared_ptr<Projectile> projectile) {
     auto acc = this->parent.getComponent<Acceleration>();
@@ -31,6 +70,9 @@ void Attack::defend(std::shared_ptr<Projectile> projectile) {
     if (this->parent.hasComponent<Stats>()) {
         auto stats = this->parent.getComponent<Stats>();
         stats->life -= projectile->power;
+
+        auto transform = this->parent.getComponent<Transform>();
+        printDamage(projectile->power, transform->p.x, transform->p.y);
     }
 }
 
@@ -63,9 +105,7 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
 
     switch (direction) {
         case N:
-            animation->addMixinFrame(51);
-            animation->addMixinFrame(52);
-            animation->addMixinFrame(53);
+            animation->queueAttackFrames();
             projectileOffsetY = -1;
             padding.left = 1.5;
             padding.right = 0;
@@ -74,9 +114,7 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
             angle = VM_100_PI;
             break;
         case W:
-            animation->addMixinFrame(19);
-            animation->addMixinFrame(20);
-            animation->addMixinFrame(21);
+            animation->queueAttackFrames();
             projectileOffsetX = -1;
             padding.left = (2 - (stats->weapon->range() * 2));
             padding.right = 0;
@@ -85,9 +123,7 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
             angle = VM_150_PI;
             break;
         case E:
-            animation->addMixinFrame(35);
-            animation->addMixinFrame(36);
-            animation->addMixinFrame(37);
+            animation->queueAttackFrames();
             projectileOffsetX = 1;
             padding.left = 0;
             padding.right = (2 - (stats->weapon->range() * 2));
@@ -96,9 +132,7 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
             angle = VM_150_PI;
             break;
         case S:
-            animation->addMixinFrame(3);
-            animation->addMixinFrame(4);
-            animation->addMixinFrame(5);
+            animation->queueAttackFrames();
             projectileOffsetY = 1;
             padding.left = 1.5;
             padding.right = 0;
@@ -126,6 +160,7 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
     auto projectile = p->getComponent<Projectile>();
     projectile->power = stats->weapon->power();
     projectile->force.set(acc->getAngle(), stats->weapon->throwback());
+    projectile->origin = &this->parent;
 
     // Self destruct weapon projectile
     p->addComponent<SelfDestruct>(DISTANCE, 0.75);

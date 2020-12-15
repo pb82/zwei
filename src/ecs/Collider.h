@@ -45,6 +45,8 @@ public:
 
     bool checked;
 
+    Padding padding;
+
 private:
 
     // Stop the motion of the parent of the given collider
@@ -52,7 +54,6 @@ private:
 
     void updateBoundingBox();
 
-    Padding padding;
 };
 
 #endif

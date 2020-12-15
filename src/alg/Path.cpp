@@ -1,4 +1,7 @@
+#include <algorithm>
+
 #include "Path.h"
+
 
 Topology::Topology() {}
 
@@ -23,6 +26,12 @@ void Topology::registerMobile(Position *position) {
     this->mobiles.push_back(position);
 }
 
+void Topology::unregisterMobile(Position *position) {
+    mobiles.erase(std::remove_if(this->mobiles.begin(), this->mobiles.end(), [&](Position *p) {
+        return p == position;
+    }), mobiles.end());
+}
+
 bool Topology::accessible(int x, int y) const {
     if (x < 0) return false;
     if (y < 0) return false;
@@ -39,8 +48,9 @@ bool Topology::accessible(int x, int y) const {
     return topology.at(i) == 0;
 }
 
-bool Topology::allAccessible(std::vector<Position> &line) {
+bool Topology::allAccessible(std::vector<Position> &line, Position &own) {
     for (auto &segment : line) {
+        if (segment == own) continue;
         if (!accessible(segment.x, segment.y)) {
             return false;
         }

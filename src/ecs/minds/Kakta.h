@@ -1,22 +1,20 @@
-#ifndef ZWEI_SKELETON_H
-#define ZWEI_SKELETON_H
+#ifndef ZWEI_KAKTA_H
+#define ZWEI_KAKTA_H
 
 #include "Mind.h"
 
-class Skeleton : public Mind {
+class Kakta : public Mind {
 public:
 
-    Skeleton(Entity &parent);
+    Kakta(Entity &parent);
 
-    ~Skeleton();
+    ~Kakta();
 
     int delay() override;
 
     void plan(float dt) override;
 
     bool activate() override;
-
-    void render() override;
 
 private:
 

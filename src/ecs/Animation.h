@@ -27,6 +27,10 @@ public:
 
     void addMixinFrame(int n, int s, int e, int w);
 
+    void addAttackFrame(int n, int s, int e, int w, float duration);
+
+    void queueAttackFrames();
+
     int getCurrentFrame(Direction d = N);
 
     void start();
@@ -36,7 +40,7 @@ public:
     float speed;
 
     bool repeat;
-    
+
 private:
 
     bool paused = false;
@@ -52,6 +56,8 @@ private:
     std::unordered_map<Direction, std::vector<int>> frames;
 
     std::queue<MixinFrame> mixinFrames;
+
+    std::vector<MixinFrame> attackFrames;
 };
 
 

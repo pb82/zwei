@@ -26,6 +26,10 @@ bool Stats::hasWeapon() {
 
 void Stats::update(float dt) {
     if (this->life <= 0) {
+        // Removed entity is no longer blocking the way
+        auto transform = this->parent.getComponent<Transform>();
+        RT_Context.getTopology().unregisterMobile(&transform->p);
+
         this->parent.disable();
 
         // Replace the enemy with an explosion
@@ -38,9 +42,8 @@ void Stats::update(float dt) {
         explosion->addAnimationFrame(129);
         explosion->addAnimationFrame(130);
         explosion->addAnimationFrame(131);
-        explosion->addAnimationFrame(132);
 
-        entity->addComponent<SelfDestruct>(TIMER, 500);
+        entity->addComponent<SelfDestruct>(TIMER, 400);
 
         auto parentTransform = this->parent.getComponent<Transform>();
         entity->addComponent<Transform>(parentTransform->p.x, parentTransform->p.y);

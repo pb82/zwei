@@ -36,6 +36,22 @@ void Animation::addMixinFrame(int n, int s, int e, int w) {
     mixinFrames.push(f);
 }
 
+void Animation::addAttackFrame(int n, int s, int e, int w, float duration) {
+    auto f = MixinFrame();
+    f.frames[N] = n;
+    f.frames[S] = s;
+    f.frames[E] = e;
+    f.frames[W] = w;
+    f.duration = duration;
+    attackFrames.push_back(f);
+}
+
+void Animation::queueAttackFrames() {
+    for (auto &frame : attackFrames) {
+        mixinFrames.push(frame);
+    }
+}
+
 int Animation::getCurrentFrame(Direction d) {
     if (!mixinFrames.empty()) {
         auto f = mixinFrames.front();

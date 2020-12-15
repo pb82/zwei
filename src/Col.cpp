@@ -122,13 +122,27 @@ void Col::collide(float dt) {
                         involved->pause(1000);
                     }
                 }
+
+                if (group.has(CT_PROJECTILE)) {
+                    for (auto &projectile : group.involved.at(CT_PROJECTILE)) {
+                        projectile->disable();
+                        group.subject->defend(projectile);
+                    }
+                }
             }
 
             if (group.subject->tag == CT_PROJECTILE) {
+                if (group.has(CT_PLAYER)) {
+                    group.subject->disable();
+                    for (auto &involved : group.involved.at(CT_PLAYER)) {
+                        involved->defend(group.subject);
+                    }
+                }
+
                 if (group.has(CT_ENEMY)) {
                     group.subject->disable();
                     for (auto &involved : group.involved.at(CT_ENEMY)) {
-
+                        involved->defend(group.subject);
                     }
                 }
             }

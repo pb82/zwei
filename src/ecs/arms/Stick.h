@@ -20,6 +20,4 @@ public:
     bool isProjectile() override;
 };
 
-extern Stick weapon_Stick;
-
 #endif //ZWEI_STICK_H

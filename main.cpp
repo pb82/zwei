@@ -33,36 +33,43 @@
 #include "src/in/Input.h"
 #include "src/Col.h"
 
-#include "src/ecs/minds/Skeleton.h"
+#include "src/ecs/minds/Kakta.h"
 #include "src/ecs/Analytics.h"
 #include "src/ecs/arms/Stick.h"
+#include "src/ecs/minds/Spider.h"
 
-void placeSkeleton(int x, int y, Topology &top) {
-    auto skeleton = Manager::instance().addEntity(OBJECTS);
-    skeleton->addComponent<Transform>(x, y);
-    skeleton->addComponent<Sprite>(SPRITES);
-    skeleton->addComponent<Animation>(200, true);
-    skeleton->addComponent<Acceleration>(2.0f, 0);
-    skeleton->addComponent<Ai>();
-    skeleton->addComponent<Attack>();
+void placeKakta(int x, int y, Topology &top) {
+    auto kakta = Manager::instance().addEntity(OBJECTS);
+    kakta->addComponent<Transform>(x, y);
+    kakta->addComponent<Sprite>(SPRITES);
+    kakta->addComponent<Animation>(200, true);
+    kakta->addComponent<Acceleration>(2.0f, 0);
+    kakta->addComponent<Ai>();
+    kakta->addComponent<Attack>();
 
-    skeleton->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
-    skeleton->getComponent<Animation>()->addAnimationFrame(113, 65, 97, 81);
-    skeleton->getComponent<Animation>()->addAnimationFrame(114, 66, 98, 82);
-    skeleton->getComponent<Animation>()->stop();
-    skeleton->addComponent<Analytics>();
+    kakta->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
+    kakta->getComponent<Animation>()->addAnimationFrame(113, 65, 97, 81);
+    kakta->getComponent<Animation>()->addAnimationFrame(114, 66, 98, 82);
 
-    skeleton->addComponent<Stats>();
-    auto stats = skeleton->getComponent<Stats>();
+    kakta->getComponent<Animation>()->addAttackFrame(115, 67, 99, 83, 300);
+
+    kakta->getComponent<Animation>()->stop();
+    kakta->addComponent<Analytics>();
+
+    kakta->addComponent<Attack>();
+
+    kakta->addComponent<Stats>();
+    auto stats = kakta->getComponent<Stats>();
+    stats->equipWeapon(std::make_shared<Stick>());
     stats->maxLife = 50;
     stats->life = 50;
 
-    auto transform = skeleton->getComponent<Transform>();
-    skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 1, 0});
+    auto transform = kakta->getComponent<Transform>();
+    kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 1, 0});
     top.registerMobile(&transform->p);
 
-    auto ai = skeleton->getComponent<Ai>();
-    ai->brainify<Skeleton>();
+    auto ai = kakta->getComponent<Ai>();
+    ai->brainify<Kakta>();
 }
 
 void placeSpider(int x, int y, Topology &top) {
@@ -70,7 +77,8 @@ void placeSpider(int x, int y, Topology &top) {
     skeleton->addComponent<Transform>(x, y);
     skeleton->addComponent<Sprite>(SPRITES);
     skeleton->addComponent<Animation>(200, true);
-    skeleton->addComponent<Acceleration>(2.0f, 0);
+    skeleton->addComponent<Acceleration>(4.0f, 0);
+
     skeleton->addComponent<Ai>();
     skeleton->addComponent<Attack>();
 
@@ -86,11 +94,11 @@ void placeSpider(int x, int y, Topology &top) {
     stats->life = 50;
 
     auto transform = skeleton->getComponent<Transform>();
-    skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 1, 0});
+    skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.3, 0.7});
     top.registerMobile(&transform->p);
 
     auto ai = skeleton->getComponent<Ai>();
-    ai->brainify<Skeleton>();
+    ai->brainify<Spider>();
 }
 
 
@@ -122,7 +130,6 @@ void loop() {
     auto sprite = Manager::instance().addEntity(OBJECTS);
     RT_Context.setPlayer(sprite);
 
-
     sprite->addComponent<Transform>(7, 14);
     sprite->addComponent<Sprite>(SPRITES);
     sprite->addComponent<Animation>(200, true);
@@ -135,6 +142,11 @@ void loop() {
     sprite->getComponent<Animation>()->addAnimationFrame(48, 0, 32, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(49, 1, 33, 17);
     sprite->getComponent<Animation>()->addAnimationFrame(50, 2, 34, 18);
+
+    sprite->getComponent<Animation>()->addAttackFrame(51, 3, 35, 19, 100);
+    sprite->getComponent<Animation>()->addAttackFrame(52, 4, 36, 20, 100);
+    sprite->getComponent<Animation>()->addAttackFrame(53, 5, 37, 21, 100);
+
     sprite->getComponent<Animation>()->stop();
     // Track the sprite
     auto transform = sprite->getComponent<Transform>();
@@ -142,7 +154,7 @@ void loop() {
 
     // Make the sprite collision aware
     sprite->addComponent<Collider>(transform, CT_PLAYER,
-                                   Padding{.5, .5, 1, 0});
+                                   Padding{.3, .3, 0.6, 0});
 
     auto tweakUi = Manager::instance().addEntity(UI);
     // tweakUi->addComponent<Tweak>(sprite);
@@ -152,8 +164,12 @@ void loop() {
     stats->life = 100;
     stats->maxLife = 100;
 
-    // placeSkeleton(10, 10, RT_Context.getTopology());
-    placeSpider(10, 10, RT_Context.getTopology());
+    // placeKakta(11, 11, RT_Context.getTopology());
+    // placeKakta(10, 10, RT_Context.getTopology());
+    // placeKakta(12, 8, RT_Context.getTopology());
+
+    placeSpider(8, 8, RT_Context.getTopology());
+
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();
