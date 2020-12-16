@@ -30,6 +30,20 @@ int Attack::frameForChar(char c) {
             return 69;
         case '2':
             return 70;
+        case '3':
+            return 71;
+        case '4':
+            return 72;
+        case '5':
+            return 73;
+        case '6':
+            return 74;
+        case '7':
+            return 75;
+        case '8':
+            return 76;
+        case '9':
+            return 77;
         default:
             return 68;
     }
@@ -37,15 +51,15 @@ int Attack::frameForChar(char c) {
 
 void Attack::printDamage(float damage, float x, float y) {
     std::string number = std::to_string((int) damage);
-    float offset = x;
+    float offset = x - ((number.size() * 0.3) / 2);
 
     for (const char digit : number) {
         auto entity = std::make_shared<Entity>();
         entity->addComponent<Transform>(offset, y, Padding{0.5, 0.5, 0.5, 0.5});
-        entity->addComponent<Acceleration>(1.0f, VM_50_PI);
+        entity->addComponent<Acceleration>(2.0f, VM_50_PI);
         entity->addComponent<Sprite>(SPRITES);
         entity->addComponent<Animation>(0, false);
-        entity->addComponent<SelfDestruct>(DISTANCE, 1);
+        entity->addComponent<SelfDestruct>(TIMER, 500);
 
         auto animation = entity->getComponent<Animation>();
         animation->addAnimationFrame(this->frameForChar(digit));

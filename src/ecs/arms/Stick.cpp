@@ -1,4 +1,5 @@
 #include "Stick.h"
+#include "../../alg/Rand.h"
 
 Stick::Stick() {}
 
@@ -10,8 +11,8 @@ int Stick::recharge() {
     return 500;
 }
 
-float Stick::power() {
-    return 10;
+int Stick::power() {
+    return damageTable[getRandomRange(0, 9)];
 }
 
 float Stick::speed() {

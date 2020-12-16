@@ -77,7 +77,7 @@ void placeSpider(int x, int y, Topology &top) {
     skeleton->addComponent<Transform>(x, y);
     skeleton->addComponent<Sprite>(SPRITES);
     skeleton->addComponent<Animation>(200, true);
-    skeleton->addComponent<Acceleration>(4.0f, 0);
+    skeleton->addComponent<Acceleration>(0.0f, 0);
 
     skeleton->addComponent<Ai>();
     skeleton->addComponent<Attack>();
@@ -90,8 +90,8 @@ void placeSpider(int x, int y, Topology &top) {
 
     skeleton->addComponent<Stats>();
     auto stats = skeleton->getComponent<Stats>();
-    stats->maxLife = 50;
-    stats->life = 50;
+    stats->maxLife = 500;
+    stats->life = 500;
 
     auto transform = skeleton->getComponent<Transform>();
     skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.3, 0.7});
