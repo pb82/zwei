@@ -7,7 +7,7 @@
 #include "Transform.h"
 #include "SelfDestruct.h"
 
-Stats::Stats(Entity &parent) : Component(parent), life(0), maxLife(0) {}
+Stats::Stats(Entity &parent) : Component(parent) {}
 
 void Stats::equipWeapon(std::shared_ptr<Weapon> w) {
     this->weapon = w;
@@ -25,7 +25,13 @@ bool Stats::hasWeapon() {
 }
 
 void Stats::update(float dt) {
-    if (this->life <= 0) {
+    auto hp = this->character.getHitpoints();
+    if (std::get<0>(hp) <= 0) {
+        // Player gains experience points
+        int exp = this->character.releaseExperience();
+        auto playerStats = RT_Context.getPlayer()->getComponent<Stats>();
+        playerStats->character.collectExperience(exp);
+
         // Removed entity is no longer blocking the way
         auto transform = this->parent.getComponent<Transform>();
         RT_Context.getTopology().unregisterMobile(&transform->p);
@@ -48,6 +54,6 @@ void Stats::update(float dt) {
         auto parentTransform = this->parent.getComponent<Transform>();
         entity->addComponent<Transform>(parentTransform->p.x, parentTransform->p.y);
 
-        Manager::instance().enqueue(entity, OBJECTS);
+        Manager::instance().enqueue(entity, FOREGROUND);
     }
 }

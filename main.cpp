@@ -61,8 +61,8 @@ void placeKakta(int x, int y, Topology &top) {
     kakta->addComponent<Stats>();
     auto stats = kakta->getComponent<Stats>();
     stats->equipWeapon(std::make_shared<Stick>());
-    stats->maxLife = 50;
-    stats->life = 50;
+    stats->character.setBase(20, 10, 5, 10);
+    stats->character.setLevel(1);
 
     auto transform = kakta->getComponent<Transform>();
     kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 1, 0});
@@ -90,8 +90,8 @@ void placeSpider(int x, int y, Topology &top) {
 
     skeleton->addComponent<Stats>();
     auto stats = skeleton->getComponent<Stats>();
-    stats->maxLife = 500;
-    stats->life = 500;
+    stats->character.setLevel(1);
+    stats->character.setBase(10, 5, 1, 5);
 
     auto transform = skeleton->getComponent<Transform>();
     skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.3, 0.7});
@@ -161,8 +161,7 @@ void loop() {
 
     auto stats = sprite->getComponent<Stats>();
     stats->equipWeapon(std::make_shared<Stick>());
-    stats->life = 100;
-    stats->maxLife = 100;
+    stats->character.setBase(10, 1, 1, 1);
 
     // placeKakta(11, 11, RT_Context.getTopology());
     // placeKakta(10, 10, RT_Context.getTopology());

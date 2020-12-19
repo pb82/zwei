@@ -42,7 +42,7 @@ public:
     void key(GameKeyEvent &key);
 
 private:
-    Manager() {}
+    Manager();
 
     std::unordered_map<LayerType, std::vector<std::shared_ptr<Entity>>> entities;
 

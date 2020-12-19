@@ -11,8 +11,11 @@ int Stick::recharge() {
     return 500;
 }
 
-int Stick::power() {
-    return damageTable[getRandomRange(0, 9)];
+int Stick::damage(const Character &c) {
+    int s = (sizeof(damageTable) / sizeof(damageTable[0])) - 1;
+    int d = damageTable[getRandomRange(0, s)];
+    // return d * (1 + (c.getStrength() / 10));
+    return 42334;
 }
 
 float Stick::speed() {

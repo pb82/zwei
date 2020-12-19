@@ -1,12 +1,19 @@
 #include "Manager.h"
 
 #include "Collider.h"
+#include "Group.h"
+
+Manager::Manager() {
+    entities.emplace(LayerType::FOREGROUND, std::vector<std::shared_ptr<Entity>>());
+    entities.emplace(LayerType::OBJECTS, std::vector<std::shared_ptr<Entity>>());
+    entities.emplace(LayerType::BACKGROUND, std::vector<std::shared_ptr<Entity>>());
+    entities.emplace(LayerType::FLOOR, std::vector<std::shared_ptr<Entity>>());
+    entities.emplace(LayerType::UI, std::vector<std::shared_ptr<Entity>>());
+    entities.emplace(LayerType::WALLS, std::vector<std::shared_ptr<Entity>>());
+}
 
 std::shared_ptr<Entity> Manager::addEntity(LayerType layer) {
     auto entity = std::make_shared<Entity>();
-    if (entities.find(layer) == entities.end()) {
-        entities.emplace(layer, std::vector<std::shared_ptr<Entity>>());
-    }
     entities.at(layer).push_back(entity);
     return entity;
 }
@@ -21,14 +28,17 @@ void Manager::enqueue(std::shared_ptr<Entity> entity, LayerType layer) {
 void Manager::collect() {
     // New entities?
     if (!pendingEntities.empty()) {
-        auto layer = pendingEntities.front().layer;
-
-        if (entities.find(layer) == entities.end()) {
-            entities.emplace(layer, std::vector<std::shared_ptr<Entity>>());
+        auto entity = pendingEntities.front();
+        if (entity.entity->hasComponent<Group>()) {
+            auto group = entity.entity->getComponent<Group>();
+            for (auto member : group->all()) {
+                entities.at(entity.layer).push_back(member);
+            }
+            pendingEntities.pop();
+        } else {
+            entities.at(entity.layer).push_back(entity.entity);
+            pendingEntities.pop();
         }
-
-        entities.at(layer).push_back(pendingEntities.front().entity);
-        pendingEntities.pop();
     }
 
     // Garbage collect

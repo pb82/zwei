@@ -5,6 +5,7 @@
 
 #include "Component.h"
 #include "arms/Weapon.h"
+#include "char/Character.h"
 
 class Stats : public Component {
 public:
@@ -22,9 +23,8 @@ public:
 
     std::shared_ptr<Weapon> weapon;
 
-    int life;
+    Character character;
 
-    int maxLife;
 };
 
 

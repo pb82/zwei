@@ -15,6 +15,8 @@ public:
     const Entity* origin;
 
     float power;
+
+    bool isProjectile = false;
 };
 
 

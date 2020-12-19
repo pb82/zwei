@@ -3,7 +3,6 @@
 
 #include "Weapon.h"
 
-
 class Stick : public Weapon {
 public:
     Stick();
@@ -12,7 +11,7 @@ public:
 
     int recharge() override;
 
-    int power() override;
+    int damage(const Character& c) override;
 
     float speed() override;
 
