@@ -21,8 +21,6 @@ private:
 
     void launchStickWeapon(std::shared_ptr<Stats> stats);
 
-    int frameForChar(char c);
-
     float wait = 0.0f;
 };
 

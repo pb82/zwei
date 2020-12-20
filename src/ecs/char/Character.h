@@ -23,6 +23,8 @@ public:
 
     std::tuple<int, int> getExperience();
 
+    bool dead() const;
+
 private:
 
     void adjustToLevel();

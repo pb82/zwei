@@ -77,7 +77,7 @@ void placeSpider(int x, int y, Topology &top) {
     skeleton->addComponent<Transform>(x, y);
     skeleton->addComponent<Sprite>(SPRITES);
     skeleton->addComponent<Animation>(200, true);
-    skeleton->addComponent<Acceleration>(0.0f, 0);
+    skeleton->addComponent<Acceleration>(4.0f, 0);
 
     skeleton->addComponent<Ai>();
     skeleton->addComponent<Attack>();

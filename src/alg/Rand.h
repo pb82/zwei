@@ -3,12 +3,10 @@
 
 #include <cstdlib>
 
-float getRandomFloat(float max) {
-    return (float) rand() / (float) (RAND_MAX / max);
-}
+struct Rnd {
+    static float getRandomFloat(float max);
 
-int getRandomRange(int from, int to) {
-    return from + (std::rand() % (to - from + 1));
-}
+    static int getRandomRange(int from, int to);
+};
 
 #endif //ZWEI_RAND_H

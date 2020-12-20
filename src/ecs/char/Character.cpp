@@ -67,3 +67,7 @@ std::tuple<int, int> Character::getExperience() {
 std::tuple<int, int> Character::getHitpoints() {
     return {this->hitpoints, this->maxHitpoints};
 }
+
+bool Character::dead() const {
+    return this->hitpoints <= 0;
+}

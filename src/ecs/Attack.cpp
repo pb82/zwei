@@ -13,6 +13,7 @@
 #include "Analytics.h"
 #include "Projectile.h"
 #include "Group.h"
+#include "../alg/Text.h"
 
 Attack::Attack(Entity &parent) : Component(parent) {}
 
@@ -21,33 +22,6 @@ void Attack::update(float dt) {
         wait -= dt;
     }
     if (wait < 0) wait = 0;
-}
-
-int Attack::frameForChar(char c) {
-    switch (c) {
-        case '0':
-            return 68;
-        case '1':
-            return 69;
-        case '2':
-            return 70;
-        case '3':
-            return 71;
-        case '4':
-            return 72;
-        case '5':
-            return 73;
-        case '6':
-            return 74;
-        case '7':
-            return 75;
-        case '8':
-            return 76;
-        case '9':
-            return 77;
-        default:
-            return 68;
-    }
 }
 
 void Attack::printDamage(float damage, float x, float y) {
@@ -68,7 +42,7 @@ void Attack::printDamage(float damage, float x, float y) {
         entity->addComponent<SelfDestruct>(TIMER, 500);
 
         auto animation = entity->getComponent<Animation>();
-        animation->addAnimationFrame(this->frameForChar(digit));
+        animation->addAnimationFrame(Text::fromChar(digit));
 
         auto acceleration = entity->getComponent<Acceleration>();
         acceleration->accelerate();
@@ -91,7 +65,10 @@ void Attack::defend(std::shared_ptr<Projectile> projectile) {
         int damage = stats->character.damage(projectile->power, projectile->isProjectile);
 
         auto transform = this->parent.getComponent<Transform>();
-        printDamage(damage, transform->p.x, transform->p.y);
+
+        if (!stats->character.dead()) {
+            printDamage(damage, transform->p.x, transform->p.y);
+        }
     }
 }
 
