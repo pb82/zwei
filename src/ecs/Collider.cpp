@@ -4,6 +4,9 @@
 #include "Acceleration.h"
 #include "Ai.h"
 #include "Attack.h"
+#include "SelfDestruct.h"
+#include "Bloat.h"
+#include "Collectable.h"
 
 Collider::Collider(Entity &parent, std::shared_ptr<Transform> tracked, ColliderTag tag,
                    Padding p) :
@@ -73,3 +76,10 @@ void Collider::defend(std::shared_ptr<Collider> projectile) {
 void Collider::disable() {
     this->parent.disable();
 }
+
+void Collider::collect() {
+    if (this->parent.hasComponent<Collectable>()) {
+        auto c = this->parent.getComponent<Collectable>();
+        c->collect();
+    }
+};

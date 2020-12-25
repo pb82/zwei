@@ -111,6 +111,12 @@ void Col::collide(float dt) {
             }
 
             if (group.subject->tag == CT_PLAYER) {
+                if (group.has(CT_ITEM)) {
+                    for (auto &item : group.involved.at(CT_ITEM)) {
+                        item->collect();
+                    }
+                }
+
                 if (group.has(CT_WALL)) {
                     group.subject->stop();
                 }
@@ -144,6 +150,12 @@ void Col::collide(float dt) {
                     for (auto &involved : group.involved.at(CT_ENEMY)) {
                         involved->defend(group.subject);
                     }
+                }
+            }
+
+            if (group.subject->tag == CT_ITEM) {
+                if (group.has(CT_PLAYER)) {
+
                 }
             }
 

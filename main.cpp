@@ -37,6 +37,8 @@
 #include "src/ecs/Analytics.h"
 #include "src/ecs/arms/Stick.h"
 #include "src/ecs/minds/Spider.h"
+#include "src/ecs/Collectable.h"
+#include "src/ecs/items/HealthPotion.h"
 
 void placeKakta(int x, int y, Topology &top) {
     auto kakta = Manager::instance().addEntity(OBJECTS);
@@ -58,10 +60,10 @@ void placeKakta(int x, int y, Topology &top) {
 
     kakta->addComponent<Attack>();
 
-    kakta->addComponent<Stats>();
+    kakta->addComponent<Stats>(false);
     auto stats = kakta->getComponent<Stats>();
     stats->equipWeapon(std::make_shared<Stick>());
-    stats->character.setBase(20, 10, 5, 10);
+    stats->character.setBase(5, 1, 1, 1);
     stats->character.setLevel(1);
 
     auto transform = kakta->getComponent<Transform>();
@@ -88,7 +90,7 @@ void placeSpider(int x, int y, Topology &top) {
     skeleton->getComponent<Animation>()->stop();
     skeleton->addComponent<Analytics>();
 
-    skeleton->addComponent<Stats>();
+    skeleton->addComponent<Stats>(false);
     auto stats = skeleton->getComponent<Stats>();
     stats->character.setLevel(1);
     stats->character.setBase(10, 5, 1, 5);
@@ -101,6 +103,15 @@ void placeSpider(int x, int y, Topology &top) {
     ai->brainify<Spider>();
 }
 
+void placePotion(int x, int y) {
+    auto potion = Manager::instance().addEntity(ITEMS);
+    potion->addComponent<Collectable>(std::make_shared<HealthPotion>());
+    potion->addComponent<Transform>(x, y, Padding{0.5, 0.5, 0.5, 0.5});
+    potion->addComponent<Analytics>();
+
+    auto potionTransform = potion->getComponent<Transform>();
+    potion->addComponent<Collider>(potionTransform, CT_ITEM, Padding{0.7, 0.7, 0.7, 0.7});
+}
 
 void loop() {
     Input in;
@@ -137,7 +148,7 @@ void loop() {
     sprite->addComponent<Controller>();
     sprite->addComponent<Attack>();
     sprite->addComponent<Analytics>();
-    sprite->addComponent<Stats>();
+    sprite->addComponent<Stats>(true);
 
     sprite->getComponent<Animation>()->addAnimationFrame(48, 0, 32, 16);
     sprite->getComponent<Animation>()->addAnimationFrame(49, 1, 33, 17);
@@ -167,7 +178,10 @@ void loop() {
     // placeKakta(10, 10, RT_Context.getTopology());
     // placeKakta(12, 8, RT_Context.getTopology());
 
-    placeSpider(8, 8, RT_Context.getTopology());
+    // placeSpider(8, 8, RT_Context.getTopology());
+    placePotion(8,8);
+    placePotion(9,8);
+    placePotion(8,9);
 
 
     while (RT_Running) {
@@ -189,6 +203,7 @@ void loop() {
         Manager::instance().render(BACKGROUND);
         Manager::instance().render(FLOOR);
         Manager::instance().render(WALLS);
+        Manager::instance().render(ITEMS);
         Manager::instance().render(OBJECTS);
         Manager::instance().render(FOREGROUND);
 
@@ -274,7 +289,7 @@ void initSdl() {
             SDL_WINDOWPOS_CENTERED,
             configWindowWidth,
             configWindowHeight,
-            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_INIT_GAMECONTROLLER
+            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_INIT_GAMECONTROLLER | SDL_WINDOW_FULLSCREEN
     );
 
     Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);

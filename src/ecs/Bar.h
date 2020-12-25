@@ -10,6 +10,8 @@ enum BarType {
 class Bar : public Component {
 public:
     Bar(Entity &parent);
+
+    void render() override;
 };
 
 

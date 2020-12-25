@@ -10,7 +10,7 @@ Kakta::Kakta(Entity &parent) : Mind(parent) {}
 Kakta::~Kakta() noexcept {}
 
 int Kakta::delay() {
-    return 500;
+    return 100;
 }
 
 bool Kakta::activate() {

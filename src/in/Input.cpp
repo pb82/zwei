@@ -22,6 +22,8 @@ GameKey Input::fromSdlKey(const SDL_Event *e) const {
             return GK_RIGHT;
         case SDLK_a:
             return GK_A;
+        case SDLK_TAB:
+            return GK_SELECT;
         default:
             return GK_NONE;
     }
@@ -39,6 +41,8 @@ GameKey Input::fromSdlButton(const SDL_Event *e) const {
             return GK_RIGHT;
         case SDL_CONTROLLER_BUTTON_A:
             return GK_A;
+        case SDL_CONTROLLER_BUTTON_GUIDE:
+            return GK_SELECT;
         default:
             return GK_NONE;
     }
@@ -79,6 +83,13 @@ bool Input::mapGamepadEvent(SDL_Event *e, GameKeyEvent *g) {
             }
             locked = true;
             g->key = GK_A;
+            return true;
+        case SDL_CONTROLLER_BUTTON_GUIDE:
+            if (g->key == GK_SELECT && locked) {
+                return false;
+            }
+            locked = true;
+            g->key = GK_SELECT;
             return true;
         default:
             g->key = GK_NONE;
@@ -121,6 +132,13 @@ bool Input::mapKeyboardEvent(SDL_Event *e, GameKeyEvent *g) {
             }
             locked = true;
             g->key = GK_A;
+            return true;
+        case SDLK_TAB:
+            if (g->key == GK_SELECT && locked) {
+                return false;
+            }
+            locked = true;
+            g->key = GK_SELECT;
             return true;
         default:
             g->key = GK_NONE;

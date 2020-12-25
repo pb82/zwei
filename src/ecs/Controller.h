@@ -11,6 +11,7 @@
 #define P_LEFT (activeKeys[GK_LEFT] == true)
 #define P_RIGHT (activeKeys[GK_RIGHT] == true)
 #define P_A (activeKeys[GK_A] == true)
+#define P_SELECT (activeKeys[GK_SELECT] == true)
 
 class Controller : public Component {
 public:

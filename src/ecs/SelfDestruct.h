@@ -14,13 +14,13 @@ public:
 
     void update(float dt) override;
 
+    float value;
+
 private:
 
     void updateDistance(float dt);
 
     SelfDestructType type;
-
-    float value;
 
     float current = 0.0f;
 

@@ -42,15 +42,20 @@ public:
                && target.y <= configWindowHeight;
     }
 
+
+    void project(SDL_Rect &target, float x, float y, Padding p = {0, 0, 0, 0}) {
+        project(target, x, y, z, p);
+    }
+
     // adjust the position and size of a rectangle according to the camera position
     // and zoom
-    void project(SDL_Rect &target, float x, float y, Padding p = {0, 0, 0, 0}) const {
+    void project(SDL_Rect &target, float x, float y, float zm, Padding p = {0, 0, 0, 0}) const {
         if (!tracked) {
             return;
         }
 
         // Adjust tile size to zoom factor
-        float f = configTileSize * z;
+        float f = configTileSize * zm;
 
         // Offsets: the pixels to move in each direction to center in on
         // the tracked sprite. Do not scroll past the map size. That's what
@@ -58,8 +63,8 @@ public:
         float dx = std::max((tracked->x * f) + (f / 2) - (configWindowWidth / 2), 0.0f);
         float dy = std::max((tracked->y * f) + (f / 2) - (configWindowHeight / 2), 0.0f);
 
-        dx = std::min(dx, (mapTilesX * configTileSize * z) - configWindowWidth);
-        dy = std::min(dy, (mapTilesY * configTileSize * z) - configWindowHeight);
+        dx = std::min(dx, (mapTilesX * configTileSize * zm) - configWindowWidth);
+        dy = std::min(dy, (mapTilesY * configTileSize * zm) - configWindowHeight);
 
         // If the zoom factor is out of bounds (more than the whole map can be seen at
         // once) we center the whole map

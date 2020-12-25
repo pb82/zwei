@@ -46,6 +46,14 @@ void Controller::key(GameKeyEvent &key) {
     auto acceleration = parent.getComponent<Acceleration>();
     auto animation = parent.getComponent<Animation>();
 
+    if (key.key == GK_SELECT && key.state == GK_PUSHED) {
+        if (parent.hasComponent<Stats>()) {
+            auto stats = parent.getComponent<Stats>();
+            stats->inventory.next();
+        }
+        return;
+    }
+
     if (key.state == GK_RELEASED) {
         if (key.key == GK_NONE) {
             activeKeys[GK_UP] = false;

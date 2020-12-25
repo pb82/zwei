@@ -17,7 +17,8 @@ enum ColliderTag {
     CT_ENEMY,
     CT_WALL,
     CT_PROJECTILE,
-    CT_TRIGGER
+    CT_TRIGGER,
+    CT_ITEM,
 };
 
 class Collider : public Component {
@@ -34,6 +35,8 @@ public:
     void pause(float duration);
 
     void disable();
+
+    void collect();
 
     void defend(std::shared_ptr<Collider> projectile);
 

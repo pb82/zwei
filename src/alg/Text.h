@@ -4,6 +4,8 @@
 
 struct Text {
     static int fromChar(char c);
+
+    static int fromInt(int c);
 };
 
 
