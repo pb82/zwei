@@ -180,9 +180,6 @@ void loop() {
 
     // placeSpider(8, 8, RT_Context.getTopology());
     placePotion(8,8);
-    placePotion(9,8);
-    placePotion(8,9);
-
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();

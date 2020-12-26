@@ -6,6 +6,12 @@
 #include "../../Draw.h"
 #include "../../../config.h"
 #include "../../alg/Text.h"
+#include "../../Rt.h"
+#include "../Transform.h"
+#include "../Collectable.h"
+#include "../Collider.h"
+#include "../Manager.h"
+#include "../Acceleration.h"
 
 Inventory::Inventory() {
     this->slots.resize(MAX_SLOTS);
@@ -40,6 +46,35 @@ bool Inventory::addSingleSlotItem(std::shared_ptr<Item> item) {
         }
     }
     return false;
+}
+
+void Inventory::drop() {
+    if (this->slots.at(selectedSlot).type == EMPTY_SLOT) return;
+
+    InventoryItem &slot = slots.at(selectedSlot);
+
+    auto t = RT_Context.getPlayer()->getComponent<Transform>();
+    auto a = RT_Context.getPlayer()->getComponent<Acceleration>();
+
+    Position p;
+    t->p.nearestTile(p);
+    Position dropPosition = RT_Context.getTopology().nearestAccessible(p, false);
+
+    auto entity = std::make_shared<Entity>();
+    entity->addComponent<Transform>(dropPosition.x, dropPosition.y, Padding{0.5, 0.5, 0.5, 0.5});
+    entity->addComponent<Collectable>(slot.item);
+
+    if (slot.number > 1) {
+        slot.number--;
+    } else {
+        slot.item.reset();
+        slot.type = EMPTY_SLOT;
+    }
+
+    auto pt = entity->getComponent<Transform>();
+    entity->addComponent<Collider>(pt, CT_ITEM, Padding{0.7, .7, 0.7, 0.7});
+
+    Manager::instance().enqueue(entity, ITEMS);
 }
 
 void Inventory::render() {

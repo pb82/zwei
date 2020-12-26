@@ -22,6 +22,8 @@ public:
 
     void next();
 
+    void drop();
+
     void render();
 
 private:

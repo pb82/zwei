@@ -58,8 +58,8 @@ bool Topology::allAccessible(std::vector<Position> &line, Position &own) {
     return true;
 }
 
-Position Topology::nearestAccessible(Position &p) {
-    if (accessible(p.x, p.y)) {
+Position Topology::nearestAccessible(Position &p, bool includeOwn) {
+    if (includeOwn && accessible(p.x, p.y)) {
         return p;
     }
 
