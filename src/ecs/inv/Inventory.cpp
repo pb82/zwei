@@ -55,11 +55,14 @@ void Inventory::drop() {
     InventoryItem &slot = slots.at(selectedSlot);
 
     auto t = RT_Context.getPlayer()->getComponent<Transform>();
-    auto a = RT_Context.getPlayer()->getComponent<Acceleration>();
-
+    
     Position p;
     t->p.nearestTile(p);
     Position dropPosition = RT_Context.getTopology().nearestAccessible(p, false);
+
+    if (Manager::instance().hasEntities(dropPosition, ITEMS)) {
+        return;
+    }
 
     auto entity = Item::make(dropPosition, slot.item);
 

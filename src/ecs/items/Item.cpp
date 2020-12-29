@@ -20,11 +20,10 @@ std::shared_ptr<Entity> Item::make(Position p, ItemType type) {
 std::shared_ptr<Entity> Item::make(Position p, std::shared_ptr<Item> item) {
     auto entity = std::make_shared<Entity>();
 
-    Padding defaaultPadding = {0.5, 0.5, 0.5, 0.5};
-    entity->addComponent<Transform>(p.x, p.y, defaaultPadding);
+    entity->addComponent<Transform>(p.x, p.y, Padding{0.5, 0.5, 0.5, 0.5});
     auto transform = entity->getComponent<Transform>();
 
-    entity->addComponent<Collider>(transform, CT_ITEM, defaaultPadding);
+    entity->addComponent<Collider>(transform, CT_ITEM, Padding{0.7, 0.7, 0.7, 0.7});
     entity->addComponent<Collectable>(item);
     entity->addComponent<Analytics>();
 

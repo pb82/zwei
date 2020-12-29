@@ -7,6 +7,7 @@
 #include <queue>
 
 #include "Entity.h"
+#include "../alg/Position.h"
 
 class Collider;
 
@@ -40,6 +41,8 @@ public:
     void render(LayerType layer);
 
     void key(GameKeyEvent &key);
+
+    bool hasEntities(Position p, LayerType layer);
 
 private:
     Manager();

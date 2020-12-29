@@ -98,3 +98,15 @@ void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
         }
     }
 }
+
+bool Manager::hasEntities(Position p, LayerType layer) {
+    for (auto &entity : entities.at(layer)) {
+        if (entity->hasComponent<Transform>()) {
+            auto t = entity->getComponent<Transform>();
+            if (p == t->p) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
