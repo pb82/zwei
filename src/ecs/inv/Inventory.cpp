@@ -19,6 +19,7 @@ Inventory::Inventory() {
 
 void Inventory::next() {
     selectedSlot++;
+    selectedSlot %= 10;
 }
 
 bool Inventory::add(std::shared_ptr<Item> item) {
@@ -60,9 +61,7 @@ void Inventory::drop() {
     t->p.nearestTile(p);
     Position dropPosition = RT_Context.getTopology().nearestAccessible(p, false);
 
-    auto entity = std::make_shared<Entity>();
-    entity->addComponent<Transform>(dropPosition.x, dropPosition.y, Padding{0.5, 0.5, 0.5, 0.5});
-    entity->addComponent<Collectable>(slot.item);
+    auto entity = Item::make(dropPosition, slot.item);
 
     if (slot.number > 1) {
         slot.number--;
@@ -70,9 +69,6 @@ void Inventory::drop() {
         slot.item.reset();
         slot.type = EMPTY_SLOT;
     }
-
-    auto pt = entity->getComponent<Transform>();
-    entity->addComponent<Collider>(pt, CT_ITEM, Padding{0.7, .7, 0.7, 0.7});
 
     Manager::instance().enqueue(entity, ITEMS);
 }
@@ -100,7 +96,7 @@ void Inventory::render() {
             Draw::instance().draw(texture->mem, source, target);
         }
 
-        if (currentSlot == (selectedSlot % 10)) {
+        if (currentSlot == selectedSlot) {
             Gfx::pick(source, cursorTile, texture->w);
             Draw::instance().draw(texture->mem, source, target);
         }

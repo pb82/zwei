@@ -103,14 +103,9 @@ void placeSpider(int x, int y, Topology &top) {
     ai->brainify<Spider>();
 }
 
-void placePotion(int x, int y) {
-    auto potion = Manager::instance().addEntity(ITEMS);
-    potion->addComponent<Collectable>(std::make_shared<HealthPotion>());
-    potion->addComponent<Transform>(x, y, Padding{0.5, 0.5, 0.5, 0.5});
-    potion->addComponent<Analytics>();
-
-    auto potionTransform = potion->getComponent<Transform>();
-    potion->addComponent<Collider>(potionTransform, CT_ITEM, Padding{0.7, 0.7, 0.7, 0.7});
+void placePotion(float x, float y) {
+    auto entity = Item::make({x, y}, HEALTH_POTION);
+    Manager::instance().enqueue(entity, ITEMS);
 }
 
 void loop() {
@@ -179,7 +174,7 @@ void loop() {
     // placeKakta(12, 8, RT_Context.getTopology());
 
     // placeSpider(8, 8, RT_Context.getTopology());
-    placePotion(8,8);
+    placePotion(8, 8);
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();
@@ -286,7 +281,7 @@ void initSdl() {
             SDL_WINDOWPOS_CENTERED,
             configWindowWidth,
             configWindowHeight,
-            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_INIT_GAMECONTROLLER | SDL_WINDOW_FULLSCREEN
+            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_INIT_GAMECONTROLLER
     );
 
     Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);

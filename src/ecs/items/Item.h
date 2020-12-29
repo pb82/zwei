@@ -3,6 +3,7 @@
 
 #include "../Entity.h"
 #include "../../alg/Padding.h"
+#include "../../alg/Position.h"
 
 enum ItemType {
     EMPTY_SLOT,
@@ -20,6 +21,10 @@ public:
     virtual int tile() = 0;
 
     ItemType type;
+
+    static std::shared_ptr<Entity> make(Position p, ItemType type);
+
+    static std::shared_ptr<Entity> make(Position p, std::shared_ptr<Item> item);
 
 };
 
