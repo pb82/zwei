@@ -8,6 +8,7 @@
 enum ItemType {
     EMPTY_SLOT,
     HEALTH_POTION,
+    STICK,
 };
 
 class Item {
@@ -16,11 +17,19 @@ public:
 
     virtual bool stackable() { return false; }
 
-    virtual void use(Entity &on) {}
+    virtual bool canEquip() { return false; }
+
+    virtual void use(std::shared_ptr<Entity> on) {}
+
+    virtual void equip(std::shared_ptr<Entity> on) {}
+
+    virtual void unequip(std::shared_ptr<Entity> on) {}
 
     virtual int tile() = 0;
 
     ItemType type;
+
+    bool equipped = false;
 
     static std::shared_ptr<Entity> make(Position p, ItemType type);
 

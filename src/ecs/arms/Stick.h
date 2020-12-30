@@ -11,7 +11,7 @@ public:
 
     int recharge() override;
 
-    int damage(const Character& c) override;
+    int damage(const Character &c) override;
 
     float speed() override;
 

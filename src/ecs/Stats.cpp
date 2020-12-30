@@ -15,21 +15,6 @@
 
 Stats::Stats(Entity &parent, bool render) : Component(parent), doRender(render) {}
 
-void Stats::equipWeapon(std::shared_ptr<Weapon> w) {
-    this->weapon = w;
-}
-
-void Stats::dropWeapon() {
-    this->weapon = nullptr;
-}
-
-bool Stats::hasWeapon() {
-    if (this->weapon) {
-        return true;
-    }
-    return false;
-}
-
 void Stats::render() {
     if (!doRender) return;
     renderHp();

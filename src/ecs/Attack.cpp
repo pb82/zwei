@@ -81,10 +81,10 @@ void Attack::attack() {
     auto stats = parent.getComponent<Stats>();
 
     // Entity must have a weapon equiped
-    if (!stats->hasWeapon()) return;
-    this->wait = stats->weapon->recharge();
+    if (!stats->inventory.hasWeapon()) return;
+    this->wait = stats->inventory.weapon->recharge();
 
-    if (stats->weapon->isProjectile()) {
+    if (stats->inventory.weapon->isProjectile()) {
         // TODO
     } else {
         launchStickWeapon(stats);
@@ -106,13 +106,13 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
             padding.left = 1.5;
             padding.right = 0;
             padding.bottom = 0;
-            padding.top = (2 - (stats->weapon->range() * 2));
+            padding.top = (2 - (stats->inventory.weapon->range() * 2));
             angle = VM_100_PI;
             break;
         case W:
             animation->queueAttackFrames();
             projectileOffsetX = -1;
-            padding.left = (2 - (stats->weapon->range() * 2));
+            padding.left = (2 - (stats->inventory.weapon->range() * 2));
             padding.right = 0;
             padding.bottom = 1.5;
             padding.top = 0;
@@ -122,7 +122,7 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
             animation->queueAttackFrames();
             projectileOffsetX = 1;
             padding.left = 0;
-            padding.right = (2 - (stats->weapon->range() * 2));
+            padding.right = (2 - (stats->inventory.weapon->range() * 2));
             padding.bottom = 1.5;
             padding.top = 0;
             angle = VM_150_PI;
@@ -132,7 +132,7 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
             projectileOffsetY = 1;
             padding.left = 1.5;
             padding.right = 0;
-            padding.bottom = (2 - (stats->weapon->range() * 2));
+            padding.bottom = (2 - (stats->inventory.weapon->range() * 2));
             padding.top = 0;
             angle = VM_100_PI;
             break;
@@ -150,13 +150,13 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
 
     auto t = p->getComponent<Transform>();
     p->addComponent<Collider>(t, CT_PROJECTILE, padding);
-    p->addComponent<Acceleration>(stats->weapon->speed(), angle);
+    p->addComponent<Acceleration>(stats->inventory.weapon->speed(), angle);
     p->addComponent<Projectile>();
 
     auto projectile = p->getComponent<Projectile>();
-    projectile->power = stats->weapon->damage(stats->character);
-    projectile->force.set(acc->getAngle(), stats->weapon->throwback());
-    projectile->isProjectile = stats->weapon->isProjectile();
+    projectile->power = stats->inventory.weapon->damage(stats->character);
+    projectile->force.set(acc->getAngle(), stats->inventory.weapon->throwback());
+    projectile->isProjectile = stats->inventory.weapon->isProjectile();
     projectile->origin = &this->parent;
 
     // Self destruct weapon projectile

@@ -16,15 +16,7 @@ public:
 
     void render() override;
 
-    void equipWeapon(std::shared_ptr<Weapon> weapon);
-
-    void dropWeapon();
-
-    bool hasWeapon();
-
     // Properties
-
-    std::shared_ptr<Weapon> weapon;
 
     Character character;
 

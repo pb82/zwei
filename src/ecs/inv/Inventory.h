@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../items/Item.h"
+#include "../arms/Weapon.h"
 
 #define MAX_SLOTS 10
 #define MAX_PER_SLOT 9
@@ -26,6 +27,16 @@ public:
 
     void render();
 
+    void use();
+
+    bool hasWeapon();
+
+    void equip(std::shared_ptr<Weapon> weapon);
+
+    void dropWeapon();
+
+    std::shared_ptr<Weapon> weapon = nullptr;
+    
 private:
 
     bool addStackableItem(std::shared_ptr<Item> item);

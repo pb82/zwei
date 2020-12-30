@@ -7,5 +7,5 @@ bool HealthPotion::stackable() {
 }
 
 int HealthPotion::tile() {
-    return 92;
+    return 93;
 }

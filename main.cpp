@@ -62,7 +62,7 @@ void placeKakta(int x, int y, Topology &top) {
 
     kakta->addComponent<Stats>(false);
     auto stats = kakta->getComponent<Stats>();
-    stats->equipWeapon(std::make_shared<Stick>());
+    stats->inventory.equip(std::make_shared<Stick>());
     stats->character.setBase(5, 1, 1, 1);
     stats->character.setLevel(1);
 
@@ -103,8 +103,8 @@ void placeSpider(int x, int y, Topology &top) {
     ai->brainify<Spider>();
 }
 
-void placePotion(float x, float y) {
-    auto entity = Item::make({x, y}, HEALTH_POTION);
+void placePotion(float x, float y, ItemType type) {
+    auto entity = Item::make({x, y}, type);
     Manager::instance().enqueue(entity, ITEMS);
 }
 
@@ -166,7 +166,6 @@ void loop() {
     // tweakUi->addComponent<Tweak>(sprite);
 
     auto stats = sprite->getComponent<Stats>();
-    stats->equipWeapon(std::make_shared<Stick>());
     stats->character.setBase(10, 1, 1, 1);
 
     // placeKakta(11, 11, RT_Context.getTopology());
@@ -174,8 +173,10 @@ void loop() {
     // placeKakta(12, 8, RT_Context.getTopology());
 
     // placeSpider(8, 8, RT_Context.getTopology());
-    placePotion(8, 8);
-    placePotion(9, 8);
+    placePotion(8, 8, HEALTH_POTION);
+    placePotion(9, 8, STICK);
+    placePotion(9, 5, STICK);
+
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();

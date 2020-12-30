@@ -27,6 +27,18 @@ bool Inventory::add(std::shared_ptr<Item> item) {
     return addSingleSlotItem(item);
 }
 
+bool Inventory::hasWeapon() {
+    return this->weapon != nullptr;
+}
+
+void Inventory::equip(std::shared_ptr<Weapon> weapon) {
+    this->weapon = weapon;
+}
+
+void Inventory::dropWeapon() {
+    this->weapon = nullptr;
+}
+
 bool Inventory::addStackableItem(std::shared_ptr<Item> item) {
     for (auto &slot : slots) {
         if (slot.type == item->type && slot.number < MAX_PER_SLOT) {
@@ -55,7 +67,7 @@ void Inventory::drop() {
     InventoryItem &slot = slots.at(selectedSlot);
 
     auto t = RT_Context.getPlayer()->getComponent<Transform>();
-    
+
     Position p;
     t->p.nearestTile(p);
     Position dropPosition = RT_Context.getTopology().nearestAccessible(p, false);
@@ -69,11 +81,34 @@ void Inventory::drop() {
     if (slot.number > 1) {
         slot.number--;
     } else {
+        if (slot.item->canEquip()) {
+            slot.item->unequip(RT_Context.getPlayer());
+        }
         slot.item.reset();
         slot.type = EMPTY_SLOT;
     }
 
     Manager::instance().enqueue(entity, ITEMS);
+}
+
+void Inventory::use() {
+    if (this->slots.at(selectedSlot).type == EMPTY_SLOT) return;
+    InventoryItem &slot = slots.at(selectedSlot);
+
+    if (slot.item->canEquip()) {
+        if (slot.item->equipped) {
+            // If already equipped, unequip
+            slot.item->unequip(RT_Context.getPlayer());
+        } else {
+            // Only one weapon can be equipped at the same time
+            for (int i = 0; i < slots.size(); i++) {
+                if (slots.at(i).item) slots.at(i).item->unequip(RT_Context.getPlayer());
+            }
+            slot.item->equip(RT_Context.getPlayer());
+        }
+    } else {
+        slot.item->use(RT_Context.getPlayer());
+    }
 }
 
 void Inventory::render() {
@@ -106,6 +141,18 @@ void Inventory::render() {
 
         if (slot.number > 1) {
             Gfx::pick(source, Text::fromInt(slot.number), texture->w);
+
+            target.x += configTileSize;
+            target.w = configTileSize;
+            target.h = configTileSize;
+
+            SDL_SetTextureColorMod(texture->mem, 128, 255, 128);
+            Draw::instance().draw(texture->mem, source, target);
+            SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
+        }
+
+        if (slot.item && slot.item->equipped) {
+            Gfx::pick(source, Text::fromChar('e'), texture->w);
 
             target.x += configTileSize;
             target.w = configTileSize;

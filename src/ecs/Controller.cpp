@@ -62,6 +62,14 @@ void Controller::key(GameKeyEvent &key) {
         return;
     }
 
+    if (key.key == GK_B && key.state == GK_PUSHED) {
+        if (parent.hasComponent<Stats>()) {
+            auto stats = parent.getComponent<Stats>();
+            stats->inventory.use();
+        }
+        return;
+    }
+
     if (key.state == GK_RELEASED) {
         if (key.key == GK_NONE) {
             activeKeys[GK_UP] = false;

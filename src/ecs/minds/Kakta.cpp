@@ -47,7 +47,7 @@ void Kakta::plan(float dt) {
         if (this->parent.hasComponent<Stats>()) {
             auto attack = this->parent.getComponent<Attack>();
             auto stats = this->parent.getComponent<Stats>();
-            if (stats->hasWeapon()) {
+            if (stats->inventory.hasWeapon()) {
                 float distance = playerCollider->tracked->p.distance(transform->p);
                 Direction d = acceleration->getDirection();
                 float offset = 0.0f;
@@ -56,7 +56,7 @@ void Kakta::plan(float dt) {
                 if (d == S) offset = 1 - playerCollider->padding.bottom;
                 if (d == E) offset = 1 - playerCollider->padding.left;
                 if (d == W) offset = 1 - playerCollider->padding.right;
-                if (distance <= (stats->weapon->range() + offset)) {
+                if (distance <= (stats->inventory.weapon->range() + offset)) {
                     attack->attack();
                     return;
                 }

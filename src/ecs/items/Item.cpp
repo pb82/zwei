@@ -3,7 +3,9 @@
 #include "../Transform.h"
 #include "../Collider.h"
 #include "HealthPotion.h"
+#include "StickItem.h"
 #include "../Analytics.h"
+
 
 std::shared_ptr<Entity> Item::make(Position p, ItemType type) {
     std::shared_ptr<Item> item = nullptr;
@@ -12,6 +14,12 @@ std::shared_ptr<Entity> Item::make(Position p, ItemType type) {
             return nullptr;
         case HEALTH_POTION:
             item = std::make_shared<HealthPotion>();
+            break;
+        case STICK:
+            item = std::make_shared<StickItem>();
+            break;
+        default:
+            return nullptr;
     }
 
     return make(p, item);
