@@ -38,7 +38,7 @@
 #include "src/ecs/arms/Stick.h"
 #include "src/ecs/minds/Spider.h"
 #include "src/ecs/Collectable.h"
-#include "src/ecs/items/HealthPotion.h"
+#include "src/snd/Player.h"
 
 void placeKakta(int x, int y, Topology &top) {
     auto kakta = Manager::instance().addEntity(OBJECTS);
@@ -168,7 +168,7 @@ void loop() {
     auto stats = sprite->getComponent<Stats>();
     stats->character.setBase(10, 1, 1, 1);
 
-    // placeKakta(11, 11, RT_Context.getTopology());
+    placeKakta(11, 11, RT_Context.getTopology());
     // placeKakta(10, 10, RT_Context.getTopology());
     // placeKakta(12, 8, RT_Context.getTopology());
 
@@ -177,6 +177,7 @@ void loop() {
     placePotion(9, 8, STICK);
     placePotion(9, 5, STICK);
 
+    Player::instance().playMusic(MUSIC_1);
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();
@@ -256,11 +257,13 @@ void initAssets() {
     // Assets::instance().addTexture(TILES, assets_Tiles);
     Assets::instance().addTexture(TILES, "assets/RAW/dungeon.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
+    Assets::instance().addSound(SOUND_PICKUP, "assets/RAW/pickup.wav");
 }
 
 void initSdl() {
 
-    auto sdlFlags = SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER;
+    auto sdlFlags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK |
+                    SDL_INIT_GAMECONTROLLER;
 
     if (SDL_Init(sdlFlags) != 0) {
         exit(1);
@@ -274,6 +277,10 @@ void initSdl() {
     SDL_GL_SetSwapInterval(1);
 
     if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
+        exit(1);
+    }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 4, 2048) < 0) {
         exit(1);
     }
 

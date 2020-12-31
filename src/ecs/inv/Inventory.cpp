@@ -11,7 +11,7 @@
 #include "../Collectable.h"
 #include "../Collider.h"
 #include "../Manager.h"
-#include "../Acceleration.h"
+#include "../../snd/Player.h"
 
 Inventory::Inventory() {
     this->slots.resize(MAX_SLOTS);
@@ -23,8 +23,16 @@ void Inventory::next() {
 }
 
 bool Inventory::add(std::shared_ptr<Item> item) {
-    if (item->stackable()) return addStackableItem(item);
-    return addSingleSlotItem(item);
+    bool success = false;
+    if (item->stackable()) {
+        success = addStackableItem(item);
+    } else {
+        success = addSingleSlotItem(item);
+    }
+    if (success) {
+        Player::instance().playSound(SOUND_PICKUP);
+    }
+    return success;
 }
 
 bool Inventory::hasWeapon() {
