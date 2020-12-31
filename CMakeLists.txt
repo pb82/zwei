@@ -35,12 +35,14 @@ set(LINUX ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(SDL2_mixer REQUIRED)
 PKG_SEARCH_MODULE(OpenGL gl)
 
 target_include_directories(
         zwei
         PRIVATE ${SDL2_INCLUDE_DIR}
         PRIVATE ${SDL2_IMAGE_INCLUDE_DIR}
+        PRIVATE ${SDL2_MIXER_INCLUDE_DIR}
         PRIVATE ${OpenGL_INCLUDE_DIRS}
         PRIVATE ${zwei_SOURCE_DIR}/lua
         PRIVATE ${zwei_SOURCE_DIR}/json
@@ -53,6 +55,7 @@ target_link_libraries(
         zwei
         PRIVATE ${SDL2_LIBRARY}
         PRIVATE ${SDL2_IMAGE_LIBRARIES}
+        PRIVATE ${SDL2_MIXER_LIBRARIES}
         PRIVATE ${OpenGL_LIBRARIES}
 )
 
