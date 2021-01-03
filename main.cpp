@@ -120,6 +120,8 @@ void loop() {
     auto targetMillis = (1 / configTargetFramerate) * 1000;
     float millis = 0.0f;
 
+    Player::instance().playMusic(MUSIC_1);
+
     Map m("./assets/RAW");
     m.load("dungeon.json");
 
@@ -176,8 +178,6 @@ void loop() {
     placePotion(8, 8, HEALTH_POTION);
     placePotion(9, 8, STICK);
     placePotion(9, 5, STICK);
-
-    Player::instance().playMusic(MUSIC_1);
 
     while (RT_Running) {
         auto timeStart = std::chrono::system_clock::now();
@@ -237,6 +237,11 @@ void initStyles() {
     style.WindowRounding = 2.0f;
 }
 
+void initSound() {
+    // force sound to init
+    Player::instance();
+}
+
 void initImgui() {
     assert(Gfx_Window);
     assert(Gfx_Renderer);
@@ -257,7 +262,6 @@ void initAssets() {
     // Assets::instance().addTexture(TILES, assets_Tiles);
     Assets::instance().addTexture(TILES, "assets/RAW/dungeon.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
-    Assets::instance().addSound(SOUND_PICKUP, "assets/RAW/pickup.wav");
 }
 
 void initSdl() {
@@ -280,7 +284,7 @@ void initSdl() {
         exit(1);
     }
 
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 4, 2048) < 0) {
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         exit(1);
     }
 
@@ -316,5 +320,6 @@ int main(int, char **) {
     initAssets();
     initImgui();
     initStyles();
+    initSound();
     loop();
 }

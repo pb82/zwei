@@ -29,22 +29,6 @@ public:
     int h;
 };
 
-struct Sound {
-    Sound(Mix_Chunk *sound) : sound(sound) {}
-
-    ~Sound();
-
-    Mix_Chunk *sound;
-};
-
-struct Music {
-    Music(Mix_Music *music) : music(music) {}
-
-    ~Music();
-
-    Mix_Music *music;
-};
-
 class Assets {
 public:
     static Assets &instance() {
@@ -63,15 +47,7 @@ public:
 
     void addTexture(Asset id, const char *file);
 
-    void addSound(Asset id, const char *file);
-
-    void addMusic(Asset id, const char *file);
-
     void *getFont(Asset id);
-
-    std::shared_ptr<Sound> getSound(Asset id);
-
-    std::shared_ptr<Music> getMusic(Asset id);
 
     std::shared_ptr<Texture> getTexture(Asset id);
 
@@ -80,8 +56,6 @@ private:
 
     std::unordered_map<Asset, std::shared_ptr<Texture>> textures;
     std::unordered_map<Asset, EmbeddedAsset *> fonts;
-    std::unordered_map<Asset, std::shared_ptr<Sound>> sounds;
-    std::unordered_map<Asset, std::shared_ptr<Music>> songs;
 
 };
 

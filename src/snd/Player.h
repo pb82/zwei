@@ -6,6 +6,26 @@
 #include <queue>
 #include <ASSETS/Assets.h>
 
+enum AudioChannel {
+    SoundEffects = 0,
+};
+
+struct Sound {
+    Sound(Mix_Chunk *sound) : sound(sound) {}
+
+    ~Sound();
+
+    Mix_Chunk *sound;
+};
+
+struct Music {
+    Music(Mix_Music *music) : music(music) {}
+
+    ~Music();
+
+    Mix_Music *music;
+};
+
 class Player {
 public:
     static Player &instance() {
@@ -25,6 +45,12 @@ private:
     Player();
 
     ~Player();
+
+    void init();
+
+    std::unordered_map<Asset, std::shared_ptr<Sound>> sounds;
+
+    std::unordered_map<Asset, std::shared_ptr<Music>> music;
 
     bool ready = false;
 };
