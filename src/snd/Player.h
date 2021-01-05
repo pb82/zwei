@@ -56,6 +56,8 @@ private:
 
     std::unordered_map<Asset, std::shared_ptr<Music>> music;
 
+    Asset nowPlaying = UNDEFINED;
+
     bool ready = false;
 };
 

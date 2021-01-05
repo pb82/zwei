@@ -52,12 +52,18 @@ void Player::playMusic(Asset id) {
         return;
     }
 
+    if (id == nowPlaying) {
+        return;
+    }
+
     if (Mix_PlayingMusic()) {
         Mix_HaltMusic();
     }
 
     if (!Mix_PlayingMusic()) {
-        Mix_PlayMusic(music.at(id)->music, -1);
+        if (Mix_PlayMusic(music.at(id)->music, -1)) {
+            nowPlaying = id;
+        }
     }
 }
 
@@ -82,6 +88,7 @@ void Player::init() {
 
     // musioc
     music_tasks.push_back({MUSIC_1, std::async(load_music, "assets/RAW/sample.ogg")});
+    music_tasks.push_back({MUSIC_GAMEOVER, std::async(load_music, "assets/RAW/gameover.ogg")});
 
     for (auto &task : sound_tasks) {
         Asset soundAsset = std::get<0>(task);

@@ -15,7 +15,7 @@
 #include "Group.h"
 #include "../alg/Text.h"
 #include "../Gfx.h"
-#include "../Draw.h"
+#include "../snd/Player.h"
 
 Attack::Attack(Entity &parent) : Component(parent) {}
 
@@ -73,6 +73,7 @@ void Attack::defend(std::shared_ptr<Projectile> projectile) {
         } else {
             if (&this->parent == RT_Context.getPlayer().get()) {
                 RT_Context.state.pushState(GameOver);
+                Player::instance().playMusic(MUSIC_GAMEOVER);
             }
         }
     }

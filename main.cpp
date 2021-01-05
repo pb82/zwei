@@ -318,6 +318,7 @@ void loop() {
                 renderGameOver(frameStart, &ga);
                 break;
             case MainMenu:
+                renderMenu(frameStart);
             default:
                 continue;
         }

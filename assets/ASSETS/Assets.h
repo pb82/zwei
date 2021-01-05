@@ -15,7 +15,9 @@ enum Asset {
     TILES,
     SPRITES,
     SOUND_PICKUP,
-    MUSIC_1
+    MUSIC_1,
+    MUSIC_GAMEOVER,
+    UNDEFINED,
 };
 
 class Texture {
