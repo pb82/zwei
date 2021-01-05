@@ -67,7 +67,7 @@ void placeKakta(int x, int y, Topology &top) {
     kakta->addComponent<Stats>(false);
     auto stats = kakta->getComponent<Stats>();
     stats->inventory.equip(std::make_shared<Stick>());
-    stats->character.setBase(5, 1, 1, 1);
+    stats->character.setBase(5, 100, 1, 1);
     stats->character.setLevel(1);
 
     auto transform = kakta->getComponent<Transform>();
@@ -114,13 +114,31 @@ void placeItem(float x, float y, ItemType type) {
 
 typedef decltype(std::chrono::system_clock::now()) tp;
 
-void renderGameOver(tp frameStart) {
-    static float darkness = 255;
+void renderMenu(tp frameStart) {
+    ImGui_ImplOpenGL2_NewFrame();
+    ImGui_ImplSDL2_NewFrame(Gfx_Window);
+    ImGui::NewFrame();
+    {
+        Manager::instance().render(UI);
+    }
+    ImGui::Render();
 
+    // Flush
+    ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+    SDL_GL_SwapWindow(Gfx_Window);
+    glFinish();
+
+    auto frameTime = std::chrono::system_clock::now() - frameStart;
+    float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
+    float delay = targetMillis - millis;
+    if (delay > 0) SDL_Delay(delay);
+}
+
+void renderGameOver(tp frameStart, float *darkness) {
     auto t1 = Assets::instance().getTexture(TILES);
 
-    SDL_SetTextureColorMod(t1->mem, 255, darkness, darkness);
-    SDL_SetTextureAlphaMod(t1->mem, darkness);
+    SDL_SetTextureColorMod(t1->mem, 255, *darkness, *darkness);
+    SDL_SetTextureAlphaMod(t1->mem, *darkness);
 
     Manager::instance().render(BACKGROUND);
     Manager::instance().render(FLOOR);
@@ -130,7 +148,6 @@ void renderGameOver(tp frameStart) {
     auto texture = Assets::instance().getTexture(SPRITES);
     std::string s("game over");
 
-    Padding p{0.5, 0.5, 0.5, 0.5};
     SDL_Rect target;
     target.x = (configWindowWidth / 2) - ((s.length() * 24) / 2);
     target.y = (configWindowHeight / 2) - 12;
@@ -168,13 +185,10 @@ void renderGameOver(tp frameStart) {
     }
 
     float dt = std::max(millis, delay);
-
-    Col::collide(dt);
     Manager::instance().update(dt);
-    darkness -= 0.5;
-    if (darkness <= 0) {
-        darkness = 0;
-    }
+
+    *darkness -= 0.5f;
+    if (*darkness <= 0) *darkness = 0.0f;
 }
 
 void renderGame(tp frameStart) {
@@ -185,31 +199,18 @@ void renderGame(tp frameStart) {
     Manager::instance().render(OBJECTS);
     Manager::instance().render(FOREGROUND);
 
-    ImGui_ImplOpenGL2_NewFrame();
-    ImGui_ImplSDL2_NewFrame(Gfx_Window);
-    ImGui::NewFrame();
-    {
-        Manager::instance().render(UI);
-    }
-    ImGui::Render();
-
-    // RT_Camera.magnify(1.003);
-
     // Flush
-    ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
     SDL_GL_SwapWindow(Gfx_Window);
     glFinish();
 
+    // Frametime
     auto frameTime = std::chrono::system_clock::now() - frameStart;
     float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
     float delay = targetMillis - millis;
-
-    if (delay > 0) {
-        SDL_Delay(delay);
-    }
-
+    if (delay > 0) SDL_Delay(delay);
     float dt = std::max(millis, delay);
 
+    // Update entities
     Col::collide(dt);
     Manager::instance().update(dt);
 }
@@ -217,7 +218,7 @@ void renderGame(tp frameStart) {
 void loop() {
     Input in;
     SDL_Event event;
-    GameKeyEvent controllerEvent;
+    GameKeyEvent gk;
     bool controllerFound = in.scan();
     if (!controllerFound) {
         // return;
@@ -284,6 +285,9 @@ void loop() {
     placeItem(9, 5, STICK);
     placeItem(9, 6, HEALTH_POTION);
 
+    // Global alpha
+    float ga = 255.0f;
+
     while (RT_Running) {
         auto frameStart = std::chrono::system_clock::now();
 
@@ -296,17 +300,22 @@ void loop() {
                 RT_Stop();
                 continue;
             }
-            if (in.map(&event, &controllerEvent)) {
-                Manager::instance().key(controllerEvent);
+            if (in.map(&event, &gk)) {
+                if (gk.valid && gk.state == GK_PUSHED && gk.key == GK_START) {
+                    Rt::instance().context.state.toggleMenu();
+                } else {
+                    Manager::instance().key(gk);
+                }
             }
         }
 
         switch (RT_Context.state.currentState()) {
             case Game:
+                ga = 255.0f;
                 renderGame(frameStart);
                 break;
             case GameOver:
-                renderGameOver(frameStart);
+                renderGameOver(frameStart, &ga);
                 break;
             case MainMenu:
             default:

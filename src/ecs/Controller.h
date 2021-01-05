@@ -6,16 +6,6 @@
 
 #include "Component.h"
 
-#define P_UP (activeKeys[GK_UP] == true)
-#define P_DOWN (activeKeys[GK_DOWN] == true)
-#define P_LEFT (activeKeys[GK_LEFT] == true)
-#define P_RIGHT (activeKeys[GK_RIGHT] == true)
-#define P_A (activeKeys[GK_A] == true)
-#define P_B (activeKeys[GK_B] == true)
-#define P_SELECT (activeKeys[GK_SELECT] == true)
-#define P_X (activeKeys[GK_X] == true)
-#define P_START(ac)
-
 class Controller : public Component {
 public:
     Controller(Entity &parent);
@@ -24,13 +14,9 @@ public:
 
 private:
 
-    // void addKey(GameKey key);
-
-    // void removeKey(GameKey key);
+    void resetKeys();
 
     float angleFromKeys();
-
-    // std::vector<GameKey> activeKeys;
 
     std::map<GameKey, bool> activeKeys;
 };
