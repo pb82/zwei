@@ -46,30 +46,6 @@ void Controller::key(GameKeyEvent &key) {
     auto acceleration = parent.getComponent<Acceleration>();
     auto animation = parent.getComponent<Animation>();
 
-    if (key.key == GK_SELECT && key.state == GK_PUSHED) {
-        if (parent.hasComponent<Stats>()) {
-            auto stats = parent.getComponent<Stats>();
-            stats->inventory.next();
-        }
-        return;
-    }
-
-    if (key.key == GK_X && key.state == GK_PUSHED) {
-        if (parent.hasComponent<Stats>()) {
-            auto stats = parent.getComponent<Stats>();
-            stats->inventory.drop();
-        }
-        return;
-    }
-
-    if (key.key == GK_B && key.state == GK_PUSHED) {
-        if (parent.hasComponent<Stats>()) {
-            auto stats = parent.getComponent<Stats>();
-            stats->inventory.use();
-        }
-        return;
-    }
-
     if (key.state == GK_RELEASED) {
         if (key.key == GK_NONE) {
             activeKeys[GK_UP] = false;
@@ -77,11 +53,22 @@ void Controller::key(GameKeyEvent &key) {
             activeKeys[GK_LEFT] = false;
             activeKeys[GK_RIGHT] = false;
             activeKeys[GK_A] = false;
+            activeKeys[GK_B] = false;
+            activeKeys[GK_X] = false;
+            activeKeys[GK_SELECT] = false;
         } else {
             activeKeys[key.key] = false;
         }
     } else {
         activeKeys[key.key] = true;
+    }
+
+    if (P_SELECT) {
+        if (parent.hasComponent<Stats>()) {
+            auto stats = parent.getComponent<Stats>();
+            stats->inventory.next();
+        }
+        return;
     }
 
     if (P_A) {
@@ -91,6 +78,22 @@ void Controller::key(GameKeyEvent &key) {
             attack->attack();
             return;
         }
+    }
+
+    if (P_B) {
+        if (parent.hasComponent<Stats>()) {
+            auto stats = parent.getComponent<Stats>();
+            stats->inventory.use();
+        }
+        return;
+    }
+
+    if (P_X) {
+        if (parent.hasComponent<Stats>()) {
+            auto stats = parent.getComponent<Stats>();
+            stats->inventory.drop();
+        }
+        return;
     }
 
     if (!P_UP && !P_DOWN && !P_LEFT && !P_RIGHT) {

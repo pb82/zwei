@@ -29,6 +29,7 @@ enum GameKey {
 struct GameKeyEvent {
     GameKeyState state;
     GameKey key;
+    bool valid = false;
 };
 
 class Input {

@@ -14,6 +14,8 @@
 #include "Projectile.h"
 #include "Group.h"
 #include "../alg/Text.h"
+#include "../Gfx.h"
+#include "../Draw.h"
 
 Attack::Attack(Entity &parent) : Component(parent) {}
 
@@ -68,6 +70,10 @@ void Attack::defend(std::shared_ptr<Projectile> projectile) {
 
         if (!stats->character.dead()) {
             printDamage(damage, transform->p.x, transform->p.y);
+        } else {
+            if (&this->parent == RT_Context.getPlayer().get()) {
+                RT_Context.state.pushState(GameOver);
+            }
         }
     }
 }

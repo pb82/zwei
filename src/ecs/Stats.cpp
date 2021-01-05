@@ -70,6 +70,7 @@ void Stats::update(float dt) {
         auto playerStats = RT_Context.getPlayer()->getComponent<Stats>();
 
         if (playerStats->character.collectExperience(exp)) {
+            // Level up
             auto playerTransform = RT_Context.getPlayer()->getComponent<Transform>();
             float offset = playerTransform->p.x;
 

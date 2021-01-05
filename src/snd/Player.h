@@ -41,6 +41,10 @@ public:
 
     void playMusic(Asset id);
 
+    void pause();
+
+    void resume();
+
 private:
     Player();
 

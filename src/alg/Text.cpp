@@ -59,6 +59,16 @@ int Text::fromChar(char c) {
             return 87;
         case 'p':
             return 88;
+        case 'g':
+            return 78;
+        case 'a':
+            return 79;
+        case 'm':
+            return 95;
+        case 'o':
+            return 100;
+        case 'r':
+            return 101;
         case '/':
             return 89;
         case '*':

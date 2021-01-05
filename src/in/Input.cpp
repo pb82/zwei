@@ -184,10 +184,12 @@ bool Input::mapKeyboardEvent(SDL_Event *e, GameKeyEvent *g) {
 
 bool Input::map(SDL_Event *e, GameKeyEvent *g) {
     if (e->type == SDL_CONTROLLERBUTTONDOWN || e->type == SDL_CONTROLLERBUTTONUP) {
-        return mapGamepadEvent(e, g);
+        g->valid = mapGamepadEvent(e, g);
+        return g->valid;
     }
     if (e->type == SDL_KEYDOWN || e->type == SDL_KEYUP) {
-        return mapKeyboardEvent(e, g);
+        g->valid = mapKeyboardEvent(e, g);
+        return g->valid;
     }
     return false;
 }

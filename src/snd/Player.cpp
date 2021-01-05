@@ -38,6 +38,10 @@ void Player::playSound(Asset id) {
         return;
     }
 
+    if (Mix_Playing(SoundEffects)) {
+        Mix_HaltChannel(SoundEffects);
+    }
+
     if (!Mix_Playing(SoundEffects)) {
         Mix_PlayChannel(SoundEffects, sounds.at(id)->sound, 0);
     }
@@ -53,7 +57,19 @@ void Player::playMusic(Asset id) {
     }
 
     if (!Mix_PlayingMusic()) {
-        Mix_PlayMusic(music.at(id)->music, 0);
+        Mix_PlayMusic(music.at(id)->music, -1);
+    }
+}
+
+void Player::pause() {
+    if (!Mix_PausedMusic() && Mix_PlayingMusic()) {
+        Mix_PauseMusic();
+    }
+}
+
+void Player::resume() {
+    if (Mix_PausedMusic()) {
+        Mix_ResumeMusic();
     }
 }
 

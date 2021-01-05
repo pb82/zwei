@@ -39,6 +39,10 @@
 #include "src/ecs/minds/Spider.h"
 #include "src/ecs/Collectable.h"
 #include "src/snd/Player.h"
+#include "src/alg/Text.h"
+#include "src/Draw.h"
+
+float targetMillis = (1 / configTargetFramerate) * 1000;
 
 void placeKakta(int x, int y, Topology &top) {
     auto kakta = Manager::instance().addEntity(OBJECTS);
@@ -103,9 +107,111 @@ void placeSpider(int x, int y, Topology &top) {
     ai->brainify<Spider>();
 }
 
-void placePotion(float x, float y, ItemType type) {
+void placeItem(float x, float y, ItemType type) {
     auto entity = Item::make({x, y}, type);
     Manager::instance().enqueue(entity, ITEMS);
+}
+
+typedef decltype(std::chrono::system_clock::now()) tp;
+
+void renderGameOver(tp frameStart) {
+    static float darkness = 255;
+
+    auto t1 = Assets::instance().getTexture(TILES);
+
+    SDL_SetTextureColorMod(t1->mem, 255, darkness, darkness);
+    SDL_SetTextureAlphaMod(t1->mem, darkness);
+
+    Manager::instance().render(BACKGROUND);
+    Manager::instance().render(FLOOR);
+    Manager::instance().render(WALLS);
+    Manager::instance().render(FOREGROUND);
+
+    auto texture = Assets::instance().getTexture(SPRITES);
+    std::string s("game over");
+
+    Padding p{0.5, 0.5, 0.5, 0.5};
+    SDL_Rect target;
+    target.x = (configWindowWidth / 2) - ((s.length() * 24) / 2);
+    target.y = (configWindowHeight / 2) - 12;
+    target.w = 32;
+    target.h = 32;
+
+    for (const char c : s) {
+        SDL_Rect source;
+        Gfx::pick(source, Text::fromChar(c), texture->w);
+        Draw::instance().draw(texture->mem, source, target);
+        target.x += 24;
+    }
+
+    ImGui_ImplOpenGL2_NewFrame();
+    ImGui_ImplSDL2_NewFrame(Gfx_Window);
+    ImGui::NewFrame();
+    {
+        Manager::instance().render(UI);
+    }
+    ImGui::Render();
+
+    RT_Camera.magnify(0.999);
+
+    // Flush
+    ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+    SDL_GL_SwapWindow(Gfx_Window);
+    glFinish();
+
+    auto frameTime = std::chrono::system_clock::now() - frameStart;
+    float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
+    float delay = targetMillis - millis;
+
+    if (delay > 0) {
+        SDL_Delay(delay);
+    }
+
+    float dt = std::max(millis, delay);
+
+    Col::collide(dt);
+    Manager::instance().update(dt);
+    darkness -= 0.5;
+    if (darkness <= 0) {
+        darkness = 0;
+    }
+}
+
+void renderGame(tp frameStart) {
+    Manager::instance().render(BACKGROUND);
+    Manager::instance().render(FLOOR);
+    Manager::instance().render(WALLS);
+    Manager::instance().render(ITEMS);
+    Manager::instance().render(OBJECTS);
+    Manager::instance().render(FOREGROUND);
+
+    ImGui_ImplOpenGL2_NewFrame();
+    ImGui_ImplSDL2_NewFrame(Gfx_Window);
+    ImGui::NewFrame();
+    {
+        Manager::instance().render(UI);
+    }
+    ImGui::Render();
+
+    // RT_Camera.magnify(1.003);
+
+    // Flush
+    ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+    SDL_GL_SwapWindow(Gfx_Window);
+    glFinish();
+
+    auto frameTime = std::chrono::system_clock::now() - frameStart;
+    float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
+    float delay = targetMillis - millis;
+
+    if (delay > 0) {
+        SDL_Delay(delay);
+    }
+
+    float dt = std::max(millis, delay);
+
+    Col::collide(dt);
+    Manager::instance().update(dt);
 }
 
 void loop() {
@@ -116,9 +222,6 @@ void loop() {
     if (!controllerFound) {
         // return;
     }
-
-    auto targetMillis = (1 / configTargetFramerate) * 1000;
-    float millis = 0.0f;
 
     Player::instance().playMusic(MUSIC_1);
 
@@ -170,17 +273,19 @@ void loop() {
     auto stats = sprite->getComponent<Stats>();
     stats->character.setBase(10, 1, 1, 1);
 
-    placeKakta(11, 11, RT_Context.getTopology());
-    // placeKakta(10, 10, RT_Context.getTopology());
-    // placeKakta(12, 8, RT_Context.getTopology());
 
-    // placeSpider(8, 8, RT_Context.getTopology());
-    placePotion(8, 8, HEALTH_POTION);
-    placePotion(9, 8, STICK);
-    placePotion(9, 5, STICK);
+    placeKakta(11, 11, RT_Context.getTopology());
+    placeKakta(10, 10, RT_Context.getTopology());
+    placeKakta(12, 8, RT_Context.getTopology());
+    placeSpider(8, 8, RT_Context.getTopology());
+
+    placeItem(8, 8, HEALTH_POTION);
+    placeItem(9, 8, STICK);
+    placeItem(9, 5, STICK);
+    placeItem(9, 6, HEALTH_POTION);
 
     while (RT_Running) {
-        auto timeStart = std::chrono::system_clock::now();
+        auto frameStart = std::chrono::system_clock::now();
 
         Manager::instance().collect();
 
@@ -189,46 +294,24 @@ void loop() {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 RT_Stop();
+                continue;
             }
             if (in.map(&event, &controllerEvent)) {
                 Manager::instance().key(controllerEvent);
             }
         }
 
-        Manager::instance().render(BACKGROUND);
-        Manager::instance().render(FLOOR);
-        Manager::instance().render(WALLS);
-        Manager::instance().render(ITEMS);
-        Manager::instance().render(OBJECTS);
-        Manager::instance().render(FOREGROUND);
-
-        ImGui_ImplOpenGL2_NewFrame();
-        ImGui_ImplSDL2_NewFrame(Gfx_Window);
-        ImGui::NewFrame();
-        {
-            Manager::instance().render(UI);
+        switch (RT_Context.state.currentState()) {
+            case Game:
+                renderGame(frameStart);
+                break;
+            case GameOver:
+                renderGameOver(frameStart);
+                break;
+            case MainMenu:
+            default:
+                continue;
         }
-        ImGui::Render();
-
-        // RT_Camera.magnify(1.003);
-
-        // Flush
-        ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-        SDL_GL_SwapWindow(Gfx_Window);
-        glFinish();
-
-        auto frameTime = std::chrono::system_clock::now() - timeStart;
-        millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
-        float delay = targetMillis - millis;
-
-        if (delay > 0) {
-            SDL_Delay(delay);
-        }
-
-        float dt = std::max(millis, delay);
-
-        Col::collide(dt);
-        Manager::instance().update(dt);
     }
 }
 
