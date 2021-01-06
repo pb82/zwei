@@ -162,18 +162,9 @@ void renderGameOver(tp frameStart, float *darkness) {
         target.x += 24;
     }
 
-    ImGui_ImplOpenGL2_NewFrame();
-    ImGui_ImplSDL2_NewFrame(Gfx_Window);
-    ImGui::NewFrame();
-    {
-        Manager::instance().render(UI);
-    }
-    ImGui::Render();
-
     RT_Camera.magnify(0.999);
 
     // Flush
-    ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
     SDL_GL_SwapWindow(Gfx_Window);
     glFinish();
 
@@ -320,6 +311,7 @@ void loop() {
                 break;
             case MainMenu:
                 renderMenu(frameStart);
+                break;
             default:
                 continue;
         }
@@ -355,7 +347,7 @@ void initImgui() {
 
     ImGuiStyle &style = ImGui::GetStyle();
     style.WindowBorderSize = 4.0f;
-    style.Colors[ImGuiCol_WindowBg] = ImVec4{0.345, 0.345, 0.98, 1};
+    style.Colors[ImGuiCol_WindowBg] = ImVec4{0.345, 0.345, 0.98, 0.4};
     style.Colors[ImGuiCol_Border] = ImVec4{0.949, 0.949, 0.949, 1};
     style.Colors[ImGuiCol_Text] = ImVec4{0.949, 0.949, 0.949, 1};
     style.Colors[ImGuiCol_Button] = ImVec4{0.949, 0.949, 0.949, 1};
@@ -391,7 +383,7 @@ void initSdl() {
         exit(1);
     }
 
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+    if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         exit(1);
     }
 
