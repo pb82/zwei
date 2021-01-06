@@ -42,6 +42,8 @@ public:
 
     void key(GameKeyEvent &key);
 
+    void uiInput(GameKeyEvent &key);
+
     bool hasEntities(Position p, LayerType layer);
 
 private:

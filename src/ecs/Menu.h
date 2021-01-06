@@ -4,12 +4,16 @@
 #include <stack>
 #include <memory>
 #include <vector>
+#include <functional>
 
 #include "Component.h"
 
 enum GameMenu {
     Main,
+    Settings,
 };
+
+typedef std::function<void()> menu_Callback;
 
 class MenuAction {
 public:
@@ -33,11 +37,16 @@ protected:
 
 class MenuOption : public MenuAction {
 public:
-    MenuOption(const char *text);
+    MenuOption(const char *text, menu_Callback cb);
 
     void invoke(GameKeyEvent &key) override;
 
     void render() override;
+
+private:
+
+    menu_Callback cb;
+
 };
 
 class Menu : public Component {
@@ -50,11 +59,15 @@ public:
 
 private:
 
+    void renderMenu(std::vector<std::unique_ptr<MenuAction>> &menu);
+
+    int currentMenuItems();
+
     std::stack<GameMenu> level;
 
-    void renderMainMenu();
+    std::vector<std::unique_ptr<MenuAction>> menu_Main;
+    std::vector<std::unique_ptr<MenuAction>> menu_Settings;
 
-    std::vector<std::unique_ptr<MenuAction>> mainMenu;
 
     int selectedIndex = 0;
 

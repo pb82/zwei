@@ -116,6 +116,10 @@ void placeItem(float x, float y, ItemType type) {
 typedef decltype(std::chrono::system_clock::now()) tp;
 
 void renderMenu(tp frameStart) {
+    Manager::instance().render(BACKGROUND);
+    Manager::instance().render(FLOOR);
+    Manager::instance().render(WALLS);
+
     ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplSDL2_NewFrame(Gfx_Window);
     ImGui::NewFrame();
@@ -267,6 +271,7 @@ void loop() {
     stats->character.setBase(10, 1, 1, 1);
 
 
+    /*
     placeKakta(11, 11, RT_Context.getTopology());
     placeKakta(10, 10, RT_Context.getTopology());
     placeKakta(12, 8, RT_Context.getTopology());
@@ -276,6 +281,7 @@ void loop() {
     placeItem(9, 8, STICK);
     placeItem(9, 5, STICK);
     placeItem(9, 6, HEALTH_POTION);
+    */
 
     // Global alpha
     float ga = 255.0f;
@@ -296,7 +302,11 @@ void loop() {
                 if (gk.valid && gk.state == GK_PUSHED && gk.key == GK_START) {
                     Rt::instance().context.state.toggleMenu();
                 } else {
-                    Manager::instance().key(gk);
+                    if (RT_Context.state.currentState() == MainMenu) {
+                        Manager::instance().uiInput(gk);
+                    } else {
+                        Manager::instance().key(gk);
+                    }
                 }
             }
         }
@@ -350,8 +360,10 @@ void initImgui() {
     style.Colors[ImGuiCol_WindowBg] = ImVec4{0.345, 0.345, 0.98, 0.4};
     style.Colors[ImGuiCol_Border] = ImVec4{0.949, 0.949, 0.949, 1};
     style.Colors[ImGuiCol_Text] = ImVec4{0.949, 0.949, 0.949, 1};
-    style.Colors[ImGuiCol_Button] = ImVec4{0.949, 0.949, 0.949, 1};
     style.Colors[ImGuiCol_Button] = ImVec4{0.1, 0.1, 0.1, 0};
+    style.Colors[ImGuiCol_ButtonActive] = ImVec4{0.1, 0.1, 0.1, 0};
+    style.Colors[ImGuiCol_ButtonHovered] = ImVec4{0.1, 0.1, 0.1, 0};
+    style.Colors[ImGuiCol_Separator] = ImVec4{0.1, 0.1, 0.1, 0};
 }
 
 void initAssets() {

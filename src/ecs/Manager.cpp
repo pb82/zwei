@@ -75,6 +75,12 @@ void Manager::key(GameKeyEvent &key) {
     }
 }
 
+void Manager::uiInput(GameKeyEvent &key) {
+    for (auto &entity : entities.at(UI)) {
+        entity->key(key);
+    }
+}
+
 void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
     for (auto &entity : entities.at(WALLS)) {
         if (entity->hasComponent<Collider>()) {
