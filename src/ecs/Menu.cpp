@@ -22,8 +22,16 @@ static int getWinFlags() {
            | ImGuiWindowFlags_NoCollapse;
 }
 
+MenuOption::MenuOption(const char *text) : MenuAction(text) {}
+
+void MenuOption::invoke(GameKeyEvent &key) {}
+
+void MenuOption::render() {}
+
 Menu::Menu(Entity &parent) : Component(parent) {
     this->level.push(Main);
+
+    mainMenu.push_back(std::make_unique<MenuOption>("Test"));
 }
 
 void Menu::render() {
@@ -48,5 +56,13 @@ void Menu::render() {
 }
 
 void Menu::renderMainMenu() {
+    for (int i = 0; i < mainMenu.size(); i++) {
+        mainMenu.at(i)->render();
+        if (i == selectedIndex) mainMenu.at(i)->select();
+        else mainMenu.at(i)->unselect();
+    }
+}
+
+void Menu::key(GameKeyEvent &key) {
 
 }
