@@ -27,6 +27,7 @@
 #include "src/ecs/Ai.h"
 #include "src/ecs/Attack.h"
 #include "src/ecs/Stats.h"
+#include "src/ecs/Menu.h"
 
 #include "src/ecs/ui/Tweak.h"
 #include "src/Map.h"
@@ -335,6 +336,11 @@ void initSound() {
     Player::instance();
 }
 
+void initMenu() {
+    auto entity = Manager::instance().addEntity(UI);
+    entity->addComponent<Menu>();
+}
+
 void initImgui() {
     assert(Gfx_Window);
     assert(Gfx_Renderer);
@@ -346,6 +352,14 @@ void initImgui() {
     ImGui_ImplOpenGL2_Init();
     ImGui::GetIO().IniFilename = nullptr;
     ImGui::GetIO().Fonts->AddFontFromMemoryTTF(Assets::instance().getFont(FONT), 16, 16);
+
+    ImGuiStyle &style = ImGui::GetStyle();
+    style.WindowBorderSize = 4.0f;
+    style.Colors[ImGuiCol_WindowBg] = ImVec4{0.345, 0.345, 0.98, 1};
+    style.Colors[ImGuiCol_Border] = ImVec4{0.949, 0.949, 0.949, 1};
+    style.Colors[ImGuiCol_Text] = ImVec4{0.949, 0.949, 0.949, 1};
+    style.Colors[ImGuiCol_Button] = ImVec4{0.949, 0.949, 0.949, 1};
+    style.Colors[ImGuiCol_Button] = ImVec4{0.1, 0.1, 0.1, 0};
 }
 
 void initAssets() {
@@ -414,5 +428,6 @@ int main(int, char **) {
     initImgui();
     initStyles();
     initSound();
+    initMenu();
     loop();
 }
