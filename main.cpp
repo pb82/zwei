@@ -42,6 +42,7 @@
 #include "src/snd/Player.h"
 #include "src/alg/Text.h"
 #include "src/Draw.h"
+#include "src/St.h"
 
 float targetMillis = (1 / configTargetFramerate) * 1000;
 
@@ -68,7 +69,7 @@ void placeKakta(int x, int y, Topology &top) {
     kakta->addComponent<Stats>(false);
     auto stats = kakta->getComponent<Stats>();
     stats->inventory.equip(std::make_shared<Stick>());
-    stats->character.setBase(5, 100, 1, 1);
+    stats->character.setBase(5, 10, 1, 1);
     stats->character.setLevel(1);
 
     auto transform = kakta->getComponent<Transform>();
@@ -271,7 +272,6 @@ void loop() {
     stats->character.setBase(10, 1, 1, 1);
 
 
-    /*
     placeKakta(11, 11, RT_Context.getTopology());
     placeKakta(10, 10, RT_Context.getTopology());
     placeKakta(12, 8, RT_Context.getTopology());
@@ -281,7 +281,7 @@ void loop() {
     placeItem(9, 8, STICK);
     placeItem(9, 5, STICK);
     placeItem(9, 6, HEALTH_POTION);
-    */
+
 
     // Global alpha
     float ga = 255.0f;
@@ -330,12 +330,13 @@ void loop() {
 
 void initStyles() {
     ImGuiStyle &style = ImGui::GetStyle();
-    style.WindowRounding = 2.0f;
+    style.WindowRounding = 3.0f;
 }
 
 void initSound() {
     // force sound to init
     Player::instance();
+    St::instance().initAll();
 }
 
 void initMenu() {
@@ -364,6 +365,7 @@ void initImgui() {
     style.Colors[ImGuiCol_ButtonActive] = ImVec4{0.1, 0.1, 0.1, 0};
     style.Colors[ImGuiCol_ButtonHovered] = ImVec4{0.1, 0.1, 0.1, 0};
     style.Colors[ImGuiCol_Separator] = ImVec4{0.1, 0.1, 0.1, 0};
+
 }
 
 void initAssets() {

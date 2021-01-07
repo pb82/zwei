@@ -45,6 +45,10 @@ public:
 
     void resume();
 
+    void setMusicVolume(int volume);
+
+    void setEffectsVolume(int volume);
+
 private:
     Player();
 
@@ -57,8 +61,6 @@ private:
     std::unordered_map<Asset, std::shared_ptr<Music>> music;
 
     Asset nowPlaying = UNDEFINED;
-
-    bool ready = false;
 };
 
 #endif //ZWEI_PLAYER_H

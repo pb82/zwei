@@ -79,6 +79,16 @@ void Player::resume() {
     }
 }
 
+void Player::setMusicVolume(int volume) {
+    float vol = ((float) volume / 100) * 128;
+    Mix_VolumeMusic(vol);
+}
+
+void Player::setEffectsVolume(int volume) {
+    float vol = ((float) volume / 100) * 128;
+    Mix_Volume(SoundEffects, vol);
+}
+
 void Player::init() {
     std::vector<std::tuple<Asset, background_audio>> sound_tasks;
     std::vector<std::tuple<Asset, background_music>> music_tasks;
@@ -102,6 +112,4 @@ void Player::init() {
         auto musicData = std::get<1>(task).get();
         music.emplace(musicAsset, musicData);
     }
-
-    this->ready = true;
 }

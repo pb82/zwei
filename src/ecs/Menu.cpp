@@ -1,8 +1,10 @@
 #include "Menu.h"
 #include <IMGUI/imgui.h>
+#include <sstream>
 
 #include "../config.h"
 #include "../Rt.h"
+#include "../St.h"
 
 #define WINDOW_MARGIN 4
 
@@ -18,8 +20,8 @@ static void getWinPos(ImVec2 &p) {
 
 static ImVec2 getItemSize() {
     ImVec2 size;
-    size.x = configWindowWidth / 3;
-    size.y = 24;
+    size.x = configWindowWidth / 2;
+    size.y = 32;
     return size;
 }
 
@@ -38,13 +40,14 @@ static int getWinFlags() {
            | ImGuiWindowFlags_NoCollapse;
 }
 
-MenuOption::MenuOption(const char *text, menu_Callback cb) : MenuAction(text), cb(cb) {}
+MenuOption::MenuOption(const char *text, menu_Callback cb) : MenuAction(text, cb) {}
 
-void MenuOption::invoke(GameKeyEvent &key) {
-    this->cb();
-}
+MenuMusicVolume::MenuMusicVolume(bool music, menu_Callback cb) : MenuAction("", cb), music(music) {}
 
 void MenuOption::render() {
+    auto s = getItemSize();
+    ImGui::SetCursorPosX((configWindowWidth / 2) - (s.x / 2));
+
     if (this->selected) {
         ImGui::PushStyleColor(ImGuiCol_Button, white());
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, white());
@@ -59,19 +62,76 @@ void MenuOption::render() {
     }
 }
 
+void MenuMusicVolume::render() {
+    std::stringstream ss;
+
+    if (this->music) {
+        ss << "Music Volume: ";
+        ss << St::instance().getMusicVolume();
+    } else {
+        ss << "Effects Volume: ";
+        ss << St::instance().getEffectsVolume();
+    }
+    ss << "%";
+
+    auto s = getItemSize();
+    ImGui::SetCursorPosX((configWindowWidth / 2) - (s.x / 2));
+
+    if (this->selected) {
+        ImGui::PushStyleColor(ImGuiCol_Button, white());
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, white());
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, white());
+        ImGui::PushStyleColor(ImGuiCol_Text, black());
+    }
+
+    ImGui::Button(ss.str().c_str(), getItemSize());
+
+    if (this->selected) {
+        ImGui::PopStyleColor(4);
+    }
+}
+
 Menu::Menu(Entity &parent) : Component(parent) {
     this->level.push(Main);
 
-    menu_Main.push_back(std::make_unique<MenuOption>("Settings", [this]() {
+    menu_Main.push_back(std::make_unique<MenuOption>("Settings", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
         this->level.push(Settings);
         this->selectedIndex = 0;
     }));
-    menu_Main.push_back(std::make_unique<MenuOption>("Quit", []() {
+    menu_Main.push_back(std::make_unique<MenuOption>("Quit", [](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
         RT_Running = false;
     }));
-    menu_Settings.push_back(std::make_unique<MenuOption>("Audio Settings", []() {}));
-    menu_Settings.push_back(std::make_unique<MenuOption>("Video Settings", []() {}));
-    menu_Settings.push_back(std::make_unique<MenuOption>("Back", [this]() {
+    menu_Settings.push_back(std::make_unique<MenuOption>("Audio Settings", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        this->level.push(AudioSettings);
+        this->selectedIndex = 0;
+    }));
+    menu_Settings.push_back(std::make_unique<MenuOption>("Video Settings", [](GameKeyEvent &key) {}));
+    menu_Settings.push_back(std::make_unique<MenuOption>("Back", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        this->level.pop();
+        this->selectedIndex = 0;
+    }));
+
+    menu_AudioSettings.push_back(std::make_unique<MenuMusicVolume>(true, [](GameKeyEvent &key) {
+        if (key.key == GK_LEFT) {
+            St::instance().decMusicVolume();
+        } else if (key.key == GK_RIGHT) {
+            St::instance().incMusicVolume();
+        }
+    }));
+
+    menu_AudioSettings.push_back(std::make_unique<MenuMusicVolume>(false, [](GameKeyEvent &key) {
+        if (key.key == GK_LEFT) {
+            St::instance().decEffectsVolume();
+        } else if (key.key == GK_RIGHT) {
+            St::instance().incEffectsVolume();
+        }
+    }));
+    menu_AudioSettings.push_back(std::make_unique<MenuOption>("Back", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
         this->level.pop();
         this->selectedIndex = 0;
     }));
@@ -88,20 +148,19 @@ void Menu::render() {
     ImGui::SetNextWindowSize(size);
     ImGui::Begin("Menu", nullptr, getWinFlags());
 
-    ImGui::Columns(3);
-    ImGui::NextColumn();
-
     switch (this->level.top()) {
         case Main:
             renderMenu(menu_Main);
             break;
         case Settings:
             renderMenu(menu_Settings);
+            break;
+        case AudioSettings:
+            renderMenu(menu_AudioSettings);
         default:
             break;
     }
 
-    ImGui::NextColumn();
     ImGui::End();
 }
 
@@ -132,6 +191,10 @@ void Menu::key(GameKeyEvent &key) {
                 break;
             case Settings:
                 this->menu_Settings.at(selectedIndex)->invoke(key);
+                break;
+            case AudioSettings:
+                this->menu_AudioSettings.at(selectedIndex)->invoke(key);
+                break;
         }
     }
 }
@@ -142,6 +205,8 @@ int Menu::currentMenuItems() {
             return menu_Main.size();
         case Settings:
             return menu_Settings.size();
+        case AudioSettings:
+            return menu_AudioSettings.size();
         default:
             return 0;
     }

@@ -11,15 +11,17 @@
 enum GameMenu {
     Main,
     Settings,
+    AudioSettings,
+    VideoSettings,
 };
 
-typedef std::function<void()> menu_Callback;
+typedef std::function<void(GameKeyEvent &key)> menu_Callback;
 
 class MenuAction {
 public:
-    MenuAction(const char *text) : text(text) {}
+    MenuAction(std::string text, menu_Callback cb) : text(text), cb(cb) {}
 
-    virtual void invoke(GameKeyEvent &key) = 0;
+    virtual void invoke(GameKeyEvent &key) { this->cb(key); }
 
     virtual void render() = 0;
 
@@ -31,6 +33,8 @@ protected:
 
     std::string text;
 
+    menu_Callback cb;
+
     bool selected = false;
 
 };
@@ -39,13 +43,19 @@ class MenuOption : public MenuAction {
 public:
     MenuOption(const char *text, menu_Callback cb);
 
-    void invoke(GameKeyEvent &key) override;
+    void render() override;
+
+};
+
+class MenuMusicVolume : public MenuAction {
+public:
+    MenuMusicVolume(bool music, menu_Callback cb);
 
     void render() override;
 
 private:
 
-    menu_Callback cb;
+    bool music;
 
 };
 
@@ -67,7 +77,7 @@ private:
 
     std::vector<std::unique_ptr<MenuAction>> menu_Main;
     std::vector<std::unique_ptr<MenuAction>> menu_Settings;
-
+    std::vector<std::unique_ptr<MenuAction>> menu_AudioSettings;
 
     int selectedIndex = 0;
 
