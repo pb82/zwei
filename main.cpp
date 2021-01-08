@@ -44,7 +44,7 @@
 #include "src/Draw.h"
 #include "src/St.h"
 
-float targetMillis = (1 / configTargetFramerate) * 1000;
+float targetMillis = (1 / St::instance().getFps()) * 1000;
 
 void placeKakta(int x, int y, Topology &top) {
     auto kakta = Manager::instance().addEntity(OBJECTS);
@@ -272,6 +272,7 @@ void loop() {
     stats->character.setBase(10, 1, 1, 1);
 
 
+    /*
     placeKakta(11, 11, RT_Context.getTopology());
     placeKakta(10, 10, RT_Context.getTopology());
     placeKakta(12, 8, RT_Context.getTopology());
@@ -281,7 +282,7 @@ void loop() {
     placeItem(9, 8, STICK);
     placeItem(9, 5, STICK);
     placeItem(9, 6, HEALTH_POTION);
-
+    */
 
     // Global alpha
     float ga = 255.0f;
@@ -295,6 +296,7 @@ void loop() {
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
+                St::instance().serialize();
                 RT_Stop();
                 continue;
             }
@@ -365,7 +367,6 @@ void initImgui() {
     style.Colors[ImGuiCol_ButtonActive] = ImVec4{0.1, 0.1, 0.1, 0};
     style.Colors[ImGuiCol_ButtonHovered] = ImVec4{0.1, 0.1, 0.1, 0};
     style.Colors[ImGuiCol_Separator] = ImVec4{0.1, 0.1, 0.1, 0};
-
 }
 
 void initAssets() {
@@ -373,7 +374,7 @@ void initAssets() {
 
     Assets::instance().addFont(FONT, assets_Font);
     // Assets::instance().addTexture(TILES, assets_Tiles);
-    Assets::instance().addTexture(TILES, "assets/RAW/dungeon.png");
+    Assets::instance().addTexture(TILES, "assets/RAW/sprites.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
 }
 

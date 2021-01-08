@@ -46,6 +46,7 @@ private:
     std::vector<InventoryItem> slots;
 
     int selectedSlot = 0;
+
 };
 
 

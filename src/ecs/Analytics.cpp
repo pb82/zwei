@@ -18,7 +18,7 @@ void Analytics::render() {
 
             auto texture = Assets::instance().getTexture(TILES);
 
-            Gfx::pick(source, 7, texture->w);
+            Gfx::pick(source, 15, texture->w);
             Draw::instance().draw(texture->mem, source, collider->boundingBox);
         }
     }

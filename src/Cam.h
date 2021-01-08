@@ -8,6 +8,7 @@
 #include "../config.h"
 #include "alg/Position.h"
 #include "alg/Padding.h"
+#include "St.h"
 
 // Main and only camera
 class Camera {
@@ -18,7 +19,8 @@ public:
               h(configWindowHeight),
               z(configZoomFactor),
               mapTilesX(0),
-              mapTilesY(0) {}
+              mapTilesY(0) {
+    }
 
     void setMapSize(int w, int h) {
         this->mapTilesX = w;

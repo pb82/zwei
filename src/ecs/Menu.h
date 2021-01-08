@@ -59,6 +59,20 @@ private:
 
 };
 
+class MenuScreenResolution : public MenuAction {
+public:
+    MenuScreenResolution(menu_Callback cb);
+
+    void render() override;
+};
+
+class MenuFps : public MenuAction {
+public:
+    MenuFps(menu_Callback cb);
+
+    void render() override;
+};
+
 class Menu : public Component {
 public:
     Menu(Entity &parent);
@@ -78,6 +92,7 @@ private:
     std::vector<std::unique_ptr<MenuAction>> menu_Main;
     std::vector<std::unique_ptr<MenuAction>> menu_Settings;
     std::vector<std::unique_ptr<MenuAction>> menu_AudioSettings;
+    std::vector<std::unique_ptr<MenuAction>> menu_VideoSettings;
 
     int selectedIndex = 0;
 

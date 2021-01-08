@@ -44,6 +44,56 @@ MenuOption::MenuOption(const char *text, menu_Callback cb) : MenuAction(text, cb
 
 MenuMusicVolume::MenuMusicVolume(bool music, menu_Callback cb) : MenuAction("", cb), music(music) {}
 
+MenuScreenResolution::MenuScreenResolution(menu_Callback cb) : MenuAction("", cb) {}
+
+MenuFps::MenuFps(menu_Callback cb) : MenuAction("", cb) {}
+
+void MenuFps::render() {
+    auto s = getItemSize();
+    ImGui::SetCursorPosX((configWindowWidth / 2) - (s.x / 2));
+
+    std::stringstream ss;
+    ss << "Target fps: ";
+    ss << St::instance().getFps();
+
+    if (this->selected) {
+        ImGui::PushStyleColor(ImGuiCol_Button, white());
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, white());
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, white());
+        ImGui::PushStyleColor(ImGuiCol_Text, black());
+    }
+
+    ImGui::Button(ss.str().c_str(), getItemSize());
+
+    if (this->selected) {
+        ImGui::PopStyleColor(4);
+    }
+}
+
+void MenuScreenResolution::render() {
+    auto s = getItemSize();
+    ImGui::SetCursorPosX((configWindowWidth / 2) - (s.x / 2));
+
+    std::stringstream ss;
+    ss << "Window size: ";
+    ss << St::instance().getWindowSize().w;
+    ss << "x";
+    ss << St::instance().getWindowSize().h;
+
+    if (this->selected) {
+        ImGui::PushStyleColor(ImGuiCol_Button, white());
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, white());
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, white());
+        ImGui::PushStyleColor(ImGuiCol_Text, black());
+    }
+
+    ImGui::Button(ss.str().c_str(), getItemSize());
+
+    if (this->selected) {
+        ImGui::PopStyleColor(4);
+    }
+}
+
 void MenuOption::render() {
     auto s = getItemSize();
     ImGui::SetCursorPosX((configWindowWidth / 2) - (s.x / 2));
@@ -108,7 +158,11 @@ Menu::Menu(Entity &parent) : Component(parent) {
         this->level.push(AudioSettings);
         this->selectedIndex = 0;
     }));
-    menu_Settings.push_back(std::make_unique<MenuOption>("Video Settings", [](GameKeyEvent &key) {}));
+    menu_Settings.push_back(std::make_unique<MenuOption>("Video Settings", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        this->level.push(VideoSettings);
+        this->selectedIndex = 0;
+    }));
     menu_Settings.push_back(std::make_unique<MenuOption>("Back", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.pop();
@@ -135,6 +189,28 @@ Menu::Menu(Entity &parent) : Component(parent) {
         this->level.pop();
         this->selectedIndex = 0;
     }));
+
+    menu_VideoSettings.push_back(std::make_unique<MenuScreenResolution>([](GameKeyEvent &key) {
+        if (key.key == GK_LEFT) {
+            St::instance().decWindowSize();
+        } else if (key.key == GK_RIGHT) {
+            St::instance().incWindowSize();
+        }
+    }));
+
+    menu_VideoSettings.push_back(std::make_unique<MenuFps>([](GameKeyEvent &key) {
+        if (key.key == GK_LEFT) {
+            St::instance().decFps();
+        } else if (key.key == GK_RIGHT) {
+            St::instance().incFps();
+        }
+    }));
+
+    menu_VideoSettings.push_back(std::make_unique<MenuOption>("Back", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        this->level.pop();
+        this->selectedIndex = 0;
+    }));
 }
 
 void Menu::render() {
@@ -157,6 +233,10 @@ void Menu::render() {
             break;
         case AudioSettings:
             renderMenu(menu_AudioSettings);
+            break;
+        case VideoSettings:
+            renderMenu(menu_VideoSettings);
+            break;
         default:
             break;
     }
@@ -195,6 +275,9 @@ void Menu::key(GameKeyEvent &key) {
             case AudioSettings:
                 this->menu_AudioSettings.at(selectedIndex)->invoke(key);
                 break;
+            case VideoSettings:
+                this->menu_VideoSettings.at(selectedIndex)->invoke(key);
+                break;
         }
     }
 }
@@ -207,6 +290,8 @@ int Menu::currentMenuItems() {
             return menu_Settings.size();
         case AudioSettings:
             return menu_AudioSettings.size();
+        case VideoSettings:
+            return menu_VideoSettings.size();
         default:
             return 0;
     }
