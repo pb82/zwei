@@ -7,10 +7,11 @@ enum LayerType {
     BACKGROUND = 0,
     FLOOR = 1,
     WALLS = 2,
-    ITEMS = 3,
-    OBJECTS = 4,
-    FOREGROUND = 5,
-    UI = 6,
+    ROOF = 3,
+    ITEMS = 4,
+    OBJECTS = 5,
+    FOREGROUND = 6,
+    UI = 7,
 };
 
 class Entity;

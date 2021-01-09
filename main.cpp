@@ -120,6 +120,7 @@ void renderMenu(tp frameStart) {
     Manager::instance().render(BACKGROUND);
     Manager::instance().render(FLOOR);
     Manager::instance().render(WALLS);
+    Manager::instance().render(ROOF);
 
     ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplSDL2_NewFrame(Gfx_Window);
@@ -149,6 +150,7 @@ void renderGameOver(tp frameStart, float *darkness) {
     Manager::instance().render(BACKGROUND);
     Manager::instance().render(FLOOR);
     Manager::instance().render(WALLS);
+    Manager::instance().render(ROOF);
     Manager::instance().render(FOREGROUND);
 
     auto texture = Assets::instance().getTexture(SPRITES);
@@ -194,6 +196,7 @@ void renderGame(tp frameStart) {
     Manager::instance().render(WALLS);
     Manager::instance().render(ITEMS);
     Manager::instance().render(OBJECTS);
+    Manager::instance().render(ROOF);
     Manager::instance().render(FOREGROUND);
 
     // Flush

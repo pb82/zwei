@@ -11,6 +11,7 @@ Manager::Manager() {
     entities.emplace(LayerType::FLOOR, std::vector<std::shared_ptr<Entity>>());
     entities.emplace(LayerType::UI, std::vector<std::shared_ptr<Entity>>());
     entities.emplace(LayerType::WALLS, std::vector<std::shared_ptr<Entity>>());
+    entities.emplace(LayerType::ROOF, std::vector<std::shared_ptr<Entity>>());
 }
 
 std::shared_ptr<Entity> Manager::addEntity(LayerType layer) {
