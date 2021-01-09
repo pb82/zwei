@@ -84,6 +84,11 @@ namespace JSON {
             std::get<JSON_STRING>(value) = val;
         }
 
+        Value(const std::string &&val)
+                : type(JSON_STRING) {
+            std::get<JSON_STRING>(value) = val;
+        }
+
         // JSON_BOOL
         Value(bool val)
                 : type(JSON_BOOL) {

@@ -42,6 +42,8 @@ public:
 
     void kick(std::shared_ptr<Collider> other);
 
+    void setPadding(Padding p);
+
     ColliderTag tag;
 
     std::shared_ptr<Transform> tracked;

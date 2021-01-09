@@ -25,6 +25,10 @@ void Collider::update(float dt) {
     updateBoundingBox();
 }
 
+void Collider::setPadding(Padding p) {
+    this->padding = p;
+}
+
 // Stop a mobile target
 void Collider::stop(const Collider &c) {
     if (c.parent.hasComponent<Acceleration>()) {

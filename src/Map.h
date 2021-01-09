@@ -10,6 +10,7 @@
 
 #include "ecs/Manager.h"
 #include "io/File.h"
+#include "alg/Padding.h"
 
 class Tileset {
 public:
@@ -18,6 +19,8 @@ public:
     bool getFrames(int tileId, std::vector<int> &frames);
 
     bool getSpeed(int tileId, int *speed);
+
+    bool getPadding(int tileId, Padding &p);
 
     bool hasProps(int tileId);
 
@@ -51,7 +54,7 @@ private:
 
     std::string baseDir;
 
-    JSON::Value &getProperty(JSON::Value &layer, const char *prop);
+    JSON::Value getProperty(JSON::Value &layer, const char *prop);
 
     std::vector<std::shared_ptr<Entity>> tiles;
 

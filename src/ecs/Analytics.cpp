@@ -22,5 +22,4 @@ void Analytics::render() {
             Draw::instance().draw(texture->mem, source, collider->boundingBox);
         }
     }
-
 }

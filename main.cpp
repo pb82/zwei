@@ -193,9 +193,9 @@ void renderGameOver(tp frameStart, float *darkness) {
 void renderGame(tp frameStart) {
     Manager::instance().render(BACKGROUND);
     Manager::instance().render(FLOOR);
-    Manager::instance().render(WALLS);
     Manager::instance().render(ITEMS);
     Manager::instance().render(OBJECTS);
+    Manager::instance().render(WALLS);
     Manager::instance().render(ROOF);
     Manager::instance().render(FOREGROUND);
 
@@ -227,7 +227,7 @@ void loop() {
     Player::instance().playMusic(MUSIC_1);
 
     Map m("./assets/RAW");
-    m.load("dungeon.json");
+    m.load("beach.json");
 
     // Set map boundaries for the camera
     int mapSizeX, mapSizeY;
@@ -377,7 +377,7 @@ void initAssets() {
 
     Assets::instance().addFont(FONT, assets_Font);
     // Assets::instance().addTexture(TILES, assets_Tiles);
-    Assets::instance().addTexture(TILES, "assets/RAW/sprites.png");
+    Assets::instance().addTexture(TILES, "assets/RAW/beach.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
 }
 

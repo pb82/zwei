@@ -6,6 +6,7 @@
 #include "ecs/Animation.h"
 #include "ecs/Collider.h"
 #include "ecs/filters/Twilight.h"
+#include "ecs/Analytics.h"
 
 void Tileset::load(const char *file) {
     using namespace JSON;
@@ -63,6 +64,26 @@ bool Tileset::getSpeed(int tileId, int *speed) {
     return true;
 }
 
+bool Tileset::getPadding(int tileId, Padding &padding) {
+    auto s = getProperty(tileId, "padding");
+    if (!s.is(JSON::JSON_STRING)) {
+        padding.left = 0.0f;
+        padding.right = 0.0f;
+        padding.top = 0.0f;
+        padding.bottom = 0.0f;
+        return false;
+    }
+
+    JSON::Value o;
+    std::string array = s.as<std::string>();
+    p.parse(o, array);
+
+    padding.left = o[0].as<float>();
+    padding.right = o[1].as<float>();
+    padding.top = o[2].as<float>();
+    padding.bottom = o[3].as<float>();
+}
+
 JSON::Value Tileset::getPropsForTile(int tileId) {
     auto tiles = v["tiles"];
     if (!tiles.is(JSON::JSON_ARRAY)) {
@@ -99,7 +120,6 @@ void Layer::load(JSON::Value &layer) {
     auto metadata = getProperty(layer, "metadata");
     if (!metadata.is(JSON::JSON_NULL)) {
         tileset = std::make_shared<Tileset>();
-
         std::stringstream ss;
         ss << baseDir << "/" << metadata.as<std::string>();
         tileset->load(ss.str().c_str());
@@ -126,6 +146,7 @@ void Layer::load(JSON::Value &layer) {
         entity->addComponent<Tile>(asset);
         entity->addComponent<Animation>(100.0, true);
         entity->getComponent<Animation>()->addAnimationFrame(tileId);
+        entity->addComponent<Analytics>();
 
         if (type == WALLS) {
             auto transform = entity->getComponent<Transform>();
@@ -144,13 +165,19 @@ void Layer::load(JSON::Value &layer) {
             if (tileset->getSpeed(tileId, &speed)) {
                 entity->getComponent<Animation>()->speed = speed;
             }
+
+            Padding p;
+            if (tileset->getPadding(tileId, p) && entity->hasComponent<Collider>()) {
+                auto collider = entity->getComponent<Collider>();
+                collider->setPadding(p);
+            }
         }
 
         tiles.push_back(entity);
     }
 }
 
-JSON::Value &Layer::getProperty(JSON::Value &layer, const char *prop) {
+JSON::Value Layer::getProperty(JSON::Value &layer, const char *prop) {
     auto properties = layer["properties"].as<JSON::Array>();
     for (auto &property : properties) {
         auto name = property["name"].as<std::string>();
