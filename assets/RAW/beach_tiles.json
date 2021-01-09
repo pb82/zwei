@@ -18,6 +18,24 @@
  "tileheight":16,
  "tiles":[
         {
+         "id":25,
+         "properties":[
+                {
+                 "name":"padding",
+                 "type":"string",
+                 "value":"[1.5,0,0,0]"
+                }]
+        }, 
+        {
+         "id":26,
+         "properties":[
+                {
+                 "name":"padding",
+                 "type":"string",
+                 "value":"[0,1.5,0,0]"
+                }]
+        }, 
+        {
          "id":33,
          "properties":[
                 {

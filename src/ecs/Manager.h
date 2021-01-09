@@ -9,6 +9,8 @@
 #include "Entity.h"
 #include "../alg/Position.h"
 
+const uint8_t HINT_HIDE_ROOF_LAYER = 1 << 0;
+
 class Collider;
 
 struct QueueEntity {
@@ -46,12 +48,18 @@ public:
 
     bool hasEntities(Position p, LayerType layer);
 
+    void setRenderHint(uint8_t hint);
+
+    void clearRenderHint(uint8_t hint);
+
 private:
     Manager();
 
     std::unordered_map<LayerType, std::vector<std::shared_ptr<Entity>>> entities;
 
     std::queue<QueueEntity> pendingEntities;
+
+    uint8_t renderHints;
 };
 
 #endif

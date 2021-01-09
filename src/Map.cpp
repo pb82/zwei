@@ -82,6 +82,7 @@ bool Tileset::getPadding(int tileId, Padding &padding) {
     padding.right = o[1].as<float>();
     padding.top = o[2].as<float>();
     padding.bottom = o[3].as<float>();
+    return true;
 }
 
 JSON::Value Tileset::getPropsForTile(int tileId) {

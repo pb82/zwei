@@ -28,6 +28,7 @@
 #include "src/ecs/Attack.h"
 #include "src/ecs/Stats.h"
 #include "src/ecs/Menu.h"
+#include "src/ecs/Trigger.h"
 
 #include "src/ecs/ui/Tweak.h"
 #include "src/Map.h"
@@ -45,6 +46,19 @@
 #include "src/St.h"
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
+
+void placeTrigger(int x, int y, trigger_Fn enter, trigger_Fn exit) {
+    auto trigger = Manager::instance().addEntity(FLOOR);
+    trigger->addComponent<Transform>(x, y);
+
+    auto transform = trigger->getComponent<Transform>();
+    trigger->addComponent<Collider>(transform, CT_TRIGGER);
+    trigger->addComponent<Trigger>();
+
+    auto handler = trigger->getComponent<Trigger>();
+    handler->onEnter(enter);
+    handler->onExit(exit);
+}
 
 void placeKakta(int x, int y, Topology &top) {
     auto kakta = Manager::instance().addEntity(OBJECTS);
@@ -194,8 +208,8 @@ void renderGame(tp frameStart) {
     Manager::instance().render(BACKGROUND);
     Manager::instance().render(FLOOR);
     Manager::instance().render(ITEMS);
-    Manager::instance().render(OBJECTS);
     Manager::instance().render(WALLS);
+    Manager::instance().render(OBJECTS);
     Manager::instance().render(ROOF);
     Manager::instance().render(FOREGROUND);
 
@@ -286,6 +300,16 @@ void loop() {
     placeItem(9, 5, STICK);
     placeItem(9, 6, HEALTH_POTION);
     */
+
+    placeTrigger(11, 9, []() {
+        Manager::instance().setRenderHint(HINT_HIDE_ROOF_LAYER);
+    }, []() {
+        auto d = RT_Context.getPlayer()->getComponent<Acceleration>()->getDirection();
+        if (d == S) {
+            Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
+        }
+    });
+
 
     // Global alpha
     float ga = 255.0f;

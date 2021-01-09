@@ -14,6 +14,14 @@ Manager::Manager() {
     entities.emplace(LayerType::ROOF, std::vector<std::shared_ptr<Entity>>());
 }
 
+void Manager::setRenderHint(uint8_t hint) {
+    renderHints |= hint;
+}
+
+void Manager::clearRenderHint(uint8_t hint) {
+    renderHints &= ~(hint);
+}
+
 std::shared_ptr<Entity> Manager::addEntity(LayerType layer) {
     auto entity = std::make_shared<Entity>();
     entities.at(layer).push_back(entity);
@@ -62,6 +70,10 @@ void Manager::update(float dt) {
 
 void Manager::render(LayerType layer) {
     if (entities.find(layer) == entities.end()) {
+        return;
+    }
+
+    if (layer == ROOF && (renderHints & HINT_HIDE_ROOF_LAYER) == HINT_HIDE_ROOF_LAYER) {
         return;
     }
 
