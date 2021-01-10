@@ -14,7 +14,8 @@
 #define VM_125_PI            ((5 * M_PI) / 4)
 #define VM_150_PI            ((3 * M_PI) / 2)
 #define VM_175_PI            ((7 * M_PI) / 4)
-#define BETWEEN(x, s, l)     (x >= s && x <= l)
+#define VM_200_PI            M_PI * 2
+#define VM_BETWEEN(x, s, l)  (x > s && x < l)
 
 class Vector {
 public:

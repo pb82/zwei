@@ -4,6 +4,7 @@
 
 #include "../Rt.h"
 #include "Collider.h"
+#include "Acceleration.h"
 
 Trigger::Trigger(Entity &parent) : Component(parent) {}
 
@@ -19,13 +20,14 @@ void Trigger::update(float dt) {
     auto player = RT_Context.getPlayer();
     auto a = player->getComponent<Collider>();
     auto b = parent.getComponent<Collider>();
+    auto c = player->getComponent<Acceleration>();
     bool collides = SDL_HasIntersection(&a->boundingBox, &b->boundingBox);
 
     if (!active && collides) {
         active = true;
-        if (enter) enter();
+        if (enter) enter(c->getAngle());
     } else if (active && !collides) {
         active = false;
-        if (exit) exit();
+        if (exit) exit(c->getAngle());
     }
 }

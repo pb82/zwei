@@ -5,7 +5,7 @@
 
 #include "Component.h"
 
-typedef std::function<void()> trigger_Fn;
+typedef std::function<void(float angle)> trigger_Fn;
 
 class Trigger : public Component {
 public:

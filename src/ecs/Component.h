@@ -8,10 +8,11 @@ enum LayerType {
     FLOOR = 1,
     WALLS = 2,
     ROOF = 3,
-    ITEMS = 4,
-    OBJECTS = 5,
-    FOREGROUND = 6,
-    UI = 7,
+    SKY = 4,
+    ITEMS = 5,
+    OBJECTS = 6,
+    FOREGROUND = 7,
+    UI = 8,
 };
 
 class Entity;

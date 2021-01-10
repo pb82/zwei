@@ -135,6 +135,7 @@ void renderMenu(tp frameStart) {
     Manager::instance().render(FLOOR);
     Manager::instance().render(WALLS);
     Manager::instance().render(ROOF);
+    Manager::instance().render(SKY);
 
     ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplSDL2_NewFrame(Gfx_Window);
@@ -165,6 +166,7 @@ void renderGameOver(tp frameStart, float *darkness) {
     Manager::instance().render(FLOOR);
     Manager::instance().render(WALLS);
     Manager::instance().render(ROOF);
+    Manager::instance().render(SKY);
     Manager::instance().render(FOREGROUND);
 
     auto texture = Assets::instance().getTexture(SPRITES);
@@ -211,6 +213,7 @@ void renderGame(tp frameStart) {
     Manager::instance().render(WALLS);
     Manager::instance().render(OBJECTS);
     Manager::instance().render(ROOF);
+    Manager::instance().render(SKY);
     Manager::instance().render(FOREGROUND);
 
     // Flush
@@ -301,11 +304,10 @@ void loop() {
     placeItem(9, 6, HEALTH_POTION);
     */
 
-    placeTrigger(11, 9, []() {
+    placeTrigger(11, 9, [](float) {
         Manager::instance().setRenderHint(HINT_HIDE_ROOF_LAYER);
-    }, []() {
-        auto d = RT_Context.getPlayer()->getComponent<Acceleration>()->getDirection();
-        if (d == S) {
+    }, [](float angle) {
+        if (VM_BETWEEN(angle, VM_100_PI, VM_200_PI)) {
             Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
         }
     });

@@ -12,6 +12,7 @@ Manager::Manager() {
     entities.emplace(LayerType::UI, std::vector<std::shared_ptr<Entity>>());
     entities.emplace(LayerType::WALLS, std::vector<std::shared_ptr<Entity>>());
     entities.emplace(LayerType::ROOF, std::vector<std::shared_ptr<Entity>>());
+    entities.emplace(LayerType::SKY, std::vector<std::shared_ptr<Entity>>());
 }
 
 void Manager::setRenderHint(uint8_t hint) {
