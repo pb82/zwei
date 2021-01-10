@@ -304,14 +304,12 @@ void loop() {
     placeItem(9, 6, HEALTH_POTION);
     */
 
-    placeTrigger(11, 9, [](float) {
+    placeTrigger(11, 8, [](float angle) {
         Manager::instance().setRenderHint(HINT_HIDE_ROOF_LAYER);
-    }, [](float angle) {
-        if (VM_BETWEEN(angle, VM_100_PI, VM_200_PI)) {
-            Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
-        }
-    });
-
+    }, nullptr);
+    placeTrigger(11, 10, [](float angle) {
+        Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
+    }, nullptr);
 
     // Global alpha
     float ga = 255.0f;
