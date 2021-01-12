@@ -11,56 +11,8 @@
 #include "Acceleration.h"
 #include "../alg/Text.h"
 #include "../Gfx.h"
-#include "../Draw.h"
 
-Stats::Stats(Entity &parent, bool render) : Component(parent), doRender(render) {}
-
-void Stats::render() {
-    if (!doRender) return;
-    renderHp();
-    this->inventory.render();
-}
-
-void Stats::renderHp() {
-    auto hp = this->character.getHitpoints();
-    std::stringstream ss;
-    ss << "*";
-    ss << std::get<0>(hp);
-    ss << "/";
-    ss << std::get<1>(hp);
-
-    auto texture = Assets::instance().getTexture(SPRITES);
-
-    Padding p{0.5, 0.5, 0.5, 0.5};
-    SDL_Rect target;
-    target.x = 10;
-    target.y = 10;
-    target.w = 32;
-    target.h = 32;
-
-    for (const char c : ss.str()) {
-        SDL_Rect source;
-        Gfx::pick(source, Text::fromChar(c), texture->w);
-        Draw::instance().draw(texture->mem, source, target);
-        target.x += 24;
-    }
-
-    auto exp = this->character.getExperience();
-    ss.str("");
-    target.x = 10;
-    target.y = 42;
-    ss << "^";
-    ss << std::get<0>(exp);
-    ss << "/";
-    ss << std::get<1>(exp);
-
-    for (const char c : ss.str()) {
-        SDL_Rect source;
-        Gfx::pick(source, Text::fromChar(c), texture->w);
-        Draw::instance().draw(texture->mem, source, target);
-        target.x += 24;
-    }
-}
+Stats::Stats(Entity &parent, bool render) : Component(parent) {}
 
 void Stats::update(float dt) {
     auto hp = this->character.getHitpoints();

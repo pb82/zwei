@@ -14,19 +14,11 @@ public:
 
     void update(float dt) override;
 
-    void render() override;
-
     // Properties
 
     Character character;
 
     Inventory inventory;
-
-private:
-
-    bool doRender = false;
-
-    void renderHp();
 
 };
 

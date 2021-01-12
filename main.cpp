@@ -29,6 +29,7 @@
 #include "src/ecs/Stats.h"
 #include "src/ecs/Menu.h"
 #include "src/ecs/Trigger.h"
+#include "src/ecs/Hud.h"
 
 #include "src/ecs/ui/Tweak.h"
 #include "src/Map.h"
@@ -291,6 +292,9 @@ void loop() {
     auto stats = sprite->getComponent<Stats>();
     stats->character.setBase(10, 1, 1, 1);
 
+
+    auto hud = Manager::instance().addEntity(FOREGROUND);
+    hud->addComponent<Hud>();
 
     /*
     placeKakta(11, 11, RT_Context.getTopology());

@@ -69,12 +69,6 @@ int Text::fromChar(char c) {
             return 100;
         case 'r':
             return 101;
-        case '/':
-            return 89;
-        case '*':
-            return 90;
-        case '^':
-            return 91;
         case ' ':
             return 31;
         default:
