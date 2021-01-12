@@ -17,6 +17,8 @@ private:
     void pick(SDL_Rect &source);
 
     Asset id;
+
+    std::shared_ptr<Texture> texture;
 };
 
 #endif

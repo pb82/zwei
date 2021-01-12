@@ -8,11 +8,12 @@
 
 Tile::Tile(Entity &parent, Asset id)
         : Component(parent),
-          id(id) {}
+          id(id) {
+    texture = Assets::instance().getTexture(id);
+}
 
 
 void Tile::pick(SDL_Rect &source) {
-    auto texture = Assets::instance().getTexture(id);
     auto animation = parent.getComponent<Animation>();
 
     // Tile position in the tilemap
@@ -34,6 +35,5 @@ void Tile::render() {
         return;
     }
 
-    auto texture = Assets::instance().getTexture(id);
     Draw::instance().draw(texture->mem, source, target);
 }

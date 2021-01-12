@@ -134,6 +134,9 @@ void Layer::load(JSON::Value &layer) {
 
         // -1 because of the way tiled reserves id 0
         int tileId = data[i].as<int>() - 1;
+        if (tileId == 30) {
+            tileId = 30;
+        }
 
         // Not all tiles have to be set on a map, skip the
         // empty ones

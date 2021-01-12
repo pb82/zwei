@@ -10,10 +10,11 @@
 
 Sprite::Sprite(Entity &parent, Asset id)
         : Component(parent),
-          assetId(id) {}
+          assetId(id) {
+    texture = Assets::instance().getTexture(assetId);
+}
 
 void Sprite::pick(SDL_Rect &source) {
-    auto texture = Assets::instance().getTexture(assetId);
     auto animation = parent.getComponent<Animation>();
 
     // Tile position in the tilemap
@@ -36,7 +37,6 @@ void Sprite::render() {
     // Screen rect
     SDL_Rect target;
     auto transform = parent.getComponent<Transform>();
-    auto texture = Assets::instance().getTexture(assetId);
 
     // On screen?
     RT_Camera.project(target, transform->p.x, transform->p.y, transform->padding);

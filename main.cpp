@@ -84,7 +84,7 @@ void placeKakta(int x, int y, Topology &top) {
     kakta->addComponent<Stats>(false);
     auto stats = kakta->getComponent<Stats>();
     stats->inventory.equip(std::make_shared<Stick>());
-    stats->character.setBase(5, 10, 1, 1);
+    stats->character.setBase(10, 2, 1, 1);
     stats->character.setLevel(1);
 
     auto transform = kakta->getComponent<Transform>();
@@ -260,7 +260,7 @@ void loop() {
     auto sprite = Manager::instance().addEntity(OBJECTS);
     RT_Context.setPlayer(sprite);
 
-    sprite->addComponent<Transform>(7, 14);
+    sprite->addComponent<Transform>(7, 28);
     sprite->addComponent<Sprite>(SPRITES);
     sprite->addComponent<Animation>(200, true);
     sprite->addComponent<Acceleration>(3.0f, VM_25_PI);
@@ -296,6 +296,9 @@ void loop() {
     auto hud = Manager::instance().addEntity(FOREGROUND);
     hud->addComponent<Hud>();
 
+    placeKakta(4, 2, RT_Context.getTopology());
+    placeKakta(19, 2, RT_Context.getTopology());
+
     /*
     placeKakta(11, 11, RT_Context.getTopology());
     placeKakta(10, 10, RT_Context.getTopology());
@@ -307,6 +310,9 @@ void loop() {
     placeItem(9, 5, STICK);
     placeItem(9, 6, HEALTH_POTION);
     */
+
+    placeItem(7, 4, STICK);
+
 
     placeTrigger(11, 8, [](float angle) {
         Manager::instance().setRenderHint(HINT_HIDE_ROOF_LAYER);

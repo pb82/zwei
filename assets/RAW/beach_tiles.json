@@ -36,6 +36,20 @@
                 }]
         }, 
         {
+         "id":30,
+         "properties":[
+                {
+                 "name":"animation",
+                 "type":"string",
+                 "value":"[31,47,31]"
+                }, 
+                {
+                 "name":"speed",
+                 "type":"int",
+                 "value":500
+                }]
+        }, 
+        {
          "id":32,
          "properties":[
                 {
@@ -96,6 +110,15 @@
                  "name":"padding",
                  "type":"string",
                  "value":"[0,1,0,0]"
+                }]
+        }, 
+        {
+         "id":75,
+         "properties":[
+                {
+                 "name":"padding",
+                 "type":"string",
+                 "value":"[1,0.5,0,0]"
                 }]
         }, 
         {

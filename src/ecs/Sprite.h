@@ -26,6 +26,8 @@ private:
     std::queue<std::shared_ptr<Filter>> filters;
 
     Asset assetId;
+
+    std::shared_ptr<Texture> texture;
 };
 
 
