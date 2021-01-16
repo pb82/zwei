@@ -1,6 +1,6 @@
 # Zwei
 
-Game engine for 2d action RPG style games.
+Game engine for 2d action RPG style games. Work in progress, still very rough.
 
 - [x] Layers, Sprites, Animations
 - [x] Import Maps and Tilesets from [Tiled](https://www.mapeditor.org/)
@@ -10,6 +10,7 @@ Game engine for 2d action RPG style games.
 - [ ] Save & Load 
 - [ ] Scripting
 - [ ] Building on Windows and Mac OS 
+- [ ] Docs
 
 # Screenshots
 
