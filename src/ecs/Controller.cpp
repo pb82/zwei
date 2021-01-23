@@ -108,6 +108,12 @@ void Controller::key(GameKeyEvent &key) {
         return;
     }
 
+    if (P_Y) {
+        acceleration->setFacing(acceleration->getDirection());
+    } else {
+        acceleration->setFacing(NONE);
+    }
+
     if (!P_UP && !P_DOWN && !P_LEFT && !P_RIGHT) {
         acceleration->decelerate();
         animation->stop();

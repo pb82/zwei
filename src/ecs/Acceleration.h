@@ -37,6 +37,8 @@ public:
 
     void reset(Position &target);
 
+    void setFacing(Direction d);
+
     float getAngle();
 
     Position &getPosition();
@@ -46,6 +48,8 @@ public:
     Direction getDirection();
 
 private:
+
+    Direction face = NONE;
 
     Vector trajectory;
 

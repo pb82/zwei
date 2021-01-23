@@ -6,6 +6,7 @@ enum Direction {
     S,
     E,
     W,
+    NONE,
 };
 
 #endif

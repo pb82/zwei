@@ -62,11 +62,16 @@ float Acceleration::getAngle() {
     return this->trajectory.angle;
 }
 
+void Acceleration::setFacing(Direction d) {
+    this->face = d;
+}
+
 Position &Acceleration::getPosition() {
     return this->last;
 }
 
 Direction Acceleration::getDirection() {
+    if (face != NONE) return face;
     return this->trajectory.getDirection();
 }
 
