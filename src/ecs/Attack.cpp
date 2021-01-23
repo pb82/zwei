@@ -56,6 +56,14 @@ void Attack::printDamage(float damage, float x, float y) {
 
 // You are being attacked
 void Attack::defend(std::shared_ptr<Projectile> projectile) {
+    if (!projectile->isProjectile && projectile->origin == RT_Context.getPlayer().get()) {
+        // If the player turns around before the stick projectile hits the enemy, then it is not a hit
+        auto playerAcc = RT_Context.getPlayer()->getComponent<Acceleration>();
+        if (playerAcc->getDirection() != projectile->launchDirection) {
+            return;
+        }
+    }
+    
     auto acc = this->parent.getComponent<Acceleration>();
     acc->applyForce(projectile->force);
 
@@ -165,6 +173,7 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
     projectile->force.set(acc->getAngle(), stats->inventory.weapon->throwback());
     projectile->isProjectile = stats->inventory.weapon->isProjectile();
     projectile->origin = &this->parent;
+    projectile->launchDirection = acc->getDirection();
 
     // Self destruct weapon projectile
     p->addComponent<SelfDestruct>(DISTANCE, 0.75);

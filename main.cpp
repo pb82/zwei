@@ -114,7 +114,7 @@ void placeSpider(int x, int y, Topology &top) {
     skeleton->addComponent<Stats>(false);
     auto stats = skeleton->getComponent<Stats>();
     stats->character.setLevel(1);
-    stats->character.setBase(10, 5, 1, 5);
+    stats->character.setBase(10, 1, 1, 10);
 
     auto transform = skeleton->getComponent<Transform>();
     skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.3, 0.7});
@@ -290,7 +290,7 @@ void loop() {
     // tweakUi->addComponent<Tweak>(sprite);
 
     auto stats = sprite->getComponent<Stats>();
-    stats->character.setBase(10, 1, 1, 1);
+    stats->character.setBase(30, 10, 1, 1);
 
 
     auto hud = Manager::instance().addEntity(FOREGROUND);

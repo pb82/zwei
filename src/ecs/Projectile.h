@@ -5,6 +5,7 @@
 
 #include "Component.h"
 #include "../alg/Force.h"
+#include "../alg/Direction.h"
 
 class Projectile : public Component {
 public:
@@ -12,11 +13,13 @@ public:
 
     Force force;
 
-    const Entity* origin;
+    const Entity *origin;
 
     float power;
 
     bool isProjectile = false;
+
+    Direction launchDirection;
 };
 
 

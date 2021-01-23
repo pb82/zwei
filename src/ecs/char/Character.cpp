@@ -36,7 +36,7 @@ void Character::setLevel(int level) {
 }
 
 int Character::releaseExperience() const {
-    int factor = (rand() % 3);
+    int factor = (rand() % 20);
     return level * factor;
 }
 
