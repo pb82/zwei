@@ -19,6 +19,7 @@ St::St()
     supportedSizes.push_back({800, 600});
     supportedSizes.push_back({1024, 640});
     supportedSizes.push_back({1024, 800});
+    supportedSizes.push_back({1280, 640});
     supportedSizes.push_back({1280, 800});
     supportedSizes.push_back({1280, 1024});
     supportedSizes.push_back({1366, 768});

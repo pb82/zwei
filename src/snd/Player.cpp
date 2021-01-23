@@ -94,7 +94,7 @@ void Player::init() {
     std::vector<std::tuple<Asset, background_music>> music_tasks;
 
     // sound effects
-    sound_tasks.push_back({SOUND_PICKUP, std::async(std::launch::deferred, load_sound, "assets/RAW/pickup.wav")});
+    sound_tasks.push_back({SOUND_PICKUP, std::async(std::launch::deferred, load_sound, "assets/RAW/pickup2.wav")});
 
     // music
     // deferred load, async seems to cause random crashes
