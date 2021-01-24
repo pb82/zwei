@@ -38,7 +38,7 @@ public:
 
     void collect();
 
-    void defend(std::shared_ptr<Collider> projectile);
+    bool defend(std::shared_ptr<Collider> projectile);
 
     void kick(std::shared_ptr<Collider> other);
 

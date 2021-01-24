@@ -56,6 +56,12 @@ void Animation::queueAttackFrames() {
     }
 }
 
+void Animation::queueProjectileFrames() {
+    for (auto &frame : projectileAttackFrames) {
+        mixinFrames.push(frame);
+    }
+}
+
 int Animation::getCurrentFrame(Direction d) {
     if (!mixinFrames.empty()) {
         auto f = mixinFrames.front();

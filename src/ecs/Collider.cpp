@@ -62,12 +62,12 @@ void Collider::kick(std::shared_ptr<Collider> other) {
     a2->applyForce(angle, 10);
 }
 
-void Collider::defend(std::shared_ptr<Collider> projectile) {
+bool Collider::defend(std::shared_ptr<Collider> projectile) {
     if (projectile->parent.hasComponent<Projectile>()) {
         auto p = projectile->parent.getComponent<Projectile>();
         if (p->origin == &this->parent) {
             // No need to defend against your own projectiles
-            return;
+            return false;
         }
 
         if (parent.hasComponent<Attack>()) {
@@ -75,6 +75,7 @@ void Collider::defend(std::shared_ptr<Collider> projectile) {
             a->defend(p);
         }
     }
+    return true;
 }
 
 void Collider::disable() {

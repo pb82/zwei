@@ -63,7 +63,7 @@ void Attack::defend(std::shared_ptr<Projectile> projectile) {
             return;
         }
     }
-    
+
     auto acc = this->parent.getComponent<Acceleration>();
     acc->applyForce(projectile->force);
 
@@ -100,10 +100,96 @@ void Attack::attack() {
     this->wait = stats->inventory.weapon->recharge();
 
     if (stats->inventory.weapon->isProjectile()) {
-        // TODO
+        launchProjectileWeapon(stats);
     } else {
         launchStickWeapon(stats);
     }
+}
+
+void Attack::launchProjectileWeapon(std::shared_ptr<Stats> stats) {
+    auto animation = parent.getComponent<Animation>();
+    auto acc = parent.getComponent<Acceleration>();
+    auto direction = acc->getDirection();
+    Padding padding = {.5, .5, .5, .5};
+    float projectileOffsetX = 0, projectileOffsetY = 0, angle = 0;
+
+    switch (direction) {
+        case N:
+            animation->queueProjectileFrames();
+            projectileOffsetY = -.5;
+            padding.left = 0.75;
+            padding.right = 0.75;
+            angle = VM_50_PI;
+            break;
+        case W:
+            animation->queueProjectileFrames();
+            projectileOffsetX = -.5;
+            padding.top = 0.75;
+            padding.bottom = 0.75;
+            angle = VM_100_PI;
+            break;
+        case E:
+            animation->queueProjectileFrames();
+            projectileOffsetX = .5;
+            padding.top = 0.75;
+            padding.bottom = 0.75;
+            angle = VM_0_PI;
+            break;
+        case S:
+            animation->queueProjectileFrames();
+            padding.left = 0.75;
+            padding.right = 0.75;
+            projectileOffsetY = .5;
+            angle = VM_150_PI;
+            break;
+    }
+
+    auto position = parent.getComponent<Transform>();
+    auto p = std::make_shared<Entity>();
+    p->addComponent<Transform>(
+            position->p.x + projectileOffsetX,
+            position->p.y + projectileOffsetY);
+
+    p->addComponent<Analytics>();
+
+    auto t = p->getComponent<Transform>();
+    p->addComponent<Collider>(t, CT_PROJECTILE, padding);
+    p->addComponent<Acceleration>(stats->inventory.weapon->speed(), angle);
+    p->addComponent<Projectile>();
+    p->addComponent<Sprite>(SPRITES);
+    p->addComponent<Animation>(200, true);
+
+    auto anim = p->getComponent<Animation>();
+    std::vector<int> projectileFrames;
+    stats->inventory.weapon->projectileFrames(projectileFrames);
+    for (auto f: projectileFrames) {
+        anim->addAnimationFrame(f);
+    }
+
+    switch (direction) {
+        case N:
+            anim->rotate = 180;
+            break;
+        case E:
+            anim->rotate = 270;
+            break;
+        case W:
+            anim->rotate = 90;
+            break;
+    }
+
+    auto projectile = p->getComponent<Projectile>();
+    projectile->power = stats->inventory.weapon->damage(stats->character);
+    projectile->force.set(acc->getAngle(), stats->inventory.weapon->throwback());
+    projectile->isProjectile = stats->inventory.weapon->isProjectile();
+    projectile->origin = &this->parent;
+    projectile->launchDirection = acc->getDirection();
+
+    // Self destruct weapon projectile
+    p->addComponent<SelfDestruct>(DISTANCE, stats->inventory.weapon->range());
+    p->getComponent<Acceleration>()->accelerate();
+
+    Manager::instance().enqueue(p, OBJECTS);
 }
 
 void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
@@ -154,8 +240,6 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
     }
 
     auto position = parent.getComponent<Transform>();
-    auto sprite = parent.getComponent<Sprite>();
-
     auto p = std::make_shared<Entity>();
     p->addComponent<Transform>(
             position->p.x + projectileOffsetX,

@@ -131,8 +131,9 @@ void Col::collide(float dt) {
 
                 if (group.has(CT_PROJECTILE)) {
                     for (auto &projectile : group.involved.at(CT_PROJECTILE)) {
-                        projectile->disable();
-                        group.subject->defend(projectile);
+                        if (group.subject->defend(projectile)) {
+                            projectile->disable();
+                        }
                     }
                 }
             }
@@ -151,11 +152,23 @@ void Col::collide(float dt) {
                         involved->defend(group.subject);
                     }
                 }
+
+                if (group.has(CT_WALL)) {
+                    group.subject->disable();
+                }
             }
 
             if (group.subject->tag == CT_ITEM) {
                 if (group.has(CT_PLAYER)) {
 
+                }
+            }
+
+            if (group.subject->tag == CT_WALL) {
+                if (group.has(CT_PROJECTILE)) {
+                    for (auto &involved : group.involved.at(CT_PROJECTILE)) {
+                        involved->disable();
+                    }
                 }
             }
 

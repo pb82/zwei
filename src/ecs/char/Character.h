@@ -17,6 +17,8 @@ public:
 
     int getStrength() const;
 
+    int getDexterity() const;
+
     int releaseExperience() const;
 
     std::tuple<int, int> getHitpoints();

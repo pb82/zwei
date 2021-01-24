@@ -21,6 +21,8 @@ private:
 
     void launchStickWeapon(std::shared_ptr<Stats> stats);
 
+    void launchProjectileWeapon(std::shared_ptr<Stats> stats);
+
     float wait = 0.0f;
 };
 

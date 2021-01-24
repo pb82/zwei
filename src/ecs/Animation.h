@@ -31,6 +31,8 @@ public:
 
     void queueAttackFrames();
 
+    void queueProjectileFrames();
+
     int getCurrentFrame(Direction d = N);
 
     void start();
@@ -41,7 +43,7 @@ public:
 
     bool repeat;
 
-    SDL_RendererFlip flip = SDL_FLIP_NONE;
+    float rotate = 0.0f;
 
 private:
 

@@ -60,6 +60,10 @@ int Character::getStrength() const {
     return baseStrength;
 }
 
+int Character::getDexterity() const {
+    return baseDexterity;
+}
+
 std::tuple<int, int> Character::getExperience() {
     return {this->experience, this->experienceToNextLevel};
 }

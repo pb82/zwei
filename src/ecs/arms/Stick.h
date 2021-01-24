@@ -7,6 +7,8 @@ class Stick : public Weapon {
 public:
     Stick();
 
+    ~Stick() {}
+
     float range() override;
 
     int recharge() override;

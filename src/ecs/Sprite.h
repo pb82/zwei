@@ -21,7 +21,7 @@ public:
     void addFilter(std::shared_ptr<Filter> f);
 
 private:
-    SDL_RendererFlip pick(SDL_Rect &source);
+    float pick(SDL_Rect &source);
 
     std::queue<std::shared_ptr<Filter>> filters;
 

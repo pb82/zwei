@@ -9,11 +9,14 @@ enum ItemType {
     EMPTY_SLOT,
     HEALTH_POTION,
     STICK,
+    BOW,
 };
 
 class Item {
 public:
     Item(ItemType type) : type(type) {}
+
+    virtual ~Item() {}
 
     virtual bool stackable() { return false; }
 

@@ -4,8 +4,8 @@
 #include "../Collider.h"
 #include "HealthPotion.h"
 #include "StickItem.h"
+#include "BowItem.h"
 #include "../Analytics.h"
-
 
 std::shared_ptr<Entity> Item::make(Position p, ItemType type) {
     std::shared_ptr<Item> item = nullptr;
@@ -17,6 +17,9 @@ std::shared_ptr<Entity> Item::make(Position p, ItemType type) {
             break;
         case STICK:
             item = std::make_shared<StickItem>();
+            break;
+        case BOW:
+            item = std::make_shared<BowItem>();
             break;
         default:
             return nullptr;
