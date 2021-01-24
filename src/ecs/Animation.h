@@ -27,7 +27,7 @@ public:
 
     void addMixinFrame(int n, int s, int e, int w);
 
-    void addAttackFrame(int n, int s, int e, int w, float duration);
+    void addAttackFrame(int n, int s, int e, int w, float duration, bool projectile = false);
 
     void queueAttackFrames();
 
@@ -40,6 +40,8 @@ public:
     float speed;
 
     bool repeat;
+
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
 
 private:
 
@@ -58,6 +60,9 @@ private:
     std::queue<MixinFrame> mixinFrames;
 
     std::vector<MixinFrame> attackFrames;
+
+    std::vector<MixinFrame> projectileAttackFrames;
+
 };
 
 

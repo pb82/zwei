@@ -14,7 +14,7 @@ Sprite::Sprite(Entity &parent, Asset id)
     texture = Assets::instance().getTexture(assetId);
 }
 
-void Sprite::pick(SDL_Rect &source) {
+SDL_RendererFlip Sprite::pick(SDL_Rect &source) {
     auto animation = parent.getComponent<Animation>();
 
     // Tile position in the tilemap
@@ -27,12 +27,13 @@ void Sprite::pick(SDL_Rect &source) {
 
     int scalar = animation->getCurrentFrame(d);
     Gfx::pick(source, scalar, texture->w);
+    return animation->flip;
 }
 
 void Sprite::render() {
     // Tilemap rect
     SDL_Rect source;
-    pick(source);
+    auto flip = pick(source);
 
     // Screen rect
     SDL_Rect target;
@@ -48,7 +49,7 @@ void Sprite::render() {
     if (!filters.empty()) filters.front()->render(texture->mem, &transform->p);
 
     // Draw
-    Draw::instance().draw(texture->mem, source, target);
+    Draw::instance().draw(texture->mem, source, target, flip);
     SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
 }
 

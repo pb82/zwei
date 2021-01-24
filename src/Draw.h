@@ -16,7 +16,7 @@ public:
 
     void operator=(Draw const &) = delete;
 
-    void draw(SDL_Texture *texture, SDL_Rect &source, SDL_Rect &target);
+    void draw(SDL_Texture *texture, SDL_Rect &source, SDL_Rect &target, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
     void line(Color &c, int x1, int y1, int x2, int y2);
 

@@ -277,6 +277,10 @@ void loop() {
     sprite->getComponent<Animation>()->addAttackFrame(52, 4, 36, 20, 100);
     sprite->getComponent<Animation>()->addAttackFrame(53, 5, 37, 21, 100);
 
+    sprite->getComponent<Animation>()->addAttackFrame(54, 6, 38, 22, 100, true);
+    sprite->getComponent<Animation>()->addAttackFrame(55, 7, 39, 23, 100, true);
+    sprite->getComponent<Animation>()->addAttackFrame(56, 8, 40, 24, 100, true);
+
     sprite->getComponent<Animation>()->stop();
     // Track the sprite
     auto transform = sprite->getComponent<Transform>();

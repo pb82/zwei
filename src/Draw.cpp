@@ -2,8 +2,8 @@
 
 #include "Gfx.h"
 
-void Draw::draw(SDL_Texture *texture, SDL_Rect &source, SDL_Rect &target) {
-    SDL_RenderCopy(Gfx_Renderer, texture, &source, &target);
+void Draw::draw(SDL_Texture *texture, SDL_Rect &source, SDL_Rect &target, SDL_RendererFlip flip) {
+    SDL_RenderCopyEx(Gfx_Renderer, texture, &source, &target, 0.0f, nullptr, flip);
 }
 
 void Draw::line(Color &c, int x1, int y1, int x2, int y2) {

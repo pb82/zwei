@@ -36,14 +36,18 @@ void Animation::addMixinFrame(int n, int s, int e, int w) {
     mixinFrames.push(f);
 }
 
-void Animation::addAttackFrame(int n, int s, int e, int w, float duration) {
+void Animation::addAttackFrame(int n, int s, int e, int w, float duration, bool projectile) {
     auto f = MixinFrame();
     f.frames[N] = n;
     f.frames[S] = s;
     f.frames[E] = e;
     f.frames[W] = w;
     f.duration = duration;
-    attackFrames.push_back(f);
+    if (projectile) {
+        projectileAttackFrames.push_back(f);
+    } else {
+        attackFrames.push_back(f);
+    }
 }
 
 void Animation::queueAttackFrames() {
