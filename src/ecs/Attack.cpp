@@ -186,8 +186,8 @@ void Attack::launchProjectileWeapon(std::shared_ptr<Stats> stats) {
     projectile->launchDirection = acc->getDirection();
 
     // Self destruct weapon projectile
-    p->addComponent<SelfDestruct>(DISTANCE, stats->inventory.weapon->range());
-    p->getComponent<Acceleration>()->accelerate();
+    p->addComponent<SelfDestruct>(STILL, 0);
+    p->getComponent<Acceleration>()->applyForce(angle, 10, 15.0f, 80.0f);
 
     Manager::instance().enqueue(p, OBJECTS);
 }

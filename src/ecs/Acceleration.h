@@ -29,7 +29,7 @@ public:
 
     void decelerate();
 
-    void applyForce(float angle, float power);
+    void applyForce(float angle, float power, float decay = 100.0f, float weight = 100.0f);
 
     void applyForce(const Force &force);
 
@@ -40,6 +40,8 @@ public:
     void setFacing(Direction d);
 
     float getAngle();
+
+    bool hasForces();
 
     Position &getPosition();
 

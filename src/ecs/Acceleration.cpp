@@ -23,8 +23,8 @@ void Acceleration::update(float dt) {
             std::remove_if(
                     forces.begin(),
                     forces.end(), [&](Force &f) {
-                        f.update(100.0f, dt);
-                        bool active = f.apply(100.0f, &transform->p.x, &transform->p.y);
+                        f.update(dt);
+                        bool active = f.apply(&transform->p.x, &transform->p.y);
                         if (!active) speed = 0;
                         return !active;
                     }),
@@ -32,14 +32,18 @@ void Acceleration::update(float dt) {
 
 }
 
+bool Acceleration::hasForces() {
+    return !this->forces.empty();
+}
+
 void Acceleration::applyForce(const Force &force) {
     if (forces.size() >= 5) return;
     forces.push_back(force);
 }
 
-void Acceleration::applyForce(float angle, float power) {
+void Acceleration::applyForce(float angle, float power, float decay, float weight) {
     if (forces.size() >= 5) return;
-    forces.push_back(Force(angle, power));
+    forces.push_back(Force(angle, power, decay, weight));
 }
 
 void Acceleration::accelerate() {

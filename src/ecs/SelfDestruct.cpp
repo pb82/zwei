@@ -6,6 +6,13 @@ SelfDestruct::SelfDestruct(Entity &parent, SelfDestructType type, float value)
         : type(type), value(value), Component(parent) {}
 
 void SelfDestruct::update(float dt) {
+    if (type == STILL) {
+        auto a = parent.getComponent<Acceleration>();
+        if (a->hasForces() == false) {
+            parent.disable();
+        }
+        return;
+    }
     if (type == TIMER) {
         current += dt;
     } else {

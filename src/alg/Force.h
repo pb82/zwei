@@ -5,17 +5,24 @@ class Force {
 public:
     Force(float angle, float power);
 
-    bool apply(float weight, float *x, float *y);
+    Force(float angle, float power, float decay, float weight);
 
-    void update(float weight, float dt);
+    bool apply(float *x, float *y);
+
+    void update(float dt);
 
     void set(float angle, float power);
+
+    float decay = 100.0f;
+
+    float weight = 100.0f;
 
 private:
 
     float angle;
 
     float power;
+
 };
 
 #endif

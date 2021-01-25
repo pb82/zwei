@@ -316,7 +316,7 @@ void loop() {
     */
 
     placeItem(7, 4, STICK);
-    placeItem(18, 10, BOW);
+    placeItem(8, 24, BOW);
 
 
     placeTrigger(11, 8, [](float angle) {

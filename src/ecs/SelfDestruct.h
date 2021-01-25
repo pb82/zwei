@@ -5,7 +5,8 @@
 
 enum SelfDestructType {
     TIMER,
-    DISTANCE
+    DISTANCE,
+    STILL,
 };
 
 class SelfDestruct : public Component {
