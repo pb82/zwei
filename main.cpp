@@ -39,6 +39,7 @@
 #include "src/ecs/minds/Kakta.h"
 #include "src/ecs/Analytics.h"
 #include "src/ecs/arms/Stick.h"
+#include "src/ecs/arms/Stone.h"
 #include "src/ecs/arms/Bow.h"
 #include "src/ecs/minds/Spider.h"
 #include "src/ecs/Collectable.h"
@@ -84,12 +85,12 @@ void placeKakta(int x, int y, Topology &top) {
 
     kakta->addComponent<Stats>(false);
     auto stats = kakta->getComponent<Stats>();
-    stats->inventory.equip(std::make_shared<Bow>());
+    stats->inventory.equip(std::make_shared<Stone>());
     stats->character.setBase(10, 2, 1, 1);
     stats->character.setLevel(1);
 
     auto transform = kakta->getComponent<Transform>();
-    kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 1, 0});
+    kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0});
     top.registerMobile(&transform->p);
 
     auto ai = kakta->getComponent<Ai>();

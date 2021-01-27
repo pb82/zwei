@@ -17,13 +17,13 @@ public:
 
     float weight = 100.0f;
 
+    float power;
+
     float total = 0.0f;
 
 private:
 
     float angle;
-
-    float power;
 
 };
 

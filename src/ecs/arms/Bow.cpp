@@ -30,5 +30,11 @@ float Bow::throwback() {
 }
 
 int Bow::getProjectileTile() {
-    return 102;
+    return 105;
+}
+
+void Bow::getParams(float *power, float *weight, float *decay) {
+    *power = 10;
+    *weight = 80;
+    *decay = 15;
 }

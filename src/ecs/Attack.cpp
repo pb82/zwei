@@ -170,7 +170,10 @@ void Attack::launchProjectileWeapon(std::shared_ptr<Stats> stats) {
 
     // Self destruct weapon projectile
     p->addComponent<SelfDestruct>(STILL, 0);
-    p->getComponent<Acceleration>()->applyForce(angle, 10, 15.0f, 80.0f);
+
+    Force f(angle, 0);
+    stats->inventory.weapon->getParams(&f.power, &f.weight, &f.decay);
+    p->getComponent<Acceleration>()->applyForce(f);
 
     Manager::instance().enqueue(p, OBJECTS);
 }

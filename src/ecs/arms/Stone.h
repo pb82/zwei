@@ -1,13 +1,13 @@
-#ifndef ZWEI_BOW_H
-#define ZWEI_BOW_H
+#ifndef ZWEI_STONE_H
+#define ZWEI_STONE_H
 
 #include "Weapon.h"
 
-class Bow : public Weapon {
+class Stone : public Weapon {
 public:
-    Bow();
+    Stone();
 
-    ~Bow() {}
+    ~Stone() {}
 
     float range() override;
 
@@ -26,8 +26,9 @@ public:
     void getParams(float *power, float *weight, float *decay) override;
 
 private:
-    int damageTable[10] = {2, 2, 3, 3, 3, 3, 4, 5, 6, 8};
+    int damageTable[10] = {1, 1, 2, 2, 2, 3, 3, 3, 3, 4};
+
 };
 
 
-#endif //ZWEI_BOW_H
+#endif //ZWEI_STONE_H

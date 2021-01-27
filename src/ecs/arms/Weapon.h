@@ -24,6 +24,12 @@ public:
 
     virtual int getProjectileTile() { return 0; }
 
+    virtual void getParams(float *power, float *weight, float *decay) {
+        *power = 0;
+        *weight = 0;
+        *decay = 0;
+    }
+
 private:
 };
 
