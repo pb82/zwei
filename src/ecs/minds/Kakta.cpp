@@ -10,7 +10,7 @@ Kakta::Kakta(Entity &parent) : Mind(parent) {}
 Kakta::~Kakta() noexcept {}
 
 int Kakta::delay() {
-    return 50;
+    return 100;
 }
 
 bool Kakta::activate() {
@@ -57,8 +57,16 @@ void Kakta::plan(float dt) {
                 if (d == E) offset = 1 - playerCollider->padding.left;
                 if (d == W) offset = 1 - playerCollider->padding.right;
                 if (distance <= (stats->inventory.weapon->range() + offset)) {
-                    attack->attack();
-                    return;
+                    if (stats->inventory.weapon->isProjectile()) {
+                        float angle = transform->p.angle(playerCollider->tracked->p);
+                        acceleration->turn(angle);
+                        acceleration->decelerate();
+                        attack->attack();
+                        return;
+                    } else {
+                        attack->attack();
+                        return;
+                    }
                 }
             }
         }

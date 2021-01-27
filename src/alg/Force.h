@@ -17,6 +17,8 @@ public:
 
     float weight = 100.0f;
 
+    float total = 0.0f;
+
 private:
 
     float angle;

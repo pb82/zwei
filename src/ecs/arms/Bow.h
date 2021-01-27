@@ -21,7 +21,7 @@ public:
 
     bool isProjectile() override;
 
-    void projectileFrames(std::vector<int>& target) override;
+    int getProjectileTile() override;
 
 private:
     int damageTable[10] = {2, 2, 3, 3, 3, 3, 4, 5, 6, 8};

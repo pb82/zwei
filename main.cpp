@@ -39,6 +39,7 @@
 #include "src/ecs/minds/Kakta.h"
 #include "src/ecs/Analytics.h"
 #include "src/ecs/arms/Stick.h"
+#include "src/ecs/arms/Bow.h"
 #include "src/ecs/minds/Spider.h"
 #include "src/ecs/Collectable.h"
 #include "src/snd/Player.h"
@@ -83,7 +84,7 @@ void placeKakta(int x, int y, Topology &top) {
 
     kakta->addComponent<Stats>(false);
     auto stats = kakta->getComponent<Stats>();
-    stats->inventory.equip(std::make_shared<Stick>());
+    stats->inventory.equip(std::make_shared<Bow>());
     stats->character.setBase(10, 2, 1, 1);
     stats->character.setLevel(1);
 

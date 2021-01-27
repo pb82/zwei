@@ -4,7 +4,7 @@
 Bow::Bow() {}
 
 float Bow::range() {
-    return 5;
+    return 2.5;
 }
 
 int Bow::recharge() {
@@ -29,7 +29,6 @@ float Bow::throwback() {
     return 10.0f;
 }
 
-void Bow::projectileFrames(std::vector<int>& target) {
-    target.push_back(102);
-    target.push_back(103);
+int Bow::getProjectileTile() {
+    return 102;
 }

@@ -110,39 +110,37 @@ void Attack::launchProjectileWeapon(std::shared_ptr<Stats> stats) {
     auto animation = parent.getComponent<Animation>();
     auto acc = parent.getComponent<Acceleration>();
     auto direction = acc->getDirection();
-    Padding padding = {.5, .5, .5, .5};
-    float projectileOffsetX = 0, projectileOffsetY = 0, angle = 0;
+    Padding padding = {.75, .75, .75, .75};
+    float projectileOffsetX = 0, projectileOffsetY = 0, angle = 0, rotate = 0;
+    animation->queueProjectileFrames();
 
     switch (direction) {
         case N:
-            animation->queueProjectileFrames();
-            projectileOffsetY = -.5;
-            padding.left = 0.75;
-            padding.right = 0.75;
             angle = VM_50_PI;
+            projectileOffsetY = -.5;
+            rotate = 90;
             break;
         case W:
-            animation->queueProjectileFrames();
-            projectileOffsetX = -.5;
-            padding.top = 0.75;
-            padding.bottom = 0.75;
             angle = VM_100_PI;
+            projectileOffsetX = -.5;
+            rotate = -90;
             break;
         case E:
-            animation->queueProjectileFrames();
-            projectileOffsetX = .5;
-            padding.top = 0.75;
-            padding.bottom = 0.75;
             angle = VM_0_PI;
+            projectileOffsetX = .5;
+            rotate = -90;
             break;
         case S:
-            animation->queueProjectileFrames();
-            padding.left = 0.75;
-            padding.right = 0.75;
-            projectileOffsetY = .5;
             angle = VM_150_PI;
+            projectileOffsetY = .5;
+            rotate = 90;
             break;
     }
+
+    if (&this->parent != RT_Context.getPlayer().get()) {
+        angle = acc->getAngle();
+    }
+    rotate += angle * (180 / VM_100_PI);
 
     auto position = parent.getComponent<Transform>();
     auto p = std::make_shared<Entity>();
@@ -160,23 +158,8 @@ void Attack::launchProjectileWeapon(std::shared_ptr<Stats> stats) {
     p->addComponent<Animation>(200, true);
 
     auto anim = p->getComponent<Animation>();
-    std::vector<int> projectileFrames;
-    stats->inventory.weapon->projectileFrames(projectileFrames);
-    for (auto f: projectileFrames) {
-        anim->addAnimationFrame(f);
-    }
-
-    switch (direction) {
-        case N:
-            anim->rotate = 180;
-            break;
-        case E:
-            anim->rotate = 270;
-            break;
-        case W:
-            anim->rotate = 90;
-            break;
-    }
+    anim->addAnimationFrame(stats->inventory.weapon->getProjectileTile());
+    anim->rotate = rotate;
 
     auto projectile = p->getComponent<Projectile>();
     projectile->power = stats->inventory.weapon->damage(stats->character);

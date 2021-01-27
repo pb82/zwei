@@ -22,7 +22,7 @@ public:
 
     virtual bool isProjectile() { return false; }
 
-    virtual void projectileFrames(std::vector<int> &) { return; }
+    virtual int getProjectileTile() { return 0; }
 
 private:
 };
