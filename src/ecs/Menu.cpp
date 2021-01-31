@@ -164,6 +164,11 @@ Menu::Menu(Entity &parent) : Component(parent) {
         this->level.push(VideoSettings);
         this->selectedIndex = 0;
     }));
+    menu_Settings.push_back(std::make_unique<MenuOption>("Controls", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        this->level.push(Controls);
+        this->selectedIndex = 0;
+    }));
     menu_Settings.push_back(std::make_unique<MenuOption>("Back", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.pop();
@@ -238,6 +243,9 @@ void Menu::render() {
         case VideoSettings:
             renderMenu(menu_VideoSettings);
             break;
+        case Controls:
+            controllerSettings.render();
+            break;
         default:
             break;
     }
@@ -251,6 +259,13 @@ void Menu::renderMenu(std::vector<std::unique_ptr<MenuAction>> &menu) {
         if (i == selectedIndex) menu.at(i)->select();
         else menu.at(i)->unselect();
     }
+}
+
+void MenuControllerSettings::key(GameKeyEvent &key) {
+
+}
+
+void MenuControllerSettings::render() {
 }
 
 void Menu::key(GameKeyEvent &key) {

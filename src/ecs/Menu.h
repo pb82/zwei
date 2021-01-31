@@ -13,6 +13,7 @@ enum GameMenu {
     Settings,
     AudioSettings,
     VideoSettings,
+    Controls,
 };
 
 typedef std::function<void(GameKeyEvent &key)> menu_Callback;
@@ -73,6 +74,15 @@ public:
     void render() override;
 };
 
+class MenuControllerSettings {
+public:
+
+    void key(GameKeyEvent &key);
+
+    void render();
+
+};
+
 class Menu : public Component {
 public:
     Menu(Entity &parent);
@@ -85,9 +95,13 @@ private:
 
     void renderMenu(std::vector<std::unique_ptr<MenuAction>> &menu);
 
+    void renderControllerSettings();
+
     int currentMenuItems();
 
     std::stack<GameMenu> level;
+
+    MenuControllerSettings controllerSettings;
 
     std::vector<std::unique_ptr<MenuAction>> menu_Main;
     std::vector<std::unique_ptr<MenuAction>> menu_Settings;
