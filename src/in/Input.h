@@ -10,6 +10,11 @@ enum GameKeyState {
     GK_RELEASED
 };
 
+enum GameEventType {
+    KEYBOARD,
+    GAMEPAD,
+};
+
 enum GameKey {
     GK_NONE = 0,
     GK_UP,
@@ -42,20 +47,20 @@ public:
 
     bool map(SDL_Event *e, GameKeyEvent *g);
 
+    void initDefaultMapping();
+
 private:
-    void mapHatEvent(SDL_Event *e, GameKeyEvent *g);
 
-    bool mapKeyboardEvent(SDL_Event *e, GameKeyEvent *g);
-
-    bool mapGamepadEvent(SDL_Event *e, GameKeyEvent *g);
-
-    GameKey fromSdlKey(const SDL_Event *e) const;
+    bool mapEvent(SDL_Event *e, GameKeyEvent *g, GameEventType type);
 
     GameKey fromSdlButton(const SDL_Event *e) const;
 
     SDL_GameController *controller;
 
     bool locked = false;
+
+    std::map<SDL_Keycode, GameKey> keyboardMapping;
+    std::map<SDL_GameControllerButton, GameKey> controllerMapping;
 };
 
 #endif

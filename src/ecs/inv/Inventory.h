@@ -23,6 +23,8 @@ public:
 
     void next();
 
+    void prev();
+
     void drop();
 
     void render();

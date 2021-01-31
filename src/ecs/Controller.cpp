@@ -15,6 +15,9 @@
 #define P_Y (activeKeys[GK_Y] == true)
 #define P_SELECT (activeKeys[GK_SELECT] == true)
 #define P_START (activeKeys[GK_START] == true)
+#define P_L (activeKeys[GK_L] == true)
+#define P_R (activeKeys[GK_R] == true)
+
 
 Controller::Controller(Entity &parent) : Component(parent) {
     resetKeys();
@@ -61,10 +64,62 @@ float Controller::angleFromKeys() {
     return VM_0_PI;
 }
 
-void Controller::key(GameKeyEvent &key) {
+void Controller::attack() {
+    if (parent.hasComponent<Attack>()) {
+        auto acceleration = parent.getComponent<Acceleration>();
+        auto attack = parent.getComponent<Attack>();
+        acceleration->decelerate();
+        attack->attack();
+    }
+}
+
+void Controller::inv(bool prev) {
+    if (parent.hasComponent<Stats>()) {
+        auto stats = parent.getComponent<Stats>();
+        if (prev) stats->inventory.prev();
+        else stats->inventory.next();
+    }
+}
+
+void Controller::drop() {
+    if (parent.hasComponent<Stats>()) {
+        auto stats = parent.getComponent<Stats>();
+        stats->inventory.drop();
+    }
+}
+
+void Controller::use() {
+    if (parent.hasComponent<Stats>()) {
+        auto stats = parent.getComponent<Stats>();
+        stats->inventory.use();
+    }
+}
+
+void Controller::lock(bool locked) {
+    auto acceleration = parent.getComponent<Acceleration>();
+    if (locked) {
+        acceleration->setFacing(acceleration->getDirection());
+    } else {
+        acceleration->setFacing(NONE);
+    }
+}
+
+void Controller::stop() {
     auto acceleration = parent.getComponent<Acceleration>();
     auto animation = parent.getComponent<Animation>();
+    acceleration->decelerate();
+    animation->stop();
+}
 
+void Controller::go() {
+    auto acceleration = parent.getComponent<Acceleration>();
+    auto animation = parent.getComponent<Animation>();
+    acceleration->turn(angleFromKeys());
+    acceleration->accelerate();
+    animation->start();
+}
+
+void Controller::updateState(GameKeyEvent &key) {
     if (key.state == GK_RELEASED) {
         if (key.key == GK_NONE) {
             resetKeys();
@@ -74,53 +129,25 @@ void Controller::key(GameKeyEvent &key) {
     } else {
         activeKeys[key.key] = true;
     }
+}
 
-    if (P_SELECT) {
-        if (parent.hasComponent<Stats>()) {
-            auto stats = parent.getComponent<Stats>();
-            stats->inventory.next();
-        }
-        return;
-    }
+void Controller::key(GameKeyEvent &key) {
+    updateState(key);
 
-    if (P_A) {
-        if (parent.hasComponent<Attack>()) {
-            auto attack = parent.getComponent<Attack>();
-            // acceleration->decelerate();
-            attack->attack();
-            return;
-        }
-    }
+    // Shoulder buttons
+    if (P_L) inv(true);
+    if (P_R) inv();
 
-    if (P_B) {
-        if (parent.hasComponent<Stats>()) {
-            auto stats = parent.getComponent<Stats>();
-            stats->inventory.use();
-        }
-        return;
-    }
+    if (P_A) attack();
+    if (P_Y) drop();
+    if (P_B) use();
 
-    if (P_X) {
-        if (parent.hasComponent<Stats>()) {
-            auto stats = parent.getComponent<Stats>();
-            stats->inventory.drop();
-        }
-        return;
-    }
-
-    if (P_Y) {
-        acceleration->setFacing(acceleration->getDirection());
-    } else {
-        acceleration->setFacing(NONE);
-    }
+    if (P_X) lock(true);
+    else if (!P_X) lock(false);
 
     if (!P_UP && !P_DOWN && !P_LEFT && !P_RIGHT) {
-        acceleration->decelerate();
-        animation->stop();
-        return;
+        stop();
+    } else {
+        go();
     }
-
-    acceleration->turn(angleFromKeys());
-    acceleration->accelerate();
-    animation->start();
 }

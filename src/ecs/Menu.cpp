@@ -151,6 +151,7 @@ Menu::Menu(Entity &parent) : Component(parent) {
     }));
     menu_Main.push_back(std::make_unique<MenuOption>("Quit", [](GameKeyEvent &key) {
         if (key.key != GK_A) return;
+        St::instance().serialize();
         RT_Running = false;
     }));
     menu_Settings.push_back(std::make_unique<MenuOption>("Audio Settings", [this](GameKeyEvent &key) {

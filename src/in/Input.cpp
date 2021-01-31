@@ -1,7 +1,9 @@
 #include <iostream>
 #include "Input.h"
 
-Input::Input() : controller(nullptr) {}
+Input::Input() : controller(nullptr) {
+    initDefaultMapping();
+}
 
 Input::~Input() {
     if (controller) {
@@ -10,221 +12,64 @@ Input::~Input() {
     }
 }
 
-GameKey Input::fromSdlKey(const SDL_Event *e) const {
-    switch (e->key.keysym.sym) {
-        case SDLK_UP:
-            return GK_UP;
-        case SDLK_DOWN:
-            return GK_DOWN;
-        case SDLK_LEFT:
-            return GK_LEFT;
-        case SDLK_RIGHT:
-            return GK_RIGHT;
-        case SDLK_a:
-            return GK_A;
-        case SDLK_b:
-            return GK_B;
-        case SDLK_TAB:
-            return GK_SELECT;
-        case SDLK_x:
-            return GK_X;
-        case SDLK_y:
-            return GK_Y;
-        case SDLK_ESCAPE:
-            return GK_START;
-        default:
-            return GK_NONE;
-    }
+void Input::initDefaultMapping() {
+    keyboardMapping[SDLK_LEFT] = GameKey::GK_LEFT;
+    keyboardMapping[SDLK_RIGHT] = GameKey::GK_RIGHT;
+    keyboardMapping[SDLK_UP] = GameKey::GK_UP;
+    keyboardMapping[SDLK_DOWN] = GameKey::GK_DOWN;
+    keyboardMapping[SDLK_a] = GameKey::GK_B;
+    keyboardMapping[SDLK_s] = GameKey::GK_A;
+    keyboardMapping[SDLK_x] = GameKey::GK_X;
+    keyboardMapping[SDLK_y] = GameKey::GK_Y;
+    keyboardMapping[SDLK_q] = GameKey::GK_L;
+    keyboardMapping[SDLK_w] = GameKey::GK_R;
+    keyboardMapping[SDLK_ESCAPE] = GameKey::GK_START;
+    keyboardMapping[SDLK_TAB] = GameKey::GK_SELECT;
+
+    controllerMapping[SDL_CONTROLLER_BUTTON_DPAD_LEFT] = GameKey::GK_LEFT;
+    controllerMapping[SDL_CONTROLLER_BUTTON_DPAD_RIGHT] = GameKey::GK_RIGHT;
+    controllerMapping[SDL_CONTROLLER_BUTTON_DPAD_UP] = GameKey::GK_UP;
+    controllerMapping[SDL_CONTROLLER_BUTTON_DPAD_DOWN] = GameKey::GK_DOWN;
+    controllerMapping[SDL_CONTROLLER_BUTTON_B] = GameKey::GK_B;
+    controllerMapping[SDL_CONTROLLER_BUTTON_A] = GameKey::GK_A;
+    controllerMapping[SDL_CONTROLLER_BUTTON_X] = GameKey::GK_X;
+    controllerMapping[SDL_CONTROLLER_BUTTON_Y] = GameKey::GK_Y;
+    controllerMapping[SDL_CONTROLLER_BUTTON_LEFTSHOULDER] = GameKey::GK_L;
+    controllerMapping[SDL_CONTROLLER_BUTTON_RIGHTSHOULDER] = GameKey::GK_R;
+    controllerMapping[SDL_CONTROLLER_BUTTON_START] = GameKey::GK_START;
+    controllerMapping[SDL_CONTROLLER_BUTTON_BACK] = GameKey::GK_SELECT;
 }
 
-GameKey Input::fromSdlButton(const SDL_Event *e) const {
-    switch (e->cbutton.button) {
-        case SDL_CONTROLLER_BUTTON_DPAD_UP:
-            return GK_UP;
-        case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-            return GK_DOWN;
-        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-            return GK_LEFT;
-        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-            return GK_RIGHT;
-        case SDL_CONTROLLER_BUTTON_A:
-            return GK_A;
-        case SDL_CONTROLLER_BUTTON_B:
-            return GK_B;
-        case SDL_CONTROLLER_BUTTON_GUIDE:
-            return GK_SELECT;
-        case SDL_CONTROLLER_BUTTON_X:
-            return GK_X;
-        case SDL_CONTROLLER_BUTTON_Y:
-            return GK_Y;
-        case SDL_CONTROLLER_BUTTON_START:
-            return GK_START;
-        default:
-            return GK_NONE;
+bool Input::mapEvent(SDL_Event *e, GameKeyEvent *g, GameEventType type) {
+    GameKey key;
+    if (type == KEYBOARD) {
+        if (keyboardMapping.find(e->key.keysym.sym) == keyboardMapping.end()) return false;
+        g->state = e->type == SDL_KEYUP ? GK_RELEASED : GK_PUSHED;
+        key = keyboardMapping[e->key.keysym.sym];
+    } else {
+        auto b = SDL_GameControllerButton(e->cbutton.button);
+        if (controllerMapping.find(b) == controllerMapping.end()) return false;
+        g->state = e->type == SDL_CONTROLLERBUTTONUP ? GK_RELEASED : GK_PUSHED;
+        key = controllerMapping[b];
     }
-}
 
-bool Input::mapGamepadEvent(SDL_Event *e, GameKeyEvent *g) {
-    g->state = e->type == SDL_CONTROLLERBUTTONUP ? GK_RELEASED : GK_PUSHED;
     if (g->state == GK_RELEASED) {
-        g->key = fromSdlButton(e);
+        g->key = key;
         locked = false;
         return true;
     }
 
-    switch (e->cbutton.button) {
-        case SDL_CONTROLLER_BUTTON_DPAD_UP:
-            if (g->key == GK_UP && locked) return false;
-            locked = true;
-            g->key = GK_UP;
-            return true;
-        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-            if (g->key == GK_RIGHT && locked) return false;
-            locked = true;
-            g->key = GK_RIGHT;
-            return true;
-        case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-            if (g->key == GK_DOWN && locked) return false;
-            locked = true;
-            g->key = GK_DOWN;
-            return true;
-        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-            if (g->key == GK_LEFT && locked) return false;
-            locked = true;
-            g->key = GK_LEFT;
-            return true;
-        case SDL_CONTROLLER_BUTTON_A:
-            if (g->key == GK_A && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_A;
-            return true;
-        case SDL_CONTROLLER_BUTTON_B:
-            if (g->key == GK_B && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_B;
-            return true;
-        case SDL_CONTROLLER_BUTTON_GUIDE:
-            if (g->key == GK_SELECT && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_SELECT;
-            return true;
-        case SDL_CONTROLLER_BUTTON_START:
-            if (g->key == GK_START && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_START;
-            return true;
-        case SDL_CONTROLLER_BUTTON_X:
-            if (g->key == GK_X && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_X;
-            return true;
-        case SDL_CONTROLLER_BUTTON_Y:
-            if (g->key == GK_Y && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_Y;
-            return true;
-        default:
-            g->key = GK_NONE;
-            return false;
-    }
-}
-
-bool Input::mapKeyboardEvent(SDL_Event *e, GameKeyEvent *g) {
-    g->state = e->type == SDL_KEYUP ? GK_RELEASED : GK_PUSHED;
-    if (g->state == GK_RELEASED) {
-        g->key = fromSdlKey(e);
-        locked = false;
-        return true;
-    }
-
-    switch (e->key.keysym.sym) {
-        case SDLK_UP:
-            if (g->key == GK_UP && locked) return false;
-            locked = true;
-            g->key = GK_UP;
-            return true;
-        case SDLK_RIGHT:
-            if (g->key == GK_RIGHT && locked) return false;
-            locked = true;
-            g->key = GK_RIGHT;
-            return true;
-        case SDLK_DOWN:
-            if (g->key == GK_DOWN && locked) return false;
-            locked = true;
-            g->key = GK_DOWN;
-            return true;
-        case SDLK_LEFT:
-            if (g->key == GK_LEFT && locked) return false;
-            locked = true;
-            g->key = GK_LEFT;
-            return true;
-        case SDLK_a:
-            if (g->key == GK_A && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_A;
-            return true;
-        case SDLK_s:
-            if (g->key == GK_B && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_B;
-            return true;
-        case SDLK_TAB:
-            if (g->key == GK_SELECT && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_SELECT;
-            return true;
-        case SDLK_ESCAPE:
-            if (g->key == GK_START && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_START;
-            return true;
-        case SDLK_x:
-            if (g->key == GK_X && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_X;
-            return true;
-        case SDLK_y:
-            if (g->key == GK_Y && locked) {
-                return false;
-            }
-            locked = true;
-            g->key = GK_Y;
-            return true;
-        default:
-            g->key = GK_NONE;
-            return false;
-    }
+    if (g->key == key && locked) return false;
+    g->key = key;
+    return true;
 }
 
 bool Input::map(SDL_Event *e, GameKeyEvent *g) {
     if (e->type == SDL_CONTROLLERBUTTONDOWN || e->type == SDL_CONTROLLERBUTTONUP) {
-        g->valid = mapGamepadEvent(e, g);
+        g->valid = mapEvent(e, g, GAMEPAD);
         return g->valid;
-    }
-    if (e->type == SDL_KEYDOWN || e->type == SDL_KEYUP) {
-        g->valid = mapKeyboardEvent(e, g);
+    } else if (e->type == SDL_KEYDOWN || e->type == SDL_KEYUP) {
+        g->valid = mapEvent(e, g, KEYBOARD);
         return g->valid;
     }
     return false;

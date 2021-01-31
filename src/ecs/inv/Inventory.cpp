@@ -22,6 +22,13 @@ void Inventory::next() {
     selectedSlot %= 10;
 }
 
+void Inventory::prev() {
+    selectedSlot--;
+    if (selectedSlot < 0) {
+        selectedSlot = this->slots.size() - 1;
+    }
+}
+
 bool Inventory::add(std::shared_ptr<Item> item) {
     bool success = false;
     if (item->stackable()) {
