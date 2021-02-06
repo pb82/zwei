@@ -35,6 +35,7 @@ struct GameKeyEvent {
     GameKeyState state;
     GameKey key;
     bool valid = false;
+    SDL_Event *source = nullptr;
 };
 
 class Input {

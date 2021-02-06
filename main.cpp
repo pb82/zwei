@@ -330,6 +330,7 @@ void loop() {
 
     // Global alpha
     float ga = 255.0f;
+    bool eventValid = false;
 
     while (RT_Running) {
         auto frameStart = std::chrono::system_clock::now();
@@ -344,15 +345,14 @@ void loop() {
                 RT_Stop();
                 continue;
             }
-            if (in.map(&event, &gk)) {
-                if (gk.valid && gk.state == GK_PUSHED && gk.key == GK_START) {
-                    Rt::instance().context.state.toggleMenu();
-                } else {
-                    if (RT_Context.state.currentState() == MainMenu) {
-                        Manager::instance().uiInput(gk);
-                    } else {
-                        Manager::instance().key(gk);
-                    }
+            eventValid = in.map(&event, &gk);
+            if (gk.valid && gk.state == GK_PUSHED && gk.key == GK_START) {
+                Rt::instance().context.state.toggleMenu();
+            } else {
+                if (RT_Context.state.currentState() == MainMenu) {
+                    Manager::instance().uiInput(gk);
+                } else if (eventValid) {
+                    Manager::instance().key(gk);
                 }
             }
         }

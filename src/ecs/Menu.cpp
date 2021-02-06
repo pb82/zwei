@@ -266,6 +266,7 @@ void MenuControllerSettings::key(GameKeyEvent &key) {
 }
 
 void MenuControllerSettings::render() {
+
 }
 
 void Menu::key(GameKeyEvent &key) {

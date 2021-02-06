@@ -19,8 +19,6 @@ public:
 
     float power;
 
-    float total = 0.0f;
-
 private:
 
     float angle;

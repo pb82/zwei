@@ -65,6 +65,7 @@ bool Input::mapEvent(SDL_Event *e, GameKeyEvent *g, GameEventType type) {
 }
 
 bool Input::map(SDL_Event *e, GameKeyEvent *g) {
+    g->source = e;
     if (e->type == SDL_CONTROLLERBUTTONDOWN || e->type == SDL_CONTROLLERBUTTONUP) {
         g->valid = mapEvent(e, g, GAMEPAD);
         return g->valid;
