@@ -43,14 +43,20 @@ void Input::initDefaultMapping() {
 bool Input::mapEvent(SDL_Event *e, GameKeyEvent *g, GameEventType type) {
     GameKey key;
     if (type == KEYBOARD) {
-        if (keyboardMapping.find(e->key.keysym.sym) == keyboardMapping.end()) return false;
+        if (keyboardMapping.find(e->key.keysym.sym) == keyboardMapping.end()) {
+            key = GK_NONE;
+        } else {
+            key = keyboardMapping[e->key.keysym.sym];
+        }
         g->state = e->type == SDL_KEYUP ? GK_RELEASED : GK_PUSHED;
-        key = keyboardMapping[e->key.keysym.sym];
     } else {
         auto b = SDL_GameControllerButton(e->cbutton.button);
-        if (controllerMapping.find(b) == controllerMapping.end()) return false;
+        if (controllerMapping.find(b) == controllerMapping.end()) {
+            key = GK_NONE;
+        } else {
+            key = controllerMapping[b];
+        }
         g->state = e->type == SDL_CONTROLLERBUTTONUP ? GK_RELEASED : GK_PUSHED;
-        key = controllerMapping[b];
     }
 
     if (g->state == GK_RELEASED) {

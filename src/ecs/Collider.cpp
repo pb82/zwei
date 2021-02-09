@@ -7,6 +7,7 @@
 #include "SelfDestruct.h"
 #include "Bloat.h"
 #include "Collectable.h"
+#include "Controller.h"
 
 Collider::Collider(Entity &parent, std::shared_ptr<Transform> tracked, ColliderTag tag,
                    Padding p) :

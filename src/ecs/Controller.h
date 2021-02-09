@@ -13,6 +13,8 @@ public:
 
     void key(GameKeyEvent &key) override;
 
+    void resetKeys();
+
 private:
 
     void attack();
@@ -30,8 +32,6 @@ private:
     void go();
 
     void updateState(GameKeyEvent &key);
-
-    void resetKeys();
 
     float angleFromKeys();
 

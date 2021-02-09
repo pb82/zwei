@@ -56,7 +56,7 @@ private:
 
     GameKey fromSdlButton(const SDL_Event *e) const;
 
-    SDL_GameController *controller;
+    SDL_GameController *controller = nullptr;
 
     bool locked = false;
 

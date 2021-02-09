@@ -231,8 +231,8 @@ void renderGame(tp frameStart) {
     float dt = std::max(millis, delay);
 
     // Update entities
-    Col::collide(dt);
     Manager::instance().update(dt);
+    Col::collide(dt);
 }
 
 void loop() {
@@ -302,8 +302,8 @@ void loop() {
     auto hud = Manager::instance().addEntity(FOREGROUND);
     hud->addComponent<Hud>();
 
-    placeKakta(4, 2, RT_Context.getTopology());
-    placeKakta(19, 2, RT_Context.getTopology());
+    // placeKakta(4, 2, RT_Context.getTopology());
+    // placeKakta(19, 2, RT_Context.getTopology());
 
     /*
     placeKakta(11, 11, RT_Context.getTopology());
@@ -345,14 +345,16 @@ void loop() {
                 RT_Stop();
                 continue;
             }
-            eventValid = in.map(&event, &gk);
-            if (gk.valid && gk.state == GK_PUSHED && gk.key == GK_START) {
-                Rt::instance().context.state.toggleMenu();
-            } else {
-                if (RT_Context.state.currentState() == MainMenu) {
-                    Manager::instance().uiInput(gk);
-                } else if (eventValid) {
-                    Manager::instance().key(gk);
+            if (in.map(&event, &gk)) {
+                gk.source = &event;
+                if (gk.state == GK_PUSHED && gk.key == GK_START) {
+                    Rt::instance().context.state.toggleMenu();
+                } else {
+                    if (RT_Context.state.currentState() == MainMenu) {
+                        Manager::instance().uiInput(gk);
+                    } else {
+                        Manager::instance().key(gk);
+                    }
                 }
             }
         }

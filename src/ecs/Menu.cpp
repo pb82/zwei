@@ -4,7 +4,7 @@
 
 #include "../config.h"
 #include "../Rt.h"
-#include "../St.h"
+#include "../in/Input.h"
 
 #define WINDOW_MARGIN 4
 
@@ -174,7 +174,6 @@ Menu::Menu(Entity &parent) : Component(parent) {
         this->level.pop();
         this->selectedIndex = 0;
     }));
-
     menu_AudioSettings.push_back(std::make_unique<MenuMusicVolume>(true, [](GameKeyEvent &key) {
         if (key.key == GK_LEFT) {
             St::instance().decMusicVolume();
@@ -182,7 +181,6 @@ Menu::Menu(Entity &parent) : Component(parent) {
             St::instance().incMusicVolume();
         }
     }));
-
     menu_AudioSettings.push_back(std::make_unique<MenuMusicVolume>(false, [](GameKeyEvent &key) {
         if (key.key == GK_LEFT) {
             St::instance().decEffectsVolume();
@@ -195,7 +193,6 @@ Menu::Menu(Entity &parent) : Component(parent) {
         this->level.pop();
         this->selectedIndex = 0;
     }));
-
     menu_VideoSettings.push_back(std::make_unique<MenuScreenResolution>([](GameKeyEvent &key) {
         if (key.key == GK_LEFT) {
             St::instance().decWindowSize();
@@ -203,7 +200,6 @@ Menu::Menu(Entity &parent) : Component(parent) {
             St::instance().incWindowSize();
         }
     }));
-
     menu_VideoSettings.push_back(std::make_unique<MenuFps>([](GameKeyEvent &key) {
         if (key.key == GK_LEFT) {
             St::instance().decFps();
@@ -211,8 +207,25 @@ Menu::Menu(Entity &parent) : Component(parent) {
             St::instance().incFps();
         }
     }));
-
     menu_VideoSettings.push_back(std::make_unique<MenuOption>("Back", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        this->level.pop();
+        this->selectedIndex = 0;
+    }));
+
+    menu_ControllerSettings.push_back(std::make_unique<MenuOption>("Keyboard", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        this->level.push(Keyboard);
+        this->selectedIndex = 0;
+    }));
+
+    menu_ControllerSettings.push_back(std::make_unique<MenuOption>("Gamepad", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        this->level.push(Gamepad);
+        this->selectedIndex = 0;
+    }));
+
+    menu_ControllerSettings.push_back(std::make_unique<MenuOption>("Back", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.pop();
         this->selectedIndex = 0;
@@ -244,7 +257,7 @@ void Menu::render() {
             renderMenu(menu_VideoSettings);
             break;
         case Controls:
-            controllerSettings.render();
+            renderMenu(menu_ControllerSettings);
             break;
         default:
             break;
@@ -295,6 +308,9 @@ void Menu::key(GameKeyEvent &key) {
             case VideoSettings:
                 this->menu_VideoSettings.at(selectedIndex)->invoke(key);
                 break;
+            case Controls:
+                this->menu_ControllerSettings.at(selectedIndex)->invoke(key);
+                break;
         }
     }
 }
@@ -309,6 +325,8 @@ int Menu::currentMenuItems() {
             return menu_AudioSettings.size();
         case VideoSettings:
             return menu_VideoSettings.size();
+        case Controls:
+            return menu_ControllerSettings.size();
         default:
             return 0;
     }

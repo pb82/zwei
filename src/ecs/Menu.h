@@ -14,6 +14,8 @@ enum GameMenu {
     AudioSettings,
     VideoSettings,
     Controls,
+    Keyboard,
+    Gamepad
 };
 
 typedef std::function<void(GameKeyEvent &key)> menu_Callback;
@@ -107,6 +109,7 @@ private:
     std::vector<std::unique_ptr<MenuAction>> menu_Settings;
     std::vector<std::unique_ptr<MenuAction>> menu_AudioSettings;
     std::vector<std::unique_ptr<MenuAction>> menu_VideoSettings;
+    std::vector<std::unique_ptr<MenuAction>> menu_ControllerSettings;
 
     int selectedIndex = 0;
 
