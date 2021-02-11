@@ -50,6 +50,11 @@ public:
 
     void initDefaultMapping();
 
+    static std::string toString(GameKey key);
+
+    static std::map<SDL_Keycode, GameKey> keyboardMapping;
+    static std::map<SDL_GameControllerButton, GameKey> controllerMapping;
+
 private:
 
     bool mapEvent(SDL_Event *e, GameKeyEvent *g, GameEventType type);
@@ -59,9 +64,6 @@ private:
     SDL_GameController *controller = nullptr;
 
     bool locked = false;
-
-    std::map<SDL_Keycode, GameKey> keyboardMapping;
-    std::map<SDL_GameControllerButton, GameKey> controllerMapping;
 };
 
 #endif

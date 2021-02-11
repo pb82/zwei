@@ -235,6 +235,11 @@ void renderGame(tp frameStart) {
     Col::collide(dt);
 }
 
+void initMenu() {
+    auto entity = Manager::instance().addEntity(UI);
+    entity->addComponent<Menu>();
+}
+
 void loop() {
     Input in;
     SDL_Event event;
@@ -243,6 +248,7 @@ void loop() {
     if (!controllerFound) {
         // return;
     }
+    initMenu();
 
     Player::instance().playMusic(MUSIC_1);
 
@@ -387,11 +393,6 @@ void initSound() {
     St::instance().initAll();
 }
 
-void initMenu() {
-    auto entity = Manager::instance().addEntity(UI);
-    entity->addComponent<Menu>();
-}
-
 void initImgui() {
     assert(Gfx_Window);
     assert(Gfx_Renderer);
@@ -481,6 +482,5 @@ int main(int, char **) {
     initImgui();
     initStyles();
     initSound();
-    initMenu();
     loop();
 }

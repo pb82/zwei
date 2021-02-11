@@ -230,6 +230,18 @@ Menu::Menu(Entity &parent) : Component(parent) {
         this->level.pop();
         this->selectedIndex = 0;
     }));
+
+
+    std::stringstream ss;
+    for (auto binding : Input::controllerMapping) {
+        ss.str("");
+        ss << Input::toString(binding.second) << ": ";
+        ss << SDL_GameControllerGetStringForButton(binding.first);;
+
+        menu_GamecontrollerSettings.push_back(std::make_unique<MenuOption>(ss.str().c_str(), [this](GameKeyEvent &key) {
+            if (key.key != GK_A) return;
+        }));
+    }
 }
 
 void Menu::render() {
@@ -258,6 +270,9 @@ void Menu::render() {
             break;
         case Controls:
             renderMenu(menu_ControllerSettings);
+            break;
+        case Gamepad:
+            renderMenu(menu_GamecontrollerSettings);
             break;
         default:
             break;
@@ -311,6 +326,9 @@ void Menu::key(GameKeyEvent &key) {
             case Controls:
                 this->menu_ControllerSettings.at(selectedIndex)->invoke(key);
                 break;
+            case Gamepad:
+                this->menu_GamecontrollerSettings.at(selectedIndex)->invoke(key);
+                break;
         }
     }
 }
@@ -327,6 +345,8 @@ int Menu::currentMenuItems() {
             return menu_VideoSettings.size();
         case Controls:
             return menu_ControllerSettings.size();
+        case Gamepad:
+            return menu_GamecontrollerSettings.size();
         default:
             return 0;
     }

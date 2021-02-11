@@ -1,6 +1,9 @@
 #include <iostream>
 #include "Input.h"
 
+std::map<SDL_Keycode, GameKey> Input::keyboardMapping;
+std::map<SDL_GameControllerButton, GameKey> Input::controllerMapping;
+
 Input::Input() : controller(nullptr) {
     initDefaultMapping();
 }
@@ -9,6 +12,39 @@ Input::~Input() {
     if (controller) {
         SDL_GameControllerClose(controller);
         controller = nullptr;
+    }
+}
+
+std::string Input::toString(GameKey key) {
+    switch (key) {
+        case GK_NONE:
+            return "unassigned";
+        case GK_SELECT:
+            return "select";
+        case GK_START:
+            return "menu";
+        case GK_R:
+            return "inventory right";
+        case GK_L:
+            return "inventory left";
+        case GK_Y:
+            return "drop item";
+        case GK_A:
+            return "attack";
+        case GK_DOWN:
+            return "down";
+        case GK_UP:
+            return "up";
+        case GK_RIGHT:
+            return "right";
+        case GK_LEFT:
+            return "left";
+        case GK_B:
+            return "use item";
+        case GK_X:
+            return "direction lock";
+        default:
+            return "unknown";
     }
 }
 

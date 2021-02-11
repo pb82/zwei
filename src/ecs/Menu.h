@@ -110,6 +110,8 @@ private:
     std::vector<std::unique_ptr<MenuAction>> menu_AudioSettings;
     std::vector<std::unique_ptr<MenuAction>> menu_VideoSettings;
     std::vector<std::unique_ptr<MenuAction>> menu_ControllerSettings;
+    std::vector<std::unique_ptr<MenuAction>> menu_GamecontrollerSettings;
+
 
     int selectedIndex = 0;
 
