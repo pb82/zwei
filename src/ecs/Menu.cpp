@@ -231,16 +231,30 @@ Menu::Menu(Entity &parent) : Component(parent) {
         this->selectedIndex = 0;
     }));
 
+    populateGamepadMenu();
+}
 
+void Menu::populateGamepadMenu() {
+    menu_GamecontrollerSettings.clear();
     std::stringstream ss;
     for (auto binding : Input::controllerMapping) {
         ss.str("");
         ss << Input::toString(binding.second) << ": ";
         ss << SDL_GameControllerGetStringForButton(binding.first);;
 
-        menu_GamecontrollerSettings.push_back(std::make_unique<MenuOption>(ss.str().c_str(), [this](GameKeyEvent &key) {
-            if (key.key != GK_A) return;
-        }));
+        menu_GamecontrollerSettings.push_back(
+                std::make_unique<MenuOption>(ss.str().c_str(), [this, binding](GameKeyEvent &key) {
+                    if (this->menuState == Normal && key.key != GK_A) return;
+                    if (!key.source) return;
+                    if (key.source->type != SDL_CONTROLLERBUTTONDOWN) return;
+                    if (this->menuState == Normal) {
+                        this->menuState = AwaitBinding;
+                    } else if (this->menuState == AwaitBinding) {
+                        auto button = SDL_GameControllerButton(key.source->cbutton.button);
+                        Input::rebind(button, binding.second);
+                        this->menuState = Normal;
+                    }
+                }));
     }
 }
 
@@ -278,6 +292,10 @@ void Menu::render() {
             break;
     }
 
+    if (this->menuState == AwaitBinding) {
+        ImGui::Text("Enter new binding...");
+    }
+
     ImGui::End();
 }
 
@@ -300,13 +318,13 @@ void MenuControllerSettings::render() {
 void Menu::key(GameKeyEvent &key) {
     if (!key.valid) return;
     if (!key.state == GK_PUSHED) return;
-    if (key.key == GK_B) {
+    if (key.key == GK_B && !menuState == AwaitBinding) {
         if (this->level.size() > 1) this->level.pop();
         this->selectedIndex = 0;
-    } else if (key.key == GK_UP) {
+    } else if (key.key == GK_UP && !menuState == AwaitBinding) {
         this->selectedIndex--;
         if (this->selectedIndex < 0) this->selectedIndex = currentMenuItems() - 1;
-    } else if (key.key == GK_DOWN) {
+    } else if (key.key == GK_DOWN && !menuState == AwaitBinding) {
         this->selectedIndex++;
         this->selectedIndex %= currentMenuItems();
     } else {
@@ -328,6 +346,7 @@ void Menu::key(GameKeyEvent &key) {
                 break;
             case Gamepad:
                 this->menu_GamecontrollerSettings.at(selectedIndex)->invoke(key);
+                if (this->menuState == Normal) populateGamepadMenu();
                 break;
         }
     }
@@ -346,7 +365,7 @@ int Menu::currentMenuItems() {
         case Controls:
             return menu_ControllerSettings.size();
         case Gamepad:
-            return menu_GamecontrollerSettings.size();
+            return Input::controllerMapping.size();
         default:
             return 0;
     }

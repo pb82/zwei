@@ -15,6 +15,25 @@ Input::~Input() {
     }
 }
 
+SDL_GameControllerButton Input::bound(GameKey button) {
+    for (auto &pair : controllerMapping) {
+        if (pair.second == button) {
+            return pair.first;
+        }
+    }
+    return SDL_CONTROLLER_BUTTON_INVALID;
+}
+
+void Input::rebind(SDL_GameControllerButton button, GameKey key) {
+    SDL_GameControllerButton bound = Input::bound(key);
+    if (bound == SDL_CONTROLLER_BUTTON_INVALID) {
+        controllerMapping[button] = key;
+    } else {
+        controllerMapping[bound] = controllerMapping[button];
+        controllerMapping[button] = key;
+    }
+}
+
 std::string Input::toString(GameKey key) {
     switch (key) {
         case GK_NONE:

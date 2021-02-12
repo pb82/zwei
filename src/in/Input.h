@@ -50,6 +50,10 @@ public:
 
     void initDefaultMapping();
 
+    static SDL_GameControllerButton bound(GameKey button);
+
+    static void rebind(SDL_GameControllerButton button, GameKey key);
+
     static std::string toString(GameKey key);
 
     static std::map<SDL_Keycode, GameKey> keyboardMapping;

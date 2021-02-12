@@ -8,6 +8,11 @@
 
 #include "Component.h"
 
+enum MenuState {
+    Normal,
+    AwaitBinding,
+};
+
 enum GameMenu {
     Main,
     Settings,
@@ -101,6 +106,8 @@ private:
 
     int currentMenuItems();
 
+    void populateGamepadMenu();
+
     std::stack<GameMenu> level;
 
     MenuControllerSettings controllerSettings;
@@ -115,6 +122,7 @@ private:
 
     int selectedIndex = 0;
 
+    MenuState menuState = Normal;
 };
 
 
