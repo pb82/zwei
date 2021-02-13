@@ -1,8 +1,8 @@
 #include <iostream>
 #include "Input.h"
 
-std::map<SDL_Keycode, GameKey> Input::keyboardMapping;
-std::map<SDL_GameControllerButton, GameKey> Input::controllerMapping;
+std::unordered_map<SDL_Keycode, GameKey> Input::keyboardMapping;
+std::unordered_map<SDL_GameControllerButton, GameKey> Input::controllerMapping;
 
 Input::Input() : controller(nullptr) {
     initDefaultMapping();
@@ -24,6 +24,15 @@ SDL_GameControllerButton Input::bound(GameKey button) {
     return SDL_CONTROLLER_BUTTON_INVALID;
 }
 
+SDL_Keycode Input::boundKey(GameKey key) {
+    for (auto &pair : keyboardMapping) {
+        if (pair.second == key) {
+            return pair.first;
+        }
+    }
+    return SDLK_UNKNOWN;
+}
+
 void Input::rebind(SDL_GameControllerButton button, GameKey key) {
     SDL_GameControllerButton bound = Input::bound(key);
     if (bound == SDL_CONTROLLER_BUTTON_INVALID) {
@@ -34,36 +43,46 @@ void Input::rebind(SDL_GameControllerButton button, GameKey key) {
     }
 }
 
+void Input::rebind(SDL_Keycode button, GameKey key) {
+    SDL_Keycode bound = Input::boundKey(key);
+    if (bound == SDLK_UNKNOWN) {
+        keyboardMapping[button] = key;
+    } else {
+        keyboardMapping[bound] = keyboardMapping[button];
+        keyboardMapping[button] = key;
+    }
+}
+
 std::string Input::toString(GameKey key) {
     switch (key) {
         case GK_NONE:
-            return "unassigned";
+            return "(unassigned)";
         case GK_SELECT:
-            return "select";
+            return "Select";
         case GK_START:
-            return "menu";
+            return "Menu";
         case GK_R:
-            return "inventory right";
+            return "Inventory >>";
         case GK_L:
-            return "inventory left";
+            return "Inventory <<";
         case GK_Y:
-            return "drop item";
+            return "Drop Item";
         case GK_A:
-            return "attack";
+            return "Attack/Confirm";
         case GK_DOWN:
-            return "down";
+            return "Down";
         case GK_UP:
-            return "up";
+            return "Up";
         case GK_RIGHT:
-            return "right";
+            return "Right";
         case GK_LEFT:
-            return "left";
+            return "Left";
         case GK_B:
-            return "use item";
+            return "Use Item/Cancel";
         case GK_X:
-            return "direction lock";
+            return "Direction Lock";
         default:
-            return "unknown";
+            return "(unknown)";
     }
 }
 

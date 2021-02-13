@@ -27,7 +27,7 @@ typedef std::function<void(GameKeyEvent &key)> menu_Callback;
 
 class MenuAction {
 public:
-    MenuAction(std::string text, menu_Callback cb) : text(text), cb(cb) {}
+    MenuAction(const char* text, menu_Callback cb) : text(text), cb(cb) {}
 
     virtual void invoke(GameKeyEvent &key) { this->cb(key); }
 
@@ -81,13 +81,14 @@ public:
     void render() override;
 };
 
-class MenuControllerSettings {
+class MenuKeyBinding : public MenuAction {
 public:
+    MenuKeyBinding(const char *action, const char *bound, menu_Callback cb);
 
-    void key(GameKeyEvent &key);
+    void render() override;
 
-    void render();
-
+private:
+    std::string bound;
 };
 
 class Menu : public Component {
@@ -98,9 +99,13 @@ public:
 
     void key(GameKeyEvent &key) override;
 
+    void reset();
+
 private:
 
     void renderMenu(std::vector<std::unique_ptr<MenuAction>> &menu);
+
+    void renderBindingMenu(std::vector<std::unique_ptr<MenuAction>> &menu);
 
     void renderControllerSettings();
 
@@ -108,9 +113,13 @@ private:
 
     void populateGamepadMenu();
 
-    std::stack<GameMenu> level;
+    void populateKeyboardMenu();
 
-    MenuControllerSettings controllerSettings;
+    void addGamepadMenuItem(GameKey k, SDL_GameControllerButton button);
+
+    void addKeyboardMenuItem(GameKey k, SDL_Keycode button);
+
+    std::stack<GameMenu> level;
 
     std::vector<std::unique_ptr<MenuAction>> menu_Main;
     std::vector<std::unique_ptr<MenuAction>> menu_Settings;
@@ -118,7 +127,7 @@ private:
     std::vector<std::unique_ptr<MenuAction>> menu_VideoSettings;
     std::vector<std::unique_ptr<MenuAction>> menu_ControllerSettings;
     std::vector<std::unique_ptr<MenuAction>> menu_GamecontrollerSettings;
-
+    std::vector<std::unique_ptr<MenuAction>> menu_KeyboardSettings;
 
     int selectedIndex = 0;
 

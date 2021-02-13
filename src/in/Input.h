@@ -1,7 +1,7 @@
 #ifndef ZWEI_INPUT_H
 #define ZWEI_INPUT_H
 
-#include <map>
+#include <unordered_map>
 
 #include <SDL2/SDL.h>
 
@@ -52,12 +52,16 @@ public:
 
     static SDL_GameControllerButton bound(GameKey button);
 
+    static SDL_Keycode boundKey(GameKey key);
+
     static void rebind(SDL_GameControllerButton button, GameKey key);
+
+    static void rebind(SDL_Keycode button, GameKey key);
 
     static std::string toString(GameKey key);
 
-    static std::map<SDL_Keycode, GameKey> keyboardMapping;
-    static std::map<SDL_GameControllerButton, GameKey> controllerMapping;
+    static std::unordered_map<SDL_Keycode, GameKey> keyboardMapping;
+    static std::unordered_map<SDL_GameControllerButton, GameKey> controllerMapping;
 
 private:
 

@@ -48,6 +48,9 @@ MenuScreenResolution::MenuScreenResolution(menu_Callback cb) : MenuAction("", cb
 
 MenuFps::MenuFps(menu_Callback cb) : MenuAction("", cb) {}
 
+MenuKeyBinding::MenuKeyBinding(const char *action, const char *bound, menu_Callback cb) : MenuAction(action, cb),
+                                                                                          bound(bound) {}
+
 void MenuFps::render() {
     auto s = getItemSize();
     ImGui::SetCursorPosX((configWindowWidth / 2) - (s.x / 2));
@@ -63,7 +66,7 @@ void MenuFps::render() {
         ImGui::PushStyleColor(ImGuiCol_Text, black());
     }
 
-    ImGui::Button(ss.str().c_str(), getItemSize());
+    ImGui::Button(ss.str().c_str(), s);
 
     if (this->selected) {
         ImGui::PopStyleColor(4);
@@ -87,7 +90,7 @@ void MenuScreenResolution::render() {
         ImGui::PushStyleColor(ImGuiCol_Text, black());
     }
 
-    ImGui::Button(ss.str().c_str(), getItemSize());
+    ImGui::Button(ss.str().c_str(), s);
 
     if (this->selected) {
         ImGui::PopStyleColor(4);
@@ -105,11 +108,33 @@ void MenuOption::render() {
         ImGui::PushStyleColor(ImGuiCol_Text, black());
     }
 
-    ImGui::Button(this->text.c_str(), getItemSize());
+    ImGui::Button(this->text.c_str(), s);
 
     if (this->selected) {
         ImGui::PopStyleColor(4);
     }
+}
+
+void MenuKeyBinding::render() {
+    auto s = getItemSize();
+    ImGui::SetCursorPosX((configWindowWidth / 2) - (s.x / 2));
+    s.x = s.x / 2;
+
+    if (this->selected) {
+        ImGui::PushStyleColor(ImGuiCol_Button, white());
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, white());
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, white());
+        ImGui::PushStyleColor(ImGuiCol_Text, black());
+    }
+
+    ImGui::Button(this->bound.c_str(), s);
+    ImGui::SameLine();
+    ImGui::Button(this->text.c_str(), s);
+
+    if (this->selected) {
+        ImGui::PopStyleColor(4);
+    }
+
 }
 
 void MenuMusicVolume::render() {
@@ -134,7 +159,7 @@ void MenuMusicVolume::render() {
         ImGui::PushStyleColor(ImGuiCol_Text, black());
     }
 
-    ImGui::Button(ss.str().c_str(), getItemSize());
+    ImGui::Button(ss.str().c_str(), s);
 
     if (this->selected) {
         ImGui::PopStyleColor(4);
@@ -232,30 +257,123 @@ Menu::Menu(Entity &parent) : Component(parent) {
     }));
 
     populateGamepadMenu();
+    populateKeyboardMenu();
+}
+
+void Menu::addGamepadMenuItem(GameKey k, SDL_GameControllerButton button) {
+    auto bound = Input::toString(k);
+    auto b = SDL_GameControllerGetStringForButton(button);
+    menu_GamecontrollerSettings.push_back(
+            std::make_unique<MenuKeyBinding>(bound.c_str(), b, [this, button](GameKeyEvent &key) {
+                if (this->menuState == Normal && key.key != GK_A) return;
+                if (!key.source) return;
+                if (key.source->type != SDL_CONTROLLERBUTTONDOWN) return;
+                if (this->menuState == Normal) {
+                    this->menuState = AwaitBinding;
+                } else if (this->menuState == AwaitBinding) {
+                    Input::rebind(button, key.key);
+                    this->menuState = Normal;
+                }
+            }));
+}
+
+void Menu::addKeyboardMenuItem(GameKey k, SDL_Keycode button) {
+    auto bound = Input::toString(k);
+    auto b = SDL_GetKeyName(button);
+    menu_KeyboardSettings.push_back(
+            std::make_unique<MenuKeyBinding>(bound.c_str(), b, [this, button](GameKeyEvent &key) {
+                if (this->menuState == Normal && key.key != GK_A) return;
+                if (!key.source) return;
+                if (key.source->type != SDL_KEYDOWN) return;
+                if (this->menuState == Normal) {
+                    this->menuState = AwaitBinding;
+                } else if (this->menuState == AwaitBinding) {
+                    Input::rebind(button, key.key);
+                    this->menuState = Normal;
+                }
+            }));
+}
+
+void Menu::populateKeyboardMenu() {
+    menu_KeyboardSettings.clear();
+    SDL_Keycode bound;
+
+    bound = Input::boundKey(GK_UP);
+    addKeyboardMenuItem(GK_UP, bound);
+
+    bound = Input::boundKey(GK_DOWN);
+    addKeyboardMenuItem(GK_DOWN, bound);
+
+    bound = Input::boundKey(GK_LEFT);
+    addKeyboardMenuItem(GK_LEFT, bound);
+
+    bound = Input::boundKey(GK_RIGHT);
+    addKeyboardMenuItem(GK_RIGHT, bound);
+
+    bound = Input::boundKey(GK_A);
+    addKeyboardMenuItem(GK_A, bound);
+
+    bound = Input::boundKey(GK_B);
+    addKeyboardMenuItem(GK_B, bound);
+
+    bound = Input::boundKey(GK_X);
+    addKeyboardMenuItem(GK_X, bound);
+
+    bound = Input::boundKey(GK_Y);
+    addKeyboardMenuItem(GK_Y, bound);
+
+    bound = Input::boundKey(GK_L);
+    addKeyboardMenuItem(GK_L, bound);
+
+    bound = Input::boundKey(GK_R);
+    addKeyboardMenuItem(GK_R, bound);
+
+    bound = Input::boundKey(GK_START);
+    addKeyboardMenuItem(GK_START, bound);
+
+    bound = Input::boundKey(GK_SELECT);
+    addKeyboardMenuItem(GK_SELECT, bound);
 }
 
 void Menu::populateGamepadMenu() {
     menu_GamecontrollerSettings.clear();
-    std::stringstream ss;
-    for (auto binding : Input::controllerMapping) {
-        ss.str("");
-        ss << Input::toString(binding.second) << ": ";
-        ss << SDL_GameControllerGetStringForButton(binding.first);;
+    SDL_GameControllerButton bound;
 
-        menu_GamecontrollerSettings.push_back(
-                std::make_unique<MenuOption>(ss.str().c_str(), [this, binding](GameKeyEvent &key) {
-                    if (this->menuState == Normal && key.key != GK_A) return;
-                    if (!key.source) return;
-                    if (key.source->type != SDL_CONTROLLERBUTTONDOWN) return;
-                    if (this->menuState == Normal) {
-                        this->menuState = AwaitBinding;
-                    } else if (this->menuState == AwaitBinding) {
-                        auto button = SDL_GameControllerButton(key.source->cbutton.button);
-                        Input::rebind(button, binding.second);
-                        this->menuState = Normal;
-                    }
-                }));
-    }
+    bound = Input::bound(GK_UP);
+    addGamepadMenuItem(GK_UP, bound);
+
+    bound = Input::bound(GK_DOWN);
+    addGamepadMenuItem(GK_DOWN, bound);
+
+    bound = Input::bound(GK_LEFT);
+    addGamepadMenuItem(GK_LEFT, bound);
+
+    bound = Input::bound(GK_RIGHT);
+    addGamepadMenuItem(GK_RIGHT, bound);
+
+    bound = Input::bound(GK_A);
+    addGamepadMenuItem(GK_A, bound);
+
+    bound = Input::bound(GK_B);
+    addGamepadMenuItem(GK_B, bound);
+
+    bound = Input::bound(GK_X);
+    addGamepadMenuItem(GK_X, bound);
+
+    bound = Input::bound(GK_Y);
+    addGamepadMenuItem(GK_Y, bound);
+
+    bound = Input::bound(GK_L);
+    addGamepadMenuItem(GK_L, bound);
+
+    bound = Input::bound(GK_R);
+    addGamepadMenuItem(GK_R, bound);
+
+    bound = Input::bound(GK_START);
+    addGamepadMenuItem(GK_START, bound);
+
+    bound = Input::bound(GK_SELECT);
+    addGamepadMenuItem(GK_SELECT, bound);
 }
 
 void Menu::render() {
@@ -288,6 +406,9 @@ void Menu::render() {
         case Gamepad:
             renderMenu(menu_GamecontrollerSettings);
             break;
+        case Keyboard:
+            renderMenu(menu_KeyboardSettings);
+            break;
         default:
             break;
     }
@@ -305,14 +426,6 @@ void Menu::renderMenu(std::vector<std::unique_ptr<MenuAction>> &menu) {
         if (i == selectedIndex) menu.at(i)->select();
         else menu.at(i)->unselect();
     }
-}
-
-void MenuControllerSettings::key(GameKeyEvent &key) {
-
-}
-
-void MenuControllerSettings::render() {
-
 }
 
 void Menu::key(GameKeyEvent &key) {
@@ -348,6 +461,10 @@ void Menu::key(GameKeyEvent &key) {
                 this->menu_GamecontrollerSettings.at(selectedIndex)->invoke(key);
                 if (this->menuState == Normal) populateGamepadMenu();
                 break;
+            case Keyboard:
+                this->menu_KeyboardSettings.at(selectedIndex)->invoke(key);
+                if (this->menuState == Normal) populateKeyboardMenu();
+                break;
         }
     }
 }
@@ -366,7 +483,15 @@ int Menu::currentMenuItems() {
             return menu_ControllerSettings.size();
         case Gamepad:
             return Input::controllerMapping.size();
+        case Keyboard:
+            return Input::keyboardMapping.size();
         default:
             return 0;
     }
+}
+
+void Menu::reset() {
+    while (!this->level.empty()) this->level.pop();
+    this->level.push(Main);
+    this->selectedIndex = 0;
 }

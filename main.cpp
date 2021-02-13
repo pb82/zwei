@@ -235,11 +235,6 @@ void renderGame(tp frameStart) {
     Col::collide(dt);
 }
 
-void initMenu() {
-    auto entity = Manager::instance().addEntity(UI);
-    entity->addComponent<Menu>();
-}
-
 void loop() {
     Input in;
     SDL_Event event;
@@ -248,7 +243,9 @@ void loop() {
     if (!controllerFound) {
         // return;
     }
-    initMenu();
+
+    auto menu = Manager::instance().addEntity(UI);
+    menu->addComponent<Menu>();
 
     Player::instance().playMusic(MUSIC_1);
 
@@ -354,6 +351,7 @@ void loop() {
             if (in.map(&event, &gk)) {
                 gk.source = &event;
                 if (gk.state == GK_PUSHED && gk.key == GK_START) {
+                    menu->getComponent<Menu>()->reset();
                     Rt::instance().context.state.toggleMenu();
                 } else {
                     if (RT_Context.state.currentState() == MainMenu) {
