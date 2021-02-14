@@ -38,9 +38,7 @@
 
 #include "src/ecs/minds/Kakta.h"
 #include "src/ecs/Analytics.h"
-#include "src/ecs/arms/Stick.h"
 #include "src/ecs/arms/Stone.h"
-#include "src/ecs/arms/Bow.h"
 #include "src/ecs/minds/Spider.h"
 #include "src/ecs/Collectable.h"
 #include "src/snd/Player.h"
@@ -236,10 +234,9 @@ void renderGame(tp frameStart) {
 }
 
 void loop() {
-    Input in;
     SDL_Event event;
     GameKeyEvent gk;
-    bool controllerFound = in.scan();
+    bool controllerFound = RT_Input.scan();
     if (!controllerFound) {
         // return;
     }
@@ -305,20 +302,6 @@ void loop() {
     auto hud = Manager::instance().addEntity(FOREGROUND);
     hud->addComponent<Hud>();
 
-    // placeKakta(4, 2, RT_Context.getTopology());
-    // placeKakta(19, 2, RT_Context.getTopology());
-
-    /*
-    placeKakta(11, 11, RT_Context.getTopology());
-    placeKakta(10, 10, RT_Context.getTopology());
-    placeKakta(12, 8, RT_Context.getTopology());
-    placeSpider(8, 8, RT_Context.getTopology());
-
-    placeItem(8, 8, HEALTH_POTION);
-    placeItem(9, 8, STICK);
-    placeItem(9, 5, STICK);
-    placeItem(9, 6, HEALTH_POTION);
-    */
 
     placeItem(7, 4, STICK);
     placeItem(8, 24, BOW);
@@ -348,7 +331,7 @@ void loop() {
                 RT_Stop();
                 continue;
             }
-            if (in.map(&event, &gk)) {
+            if (RT_Input.map(&event, &gk)) {
                 gk.source = &event;
                 if (gk.state == GK_PUSHED && gk.key == GK_START) {
                     menu->getComponent<Menu>()->reset();

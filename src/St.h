@@ -59,6 +59,10 @@ public:
 private:
     St();
 
+    void serializeControls(JSON::Value &target);
+
+    void deserializeControls(JSON::Value &source);
+
     int musicVolume;
 
     int effectsVolume;

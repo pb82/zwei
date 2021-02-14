@@ -4,7 +4,6 @@
 
 #include "../config.h"
 #include "../Rt.h"
-#include "../in/Input.h"
 
 #define WINDOW_MARGIN 4
 

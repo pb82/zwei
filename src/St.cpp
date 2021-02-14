@@ -2,6 +2,7 @@
 #include "snd/Player.h"
 #include "io/File.h"
 #include "io/Out.h"
+#include "in/Input.h"
 #include <JSON/printer.h>
 #include <JSON/parser.h>
 
@@ -10,6 +11,8 @@
 #define EFFECTS_VOLUME "effectsVolume"
 #define FPS "fps"
 #define WINDOW "window"
+#define CONTROLS_KEYBOARD "controls_keyboard"
+#define CONTROLS_GAMEPAD "controls_gamepad"
 
 St::St()
         : musicVolume(50),
@@ -106,6 +109,22 @@ void St::initAll() {
     Player::instance().setEffectsVolume(effectsVolume);
 }
 
+void St::serializeControls(JSON::Value &target) {
+    JSON::Object keyboardControls;
+    JSON::Object gamepadControls;
+
+    for (auto &pair : Input::keyboardMapping) {
+        keyboardControls[std::to_string(pair.first)] = pair.second;
+    }
+
+    for (auto &pair : Input::controllerMapping) {
+        gamepadControls[std::to_string(pair.first)] = pair.second;
+    }
+
+    target[CONTROLS_KEYBOARD] = keyboardControls;
+    target[CONTROLS_GAMEPAD] = gamepadControls;
+}
+
 void St::serialize() {
     JSON::Value target;
     JSON::PrettyPrinter p;
@@ -114,11 +133,36 @@ void St::serialize() {
     target[FPS] = selectedFps;
     target[WINDOW] = selectedWindowSize;
 
+    serializeControls(target);
+
     std::string settings = p.print(target);
 
     Out out(SETTINGS_FILE);
     if (out.open()) {
         out.write(settings);
+    }
+}
+
+void St::deserializeControls(JSON::Value &source) {
+    if (source[CONTROLS_KEYBOARD].is(JSON::JSON_OBJECT)) {
+        for (auto &pair : Input::keyboardMapping) {
+            auto key = std::to_string(pair.first);
+            if (source[CONTROLS_KEYBOARD][key].is(JSON::JSON_NUMBER)) {
+                auto val = source[CONTROLS_KEYBOARD][key];
+                auto num = static_cast<SDL_Keycode>(std::stoi(key));
+                Input::keyboardMapping[num] = static_cast<GameKey>(val.as<int>());
+            }
+        }
+    }
+    if (source[CONTROLS_GAMEPAD].is(JSON::JSON_OBJECT)) {
+        for (auto &pair : Input::controllerMapping) {
+            auto key = std::to_string(pair.first);
+            if (source[CONTROLS_GAMEPAD][key].is(JSON::JSON_NUMBER)) {
+                auto val = source[CONTROLS_GAMEPAD][key];
+                auto num = static_cast<SDL_GameControllerButton>(std::stoi(key));
+                Input::keyboardMapping[num] = static_cast<GameKey>(val.as<int>());
+            }
+        }
     }
 }
 
@@ -148,4 +192,6 @@ void St::deserialize() {
     if (source[WINDOW].is(JSON::JSON_NUMBER)) {
         this->selectedWindowSize = source[WINDOW].as<int>();
     }
+
+    deserializeControls(source);
 }

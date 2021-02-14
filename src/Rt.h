@@ -3,11 +3,14 @@
 
 #include "Cam.h"
 #include "Ctx.h"
+#include "in/Input.h"
 
 #define RT_Running Rt::instance().running
 #define RT_Stop Rt::instance().stop
 #define RT_Camera Rt::instance().camera
 #define RT_Context Rt::instance().context
+#define RT_Input Rt::instance().in
+
 
 // Shared runtime state
 class Rt {
@@ -24,6 +27,7 @@ public:
     bool running;
     Camera camera;
     Ctx context;
+    Input in;
 
     void stop() {
         this->running = false;
