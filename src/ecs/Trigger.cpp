@@ -1,6 +1,6 @@
 #include "Trigger.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include "../Rt.h"
 #include "Collider.h"

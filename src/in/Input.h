@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 enum GameKeyState {
     GK_PUSHED,

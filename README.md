@@ -17,3 +17,20 @@ Game engine for 2d action RPG style games. Work in progress, still very rough.
 ![Gameplay](./media/screenshot.png)
 
 ![Menu](./media/menu.png)
+
+# Building on macos
+
+Install dependencies
+
+```
+brew install SDL2
+brew install SDL2_image
+brew install SDL2_mixer
+brew install cmake
+```
+
+Build it
+
+```
+cmake .
+cmake --build .

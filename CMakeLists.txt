@@ -34,8 +34,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${zwei_SOURCE_DIR}/cmake")
 set(LINUX ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIR})
 find_package(SDL2_image REQUIRED)
+include_directories(${SDL2_IMAGE_INCLUDE_DIR})
 find_package(SDL2_mixer REQUIRED)
+include_directories(${SDL2_MIXER_INCLUDE_DIR})
 PKG_SEARCH_MODULE(OpenGL gl)
 
 target_include_directories(

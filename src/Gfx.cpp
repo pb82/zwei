@@ -1,6 +1,6 @@
 #include "Gfx.h"
 
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 
 void Gfx::pick(SDL_Rect &source, int tileId, int textureWidth) {
     source.x = (tileId * Gfx_Tile_Size) % textureWidth;

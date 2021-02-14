@@ -1,7 +1,7 @@
 #ifndef ZWEI_FILTER_H
 #define ZWEI_FILTER_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include "../../alg/Position.h"
 
