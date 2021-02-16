@@ -39,7 +39,8 @@ find_package(SDL2_image REQUIRED)
 include_directories(${SDL2_IMAGE_INCLUDE_DIR})
 find_package(SDL2_mixer REQUIRED)
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
-PKG_SEARCH_MODULE(OpenGL gl)
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIR})
 
 target_include_directories(
         zwei
@@ -59,13 +60,6 @@ target_link_libraries(
         PRIVATE ${SDL2_LIBRARY}
         PRIVATE ${SDL2_IMAGE_LIBRARIES}
         PRIVATE ${SDL2_MIXER_LIBRARIES}
-        PRIVATE ${OpenGL_LIBRARIES}
+        PRIVATE ${OPENGL_LIBRARIES}
+        "-framework OpenGL"
 )
-
-
-if (LINUX)
-    target_link_libraries(
-            zwei
-            PRIVATE ${zwei_SOURCE_DIR}/lua/linux64/liblua.a
-    )
-endif (LINUX)
