@@ -255,6 +255,9 @@ void loop() {
     // Set map boundaries for the camera
     int mapSizeX, mapSizeY;
     m.getSize(FLOOR, &mapSizeX, &mapSizeY);
+
+    std::cout << "map x: " << mapSizeX << ", map y: " << mapSizeY << std::endl;
+
     RT_Camera.setMapSize(mapSizeX, mapSizeY);
 
     // Topology topology(mapSizeX, mapSizeY);
@@ -408,13 +411,13 @@ void initAssets() {
     Assets::instance().addTexture(TILES, "assets/RAW/beach.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
 
-    if(Assets::instance().getTexture(TILES)->mem == nullptr) {
+    if (Assets::instance().getTexture(TILES)->mem == nullptr) {
         std::cout << "error loading tileset" << std::endl;
     } else {
         std::cout << "tileset loaded ok" << std::endl;
     }
 
-    if(Assets::instance().getTexture(SPRITES)->mem == nullptr) {
+    if (Assets::instance().getTexture(SPRITES)->mem == nullptr) {
         std::cout << "error loading sprites" << std::endl;
     } else {
         std::cout << "sprites loaded ok" << std::endl;
