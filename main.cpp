@@ -250,6 +250,8 @@ void loop() {
     Map m("./assets/RAW");
     m.load("beach.json");
 
+    std::cout << "map loaded" << std::endl;
+
     // Set map boundaries for the camera
     int mapSizeX, mapSizeY;
     m.getSize(FLOOR, &mapSizeX, &mapSizeY);
@@ -405,6 +407,19 @@ void initAssets() {
     // Assets::instance().addTexture(TILES, assets_Tiles);
     Assets::instance().addTexture(TILES, "assets/RAW/beach.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
+
+    if(Assets::instance().getTexture(TILES)== nullptr) {
+        std::cout << "error loading tileset" << std::endl;
+    } else {
+        std::cout << "tileset loaded ok" << std::endl;
+    }
+
+    if(Assets::instance().getTexture(SPRITES)== nullptr) {
+        std::cout << "error loading sprites" << std::endl;
+    } else {
+        std::cout << "sprites loaded ok" << std::endl;
+    }
+
 }
 
 void initSdl() {
