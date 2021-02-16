@@ -2,6 +2,7 @@
 #include <chrono>
 #include <algorithm>
 #include <csignal>
+#include <iostream>
 
 #include <SDL_image.h>
 #include <SDL_opengl.h>
@@ -430,7 +431,7 @@ void initSdl() {
         exit(1);
     }
 
-    Gfx_Window = SDL_CreateWindow(
+    Gfx::instance().window = SDL_CreateWindow(
             configWindowTitle,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
@@ -439,8 +440,20 @@ void initSdl() {
             SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_INIT_GAMECONTROLLER
     );
 
-    Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);
-    Gfx_GL_Context = SDL_GL_CreateContext(Gfx_Window);
+    Gfx::instance().renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);
+    Gfx::instance().glContext = SDL_GL_CreateContext(Gfx_Window);
+
+    if (Gfx::instance().glContext == nullptr) {
+        std::cout << "GL Context is null" << std::endl;
+    } else {
+        std::cout << "GL Context created successfully" << std::endl;
+    }
+
+    const char *error = SDL_GetError();
+    if (error) {
+        std::cout << error << std::endl;
+    }
+
     SDL_GL_MakeCurrent(Gfx_Window, Gfx_GL_Context);
     Gfx_Tile_Size = configTileSize;
 }
