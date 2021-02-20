@@ -1,7 +1,7 @@
 #ifndef ZWEI_PLAYER_H
 #define ZWEI_PLAYER_H
 
-#include <SDL2/SDL_mixer.h>
+#include <SDL_mixer.h>
 
 #include <queue>
 #include <ASSETS/Assets.h>

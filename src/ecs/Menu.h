@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <functional>
+#include <string>
 
 #include "Component.h"
 
@@ -28,6 +29,8 @@ typedef std::function<void(GameKeyEvent &key)> menu_Callback;
 class MenuAction {
 public:
     MenuAction(const char* text, menu_Callback cb) : text(text), cb(cb) {}
+
+    virtual ~MenuAction() {}
 
     virtual void invoke(GameKeyEvent &key) { this->cb(key); }
 

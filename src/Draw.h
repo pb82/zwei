@@ -1,7 +1,7 @@
 #ifndef ZWEI_DRAW_H
 #define ZWEI_DRAW_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include "alg/Color.h"
 

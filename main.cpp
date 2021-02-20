@@ -3,7 +3,10 @@
 #include <algorithm>
 #include <csignal>
 
+#include <OpenGL/glu.h>
+
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 #include <SDL_opengl.h>
 
 #include <IMGUI/imgui.h>
@@ -149,7 +152,8 @@ void renderMenu(tp frameStart) {
     // Flush
     ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
     SDL_GL_SwapWindow(Gfx_Window);
-    glFinish();
+    SDL_RenderPresent(Gfx_Renderer);
+    // glFinish();
 
     auto frameTime = std::chrono::system_clock::now() - frameStart;
     float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
@@ -219,7 +223,8 @@ void renderGame(tp frameStart) {
 
     // Flush
     SDL_GL_SwapWindow(Gfx_Window);
-    glFinish();
+    SDL_RenderPresent(Gfx_Renderer);
+    // glFinish();
 
     // Frametime
     auto frameTime = std::chrono::system_clock::now() - frameStart;
@@ -323,7 +328,9 @@ void loop() {
 
         Manager::instance().collect();
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        // glClear(GL_COLOR_BUFFER_BIT);
+
+        SDL_RenderClear(Gfx_Renderer);
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -411,16 +418,16 @@ void initSdl() {
     auto sdlFlags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK |
                     SDL_INIT_GAMECONTROLLER;
 
-    if (SDL_Init(sdlFlags) != 0) {
-        exit(1);
-    }
-
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetSwapInterval(1);
+
+    if (SDL_Init(sdlFlags) != 0) {
+        exit(1);
+    }
 
     if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
         exit(1);
@@ -439,9 +446,14 @@ void initSdl() {
             SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_INIT_GAMECONTROLLER
     );
 
-    Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);
+    int actualW, actualH;
+    SDL_GL_GetDrawableSize(Gfx_Window, &actualW, &actualH);
+    configWindowWidth = actualW;
+    configWindowHeight = actualH;
+
     Gfx_GL_Context = SDL_GL_CreateContext(Gfx_Window);
     SDL_GL_MakeCurrent(Gfx_Window, Gfx_GL_Context);
+    Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);
     Gfx_Tile_Size = configTileSize;
 }
 

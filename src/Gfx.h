@@ -1,7 +1,7 @@
 #ifndef ZWEI_GFX_H
 #define ZWEI_GFX_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #define Gfx_GL_Context Gfx::instance().glContext
 #define Gfx_Renderer Gfx::instance().renderer

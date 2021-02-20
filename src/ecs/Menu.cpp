@@ -429,14 +429,14 @@ void Menu::renderMenu(std::vector<std::unique_ptr<MenuAction>> &menu) {
 
 void Menu::key(GameKeyEvent &key) {
     if (!key.valid) return;
-    if (!key.state == GK_PUSHED) return;
-    if (key.key == GK_B && !menuState == AwaitBinding) {
+    if (key.state != GK_PUSHED) return;
+    if (key.key == GK_B && menuState != AwaitBinding) {
         if (this->level.size() > 1) this->level.pop();
         this->selectedIndex = 0;
-    } else if (key.key == GK_UP && !menuState == AwaitBinding) {
+    } else if (key.key == GK_UP && menuState != AwaitBinding) {
         this->selectedIndex--;
         if (this->selectedIndex < 0) this->selectedIndex = currentMenuItems() - 1;
-    } else if (key.key == GK_DOWN && !menuState == AwaitBinding) {
+    } else if (key.key == GK_DOWN && menuState != AwaitBinding) {
         this->selectedIndex++;
         this->selectedIndex %= currentMenuItems();
     } else {

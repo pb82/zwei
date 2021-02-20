@@ -5,7 +5,7 @@
 
 Spider::Spider(Entity &parent) : Mind(parent) {}
 
-Spider::~Spider() noexcept {}
+Spider::~Spider() {}
 
 int Spider::delay() {
     return 1000;

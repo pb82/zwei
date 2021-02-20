@@ -8,7 +8,7 @@ Acceleration::Acceleration(Entity &parent, float maxSpeed, float angle)
           trajectory(0, angle),
           maxSpeed(maxSpeed),
           speed(0),
-          acceleration(acceleration) {}
+          acceleration(0.0f) {}
 
 void Acceleration::update(float dt) {
     auto transform = parent.getComponent<Transform>();
