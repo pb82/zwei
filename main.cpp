@@ -370,11 +370,6 @@ void loop() {
     }
 }
 
-void initStyles() {
-    ImGuiStyle &style = ImGui::GetStyle();
-    style.WindowRounding = 3.0f;
-}
-
 void initSound() {
     // force sound to init
     Player::instance();
@@ -390,7 +385,6 @@ void initImgui() {
     ImGui::StyleColorsLight();
     ImGui::GetIO().IniFilename = nullptr;
     ImGui::GetIO().Fonts->AddFontFromMemoryTTF(Assets::instance().getFont(FONT), 16, 16);
-    ImGuiSDL::Initialize(Gfx_Renderer, configWindowWidth, configWindowHeight);
 
     ImGuiStyle &style = ImGui::GetStyle();
     style.WindowBorderSize = 4.0f;
@@ -401,6 +395,9 @@ void initImgui() {
     style.Colors[ImGuiCol_ButtonActive] = ImVec4{0.1, 0.1, 0.1, 0};
     style.Colors[ImGuiCol_ButtonHovered] = ImVec4{0.1, 0.1, 0.1, 0};
     style.Colors[ImGuiCol_Separator] = ImVec4{0.1, 0.1, 0.1, 0};
+
+    ImGuiStyle &s = ImGui::GetStyle();
+    ImGuiSDL::Initialize(Gfx_Renderer, configWindowWidth, configWindowHeight);
 }
 
 void initAssets() {
@@ -469,7 +466,6 @@ int main(int, char **) {
     initSdl();
     initAssets();
     initImgui();
-    initStyles();
     initSound();
     loop();
 
