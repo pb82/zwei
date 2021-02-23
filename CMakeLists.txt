@@ -32,28 +32,23 @@ add_executable(
 INCLUDE(FindPkgConfig)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${zwei_SOURCE_DIR}/cmake")
 
-target_include_directories(
-        zwei
-        PRIVATE ${OpenGL_INCLUDE_DIRS}
-        PRIVATE ${zwei_SOURCE_DIR}/json
-        PRIVATE ${zwei_SOURCE_DIR}/imgui
-        PRIVATE ${zwei_SOURCE_DIR}/base64
-        PRIVATE ${zwei_SOURCE_DIR}/assets
-        PRIVATE ${zwei_SOURCE_DIR}/sdl/SDL
-        PRIVATE ${zwei_SOURCE_DIR}/sdl/IMAGE
-        PRIVATE ${zwei_SOURCE_DIR}/sdl/MIXER
-)
-
-find_package(OpenGL REQUIRED)
-
 if(APPLE)
+    target_include_directories(
+            zwei
+            PRIVATE ${zwei_SOURCE_DIR}/json
+            PRIVATE ${zwei_SOURCE_DIR}/imgui
+            PRIVATE ${zwei_SOURCE_DIR}/base64
+            PRIVATE ${zwei_SOURCE_DIR}/assets
+            PRIVATE ${zwei_SOURCE_DIR}/sdl/SDL
+            PRIVATE ${zwei_SOURCE_DIR}/sdl/IMAGE
+            PRIVATE ${zwei_SOURCE_DIR}/sdl/MIXER
+    )
+
     target_link_libraries(
             zwei
             ${zwei_SOURCE_DIR}/sdl/darwin/libSDL2.dylib
             ${zwei_SOURCE_DIR}/sdl/darwin/libSDL2_image.dylib
             ${zwei_SOURCE_DIR}/sdl/darwin/libSDL2_mixer.dylib
-            ${OpenGL_LIBRARIES}
-            "-framework OpenGL"
     )
 endif()
 
@@ -62,11 +57,21 @@ if(UNIX AND NOT APPLE)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_mixer REQUIRED)
 
+    target_include_directories(
+            zwei
+            PRIVATE ${zwei_SOURCE_DIR}/json
+            PRIVATE ${zwei_SOURCE_DIR}/imgui
+            PRIVATE ${zwei_SOURCE_DIR}/base64
+            PRIVATE ${zwei_SOURCE_DIR}/assets
+            PRIVATE ${SDL2_INCLUDE_DIRS}
+            PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS}
+            PRIVATE ${SDL2_MIXER_INCLUDE_DIRS}
+    )
+
     target_link_libraries(
         zwei
         PRIVATE ${SDL2_LIBRARY}
         PRIVATE ${SDL2_IMAGE_LIBRARIES}
         PRIVATE ${SDL2_MIXER_LIBRARIES}
-        PRIVATE ${OpenGL_LIBRARIES}
     )
 endif()

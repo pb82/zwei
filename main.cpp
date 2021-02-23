@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <csignal>
 
-#include <OpenGL/glu.h>
-
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <SDL_opengl.h>
