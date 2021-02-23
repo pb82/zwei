@@ -16,7 +16,7 @@ namespace JSON {
         JSON_ARRAY = 3,
         JSON_OBJECT = 4,
         EXT_BINARY = 5,
-        JSON_NULL
+        JSON_NULL = 6
     };
 
     // Forward declaration needed for typedefs.
@@ -50,6 +50,7 @@ namespace JSON {
         // JSON null.
         Value()
                 : type(JSON_NULL) {
+            std::get<JSON_NULL>(value) = "null";
         }
 
         // JSON_NUMBER

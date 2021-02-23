@@ -11,7 +11,7 @@
 
 #include <IMGUI/imgui.h>
 #include <IMGUI/imgui_impl_sdl.h>
-#include <IMGUI/imgui_impl_opengl2.h>
+#include <IMGUI/imgui_sdl.h>
 
 #include <ASSETS/Assets.h>
 #include <EMBEDDED/Font.h>
@@ -141,7 +141,6 @@ void renderMenu(tp frameStart) {
     Manager::instance().render(ROOF);
     Manager::instance().render(SKY);
 
-    ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplSDL2_NewFrame(Gfx_Window);
     ImGui::NewFrame();
     {
@@ -150,7 +149,7 @@ void renderMenu(tp frameStart) {
     ImGui::Render();
 
     // Flush
-    ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+    ImGuiSDL::Render(ImGui::GetDrawData());
     SDL_GL_SwapWindow(Gfx_Window);
     SDL_RenderPresent(Gfx_Renderer);
     // glFinish();
@@ -194,7 +193,8 @@ void renderGameOver(tp frameStart, float *darkness) {
 
     // Flush
     SDL_GL_SwapWindow(Gfx_Window);
-    glFinish();
+    SDL_RenderPresent(Gfx_Renderer);
+    // glFinish();
 
     auto frameTime = std::chrono::system_clock::now() - frameStart;
     float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
@@ -388,10 +388,9 @@ void initImgui() {
 
     ImGui::CreateContext();
     ImGui::StyleColorsLight();
-    ImGui_ImplSDL2_InitForOpenGL(Gfx_Window, Gfx_GL_Context);
-    ImGui_ImplOpenGL2_Init();
     ImGui::GetIO().IniFilename = nullptr;
     ImGui::GetIO().Fonts->AddFontFromMemoryTTF(Assets::instance().getFont(FONT), 16, 16);
+    ImGuiSDL::Initialize(Gfx_Renderer, configWindowWidth, configWindowHeight);
 
     ImGuiStyle &style = ImGui::GetStyle();
     style.WindowBorderSize = 4.0f;
@@ -448,16 +447,13 @@ void initSdl() {
 
     int actualW, actualH;
     SDL_GL_GetDrawableSize(Gfx_Window, &actualW, &actualH);
-    configWindowWidth = actualW;
-    configWindowHeight = actualH;
-
-    Gfx_GL_Context = SDL_GL_CreateContext(Gfx_Window);
-    SDL_GL_MakeCurrent(Gfx_Window, Gfx_GL_Context);
     Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_RenderSetScale(Gfx_Renderer, actualW / configWindowWidth, actualH / configWindowHeight);
     Gfx_Tile_Size = configTileSize;
 }
 
 void onSignal(int sig) {
+    ImGuiSDL::Deinitialize();
     exit(sig);
 }
 
@@ -476,4 +472,6 @@ int main(int, char **) {
     initStyles();
     initSound();
     loop();
+
+    ImGuiSDL::Deinitialize();
 }
