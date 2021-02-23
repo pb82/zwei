@@ -133,6 +133,13 @@ namespace JSON {
             return std::get<JSON_ARRAY>(value)[index];
         }
 
+        void operator=(const void *ptr) {
+            if (ptr == nullptr) this->type = JSON_NULL;
+            else {
+                throw (std::runtime_error("Cannot accept unbounded binary data"));
+            }
+        }
+
         bool is(JsonType type) const {
             return this->type == type;
         }

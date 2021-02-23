@@ -16,7 +16,7 @@ public:
     static St &instance() {
         static St instance;
         if (!instance.fresh) {
-            // instance.deserialize();
+            instance.deserialize();
             instance.fresh = true;
         }
         return instance;
