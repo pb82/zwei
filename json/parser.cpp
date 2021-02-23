@@ -404,7 +404,7 @@ namespace JSON {
     void Parser::parse(Value &value, const std::string &source) {
         reset();
         if (source.length() > 0) {
-            value = null;
+            value = nullptr;
             this->source = source;
             objectStack.push(&value);
             parseValue();

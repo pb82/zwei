@@ -16,7 +16,7 @@ namespace JSON {
         JSON_ARRAY = 3,
         JSON_OBJECT = 4,
         EXT_BINARY = 5,
-        JSON_NULL
+        JSON_NULL = 6
     };
 
     // Forward declaration needed for typedefs.
@@ -50,6 +50,7 @@ namespace JSON {
         // JSON null.
         Value()
                 : type(JSON_NULL) {
+            std::get<JSON_NULL>(value) = "null";
         }
 
         // JSON_NUMBER
@@ -130,6 +131,13 @@ namespace JSON {
         // Array access and manipulation
         Value &operator[](unsigned long index) {
             return std::get<JSON_ARRAY>(value)[index];
+        }
+
+        void operator=(const void *ptr) {
+            if (ptr == nullptr) this->type = JSON_NULL;
+            else {
+                throw (std::runtime_error("Cannot accept unbounded binary data"));
+            }
         }
 
         bool is(JsonType type) const {

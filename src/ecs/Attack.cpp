@@ -135,6 +135,8 @@ void Attack::launchProjectileWeapon(std::shared_ptr<Stats> stats) {
             projectileOffsetY = .5;
             rotate = 90;
             break;
+        default:
+            break;
     }
 
     if (&this->parent != RT_Context.getPlayer().get()) {
@@ -222,6 +224,8 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
             padding.bottom = (2 - (stats->inventory.weapon->range() * 2));
             padding.top = 0;
             angle = VM_100_PI;
+            break;
+        default:
             break;
     }
 
