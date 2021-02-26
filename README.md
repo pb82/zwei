@@ -7,9 +7,10 @@ Game engine for 2d action RPG style games. Work in progress, still very rough.
 - [x] Items, Weapons and Inventory
 - [x] Combat
 - [x] Menu
-- [ ] Save & Load 
+- [x] Builds on Linux and MacOs
+- [ ] Save & Load
 - [ ] Scripting
-- [ ] Building on Windows and Mac OS 
+- [ ] Building on Windows
 - [ ] Docs
 
 # Screenshots
@@ -25,8 +26,10 @@ Game engine for 2d action RPG style games. Work in progress, still very rough.
 Install dependencies
 
 ```
-brew install cmake sdl2 sdl_image sdl_mixer
+brew install cmake
 ```
+
+__NOTE__: All other dependencies are included in the repository
 
 Build using cmake
 

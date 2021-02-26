@@ -5,7 +5,6 @@
 
 #include <SDL_image.h>
 #include <SDL_mixer.h>
-#include <SDL_opengl.h>
 
 #include <IMGUI/imgui.h>
 #include <IMGUI/imgui_impl_sdl.h>
@@ -385,9 +384,7 @@ void initImgui() {
     ImGui::GetIO().Fonts->AddFontFromMemoryTTF(Assets::instance().getFont(FONT), 16, 16);
 
     ImGuiStyle &style = ImGui::GetStyle();
-    style.WindowBorderSize = 4.0f;
     style.Colors[ImGuiCol_WindowBg] = ImVec4{0.345, 0.345, 0.98, 0.4};
-    style.Colors[ImGuiCol_Border] = ImVec4{0.949, 0.949, 0.949, 1};
     style.Colors[ImGuiCol_Text] = ImVec4{0.949, 0.949, 0.949, 1};
     style.Colors[ImGuiCol_Button] = ImVec4{0.1, 0.1, 0.1, 0};
     style.Colors[ImGuiCol_ButtonActive] = ImVec4{0.1, 0.1, 0.1, 0};

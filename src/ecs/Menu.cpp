@@ -5,7 +5,7 @@
 #include "../config.h"
 #include "../Rt.h"
 
-#define WINDOW_MARGIN 4
+#define WINDOW_MARGIN 0
 
 static void getWinSize(ImVec2 &s) {
     s.x = configWindowWidth - WINDOW_MARGIN;
