@@ -11,3 +11,4 @@ Color color_Bad = Color{190, 60, 43, 128};
 Color color_EnemyGood = Color{40, 180, 100, 255};
 Color color_EnemyMedium = Color{240, 155, 20, 255};
 Color color_EnemyBad = Color{190, 60, 43, 255};
+Color color_EnemyBlue = Color{100, 150, 240, 255};
