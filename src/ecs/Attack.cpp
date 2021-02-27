@@ -12,10 +12,9 @@
 #include "filters/Halo.h"
 #include "Analytics.h"
 #include "Projectile.h"
-#include "Group.h"
-#include "../alg/Text.h"
 #include "../Gfx.h"
 #include "../snd/Player.h"
+#include "Bar.h"
 
 Attack::Attack(Entity &parent) : Component(parent) {}
 
@@ -24,34 +23,6 @@ void Attack::update(float dt) {
         wait -= dt;
     }
     if (wait < 0) wait = 0;
-}
-
-void Attack::printDamage(float damage, float x, float y) {
-    std::string number = std::to_string((int) damage);
-    float offset = x - ((number.size() * 0.3) / 2);
-
-    auto container = std::make_shared<Entity>();
-    container->addComponent<Group>();
-
-    auto group = container->getComponent<Group>();
-
-    for (const char digit : number) {
-        auto entity = std::make_shared<Entity>();
-        entity->addComponent<Transform>(offset, y, Padding{0.5, 0.5, 0.5, 0.5});
-        entity->addComponent<Acceleration>(2.0f, VM_50_PI);
-        entity->addComponent<Sprite>(SPRITES);
-        entity->addComponent<Animation>(0, false);
-        entity->addComponent<SelfDestruct>(TIMER, 500);
-
-        auto animation = entity->getComponent<Animation>();
-        animation->addAnimationFrame(Text::fromChar(digit));
-
-        auto acceleration = entity->getComponent<Acceleration>();
-        acceleration->accelerate();
-        group->addMember(entity);
-        offset += 0.3;
-    }
-    Manager::instance().enqueue(container, FOREGROUND);
 }
 
 // You are being attacked
@@ -72,12 +43,16 @@ void Attack::defend(std::shared_ptr<Projectile> projectile) {
 
     if (this->parent.hasComponent<Stats>()) {
         auto stats = this->parent.getComponent<Stats>();
-        int damage = stats->character.damage(projectile->power, projectile->isProjectile);
+        stats->character.damage(projectile->power, projectile->isProjectile);
 
         auto transform = this->parent.getComponent<Transform>();
 
         if (!stats->character.dead()) {
-            printDamage(damage, transform->p.x, transform->p.y);
+            // printDamage(damage, transform->p.x, transform->p.y);
+            if (this->parent.hasComponent<Bar>()) {
+                // Show enemy health bar for one second
+                this->parent.getComponent<Bar>()->setVisibility(1000);
+            }
         } else {
             if (&this->parent == RT_Context.getPlayer().get()) {
                 RT_Context.state.pushState(GameOver);

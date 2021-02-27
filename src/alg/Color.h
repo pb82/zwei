@@ -12,5 +12,14 @@ public:
 };
 
 extern Color color_Red;
+extern Color color_White;
+
+extern Color color_Good;
+extern Color color_Medium;
+extern Color color_Bad;
+
+extern Color color_EnemyGood;
+extern Color color_EnemyMedium;
+extern Color color_EnemyBad;
 
 #endif

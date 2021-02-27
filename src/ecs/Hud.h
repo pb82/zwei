@@ -13,9 +13,9 @@ private:
 
     void fastNums(int num, int *h, int *t, int *o);
 
-    void renderNumber(SDL_Rect &target, int num, int h, int t, int o);
-
     std::shared_ptr<Texture> texture;
+
+    SDL_Rect target;
 };
 
 

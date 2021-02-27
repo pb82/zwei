@@ -45,6 +45,7 @@
 #include "src/alg/Text.h"
 #include "src/Draw.h"
 #include "src/St.h"
+#include "src/ecs/Bar.h"
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
 
@@ -69,6 +70,7 @@ void placeKakta(int x, int y, Topology &top) {
     kakta->addComponent<Acceleration>(2.0f, 0);
     kakta->addComponent<Ai>();
     kakta->addComponent<Attack>();
+    kakta->addComponent<Bar>();
 
     kakta->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
     kakta->getComponent<Animation>()->addAnimationFrame(113, 65, 97, 81);
@@ -308,6 +310,9 @@ void loop() {
     placeItem(7, 4, STICK);
     placeItem(8, 24, BOW);
 
+    placeKakta(5, 5, RT_Context.getTopology());
+    placeKakta(2, 8, RT_Context.getTopology());
+
 
     placeTrigger(11, 8, [](float angle) {
         Manager::instance().setRenderHint(HINT_HIDE_ROOF_LAYER);
@@ -424,6 +429,10 @@ void initSdl() {
         exit(1);
     }
 
+    if (TTF_Init() != 0) {
+        exit(1);
+    }
+
     if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         exit(1);
     }
@@ -437,10 +446,15 @@ void initSdl() {
             SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_INIT_GAMECONTROLLER
     );
 
+    // Deal with high dpi displays where the scaled resolution is not the same as
+    // the requested resolution
     int actualW, actualH;
     SDL_GL_GetDrawableSize(Gfx_Window, &actualW, &actualH);
+    configRenderScaleX = actualW / configWindowWidth;
+    configRenderScaleY = actualH / configWindowHeight;
+
     Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);
-    SDL_RenderSetScale(Gfx_Renderer, actualW / configWindowWidth, actualH / configWindowHeight);
+    SDL_RenderSetScale(Gfx_Renderer, configRenderScaleX, configRenderScaleY);
     Gfx_Tile_Size = configTileSize;
 }
 

@@ -15,3 +15,22 @@ void Draw::rect(Color &c, SDL_Rect &rect) {
     SDL_SetRenderDrawColor(Gfx_Renderer, c.r, c.g, c.b, c.a);
     SDL_RenderDrawRect(Gfx_Renderer, &rect);
 }
+
+void Draw::box(Color &c, SDL_Rect &rect) {
+    SDL_SetRenderDrawBlendMode(Gfx_Renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(Gfx_Renderer, c.r, c.g, c.b, c.a);
+    SDL_RenderFillRect(Gfx_Renderer, &rect);
+}
+
+void Draw::pushColor() {
+    SDL_Color c;
+    SDL_GetRenderDrawColor(Gfx_Renderer, &c.r, &c.g, &c.b, &c.a);
+    colors.push(c);
+}
+
+void Draw::popColor() {
+    if (colors.empty()) return;
+    SDL_Color c = colors.top();
+    SDL_SetRenderDrawColor(Gfx_Renderer, c.r, c.g, c.b, c.a);
+    colors.pop();
+}

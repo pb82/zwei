@@ -1,6 +1,8 @@
 #ifndef ZWEI_DRAW_H
 #define ZWEI_DRAW_H
 
+#include <stack>
+
 #include <SDL.h>
 
 #include "alg/Color.h"
@@ -23,8 +25,16 @@ public:
 
     void rect(Color &c, SDL_Rect &rect);
 
+    void box(Color &c, SDL_Rect &rect);
+
+    void pushColor();
+
+    void popColor();
+
 private:
     Draw() {}
+
+    std::stack<SDL_Color> colors;
 };
 
 #endif

@@ -1,7 +1,48 @@
 #include "Bar.h"
 
+#include "Entity.h"
+#include "Stats.h"
+#include "Transform.h"
+
+#include "../Draw.h"
+
 Bar::Bar(Entity &parent) : Component(parent) {}
 
-void Bar::render() {
+void Bar::setVisibility(float duration) {
+    this->visible = duration;
+}
 
+void Bar::update(float dt) {
+    if (visible <= 0) {
+        visible = 0.0f;
+    }
+    visible -= dt;
+}
+
+void Bar::render() {
+    if (visible <= 0.0f) {
+        return;
+    }
+
+    auto stats = this->parent.getComponent<Stats>();
+    auto transform = this->parent.getComponent<Transform>();
+    auto hp = stats->character.getHitpoints();
+
+    float cur = std::get<0>(hp);
+    float max = std::get<1>(hp);
+    float percent = cur / max;
+
+    SDL_Rect target;
+    Padding p = {0, 0, -0.25, 2};
+    p.right = 2 - (2 * percent);
+
+    RT_Camera.project(target, transform->p.x, transform->p.y, p);
+
+    if (percent >= 0.5) {
+        Draw::instance().box(color_EnemyGood, target);
+    } else if (percent >= 0.2) {
+        Draw::instance().box(color_EnemyMedium, target);
+    } else {
+        Draw::instance().box(color_EnemyBad, target);
+    }
 }

@@ -1,4 +1,5 @@
 #include <ASSETS/Assets.h>
+#include <SDL_ttf.h>
 
 #include "Hud.h"
 #include "Entity.h"
@@ -8,6 +9,7 @@
 #include "../Gfx.h"
 #include "../Draw.h"
 
+#define BAR_SCREEN_RATIO 5
 
 Hud::Hud(Entity &parent) : Component(parent) {
     this->texture = Assets::instance().getTexture(SPRITES);
@@ -28,14 +30,9 @@ void Hud::render() {
 
     // Health
     auto hp = stats->character.getHitpoints();
-    int cur = std::get<0>(hp);
-    int max = std::get<1>(hp);
+    float cur = std::get<0>(hp);
+    float max = std::get<1>(hp);
 
-    // render cur
-    int h, t, o;
-    fastNums(cur, &h, &t, &o);
-
-    SDL_Rect target;
     target.x = 10;
     target.y = 10;
     target.w = 32;
@@ -45,65 +42,25 @@ void Hud::render() {
     // Hp symbol
     Gfx::pick(source, 90, texture->w);
     Draw::instance().draw(texture->mem, source, target);
-    target.x += 24;
 
-    // Current Hp
-    fastNums(cur, &h, &t, &o);
-    renderNumber(target, cur, h, t, o);
+    target.x += 28;
+    target.h = 20;
+    target.w = ((configWindowWidth / BAR_SCREEN_RATIO) * configRenderScaleX) + 2;
+    target.y = (16 * configRenderScaleY);
 
-    // Divider
-    Gfx::pick(source, 89, texture->w);
-    Draw::instance().draw(texture->mem, source, target);
-    target.x += 24;
+    Draw::instance().rect(color_White, target);
 
-    // Max hp
-    fastNums(max, &h, &t, &o);
-    renderNumber(target, max, h, t, o);
+    float percent = cur / max;
+    target.x += 1;
+    target.y += 1;
+    target.w = (((configWindowWidth / BAR_SCREEN_RATIO) * configRenderScaleX) * percent);
+    target.h -= 2;
 
-    // Experience
-    target.y += 32;
-    target.x = 10;
-
-    // Exp symbol
-    Gfx::pick(source, 91, texture->w);
-    Draw::instance().draw(texture->mem, source, target);
-    target.x += 24;
-
-    auto exp = stats->character.getExperience();
-    cur = std::get<0>(exp);
-    max = std::get<1>(exp);
-
-    // Current exp
-    fastNums(cur, &h, &t, &o);
-    renderNumber(target, cur, h, t, o);
-
-    // Divider
-    Gfx::pick(source, 89, texture->w);
-    Draw::instance().draw(texture->mem, source, target);
-    target.x += 24;
-
-    // Next level
-    fastNums(max, &h, &t, &o);
-    renderNumber(target, max, h, t, o);
-
-
-}
-
-void Hud::renderNumber(SDL_Rect &target, int num, int h, int t, int o) {
-    SDL_Rect source;
-    if (h > 0) {
-        Gfx::pick(source, Text::fromInt(h), texture->w);
-        Draw::instance().draw(texture->mem, source, target);
+    if (percent >= 0.5) {
+        Draw::instance().box(color_Good, target);
+    } else if (percent >= 0.2) {
+        Draw::instance().box(color_Medium, target);
+    } else {
+        Draw::instance().box(color_Bad, target);
     }
-    target.x += 24;
-
-    if (t > 0 || num >= 100) {
-        Gfx::pick(source, Text::fromInt(t), texture->w);
-        Draw::instance().draw(texture->mem, source, target);
-    }
-    target.x += 24;
-
-    Gfx::pick(source, Text::fromInt(o), texture->w);
-    Draw::instance().draw(texture->mem, source, target);
-    target.x += 24;
 }

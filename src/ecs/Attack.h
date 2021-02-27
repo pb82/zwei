@@ -17,8 +17,6 @@ public:
 
 private:
 
-    void printDamage(float damage, float x, float y);
-
     void launchStickWeapon(std::shared_ptr<Stats> stats);
 
     void launchProjectileWeapon(std::shared_ptr<Stats> stats);

@@ -32,6 +32,16 @@ public:
     int h;
 };
 
+class SDLFont {
+public:
+    SDLFont(TTF_Font *font) : mem(font) {}
+
+    ~SDLFont();
+
+    TTF_Font *mem;
+};
+
+
 class Assets {
 public:
     static Assets &instance() {
@@ -52,6 +62,8 @@ public:
 
     void *getFont(Asset id);
 
+    std::shared_ptr<SDLFont> getSDLFont(Asset id);
+
     std::shared_ptr<Texture> getTexture(Asset id);
 
 private:
@@ -59,6 +71,7 @@ private:
 
     std::unordered_map<Asset, std::shared_ptr<Texture>> textures;
     std::unordered_map<Asset, EmbeddedAsset *> fonts;
+    std::unordered_map<Asset, std::shared_ptr<SDLFont>> ttf_fonts;
 
 };
 
