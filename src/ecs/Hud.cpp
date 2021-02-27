@@ -8,6 +8,7 @@
 #include "../alg/Text.h"
 #include "../Gfx.h"
 #include "../Draw.h"
+#include "Attack.h"
 
 #define BAR_SCREEN_RATIO 5
 
@@ -43,18 +44,18 @@ void Hud::render() {
     Gfx::pick(source, 90, texture->w);
     Draw::instance().draw(texture->mem, source, target);
 
-    target.x += 28;
-    target.h = 20;
+    target.x += 28 * configRenderScaleX;
+    target.h = 20 * configRenderScaleY;
     target.w = ((configWindowWidth / BAR_SCREEN_RATIO) * configRenderScaleX) + 2;
     target.y = (16 * configRenderScaleY);
 
     Draw::instance().rect(color_White, target);
 
     float percent = cur / max;
-    target.x += 1;
-    target.y += 1;
+    target.x += 1 * configRenderScaleX;
+    target.y += 1 * configRenderScaleY;
     target.w = (((configWindowWidth / BAR_SCREEN_RATIO) * configRenderScaleX) * percent);
-    target.h -= 2;
+    target.h -= 2 * configRenderScaleY;
 
     if (percent >= 0.5) {
         Draw::instance().box(color_Good, target);
@@ -63,4 +64,40 @@ void Hud::render() {
     } else {
         Draw::instance().box(color_Bad, target);
     }
+
+    if (!stats->inventory.hasWeapon()) {
+        return;
+    }
+
+    auto attack = player->getComponent<Attack>();
+
+    target.x = 10 * configRenderScaleX;
+    target.y = 42 * configRenderScaleY;
+    target.w = 32 * configRenderScaleX;
+    target.h = 32 * configRenderScaleY;
+
+    Gfx::pick(source, 107, texture->w);
+    Draw::instance().draw(texture->mem, source, target);
+
+    target.x += 28 * configRenderScaleX;
+    target.h = 20 * configRenderScaleY;
+    target.w = ((configWindowWidth / BAR_SCREEN_RATIO) * configRenderScaleX) + 2;
+    target.y = (48 * configRenderScaleY);
+
+    Draw::instance().rect(color_White, target);
+
+    float recharge = stats->inventory.weapon->recharge();
+    float current = attack->wait;
+    percent = 1.0f;
+
+    if (current > 0.0f) {
+        percent *= (current / recharge);
+    }
+
+    target.x += 1 * configRenderScaleX;
+    target.y += 1 * configRenderScaleY;
+    target.w = (((configWindowWidth / BAR_SCREEN_RATIO) * configRenderScaleX) * percent);
+    target.h -= 2 * configRenderScaleY;
+
+    Draw::instance().box(color_Blue, target);
 }

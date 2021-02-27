@@ -13,6 +13,7 @@ public:
 
 extern Color color_Red;
 extern Color color_White;
+extern Color color_Blue;
 
 extern Color color_Good;
 extern Color color_Medium;

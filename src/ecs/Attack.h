@@ -15,13 +15,14 @@ public:
 
     void defend(std::shared_ptr<Projectile> projectile);
 
+    float wait = 0.0f;
+
 private:
 
     void launchStickWeapon(std::shared_ptr<Stats> stats);
 
     void launchProjectileWeapon(std::shared_ptr<Stats> stats);
 
-    float wait = 0.0f;
 };
 
 
