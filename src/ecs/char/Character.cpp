@@ -2,42 +2,12 @@
 
 Character::Character() {}
 
-void Character::adjustToLevel() {
-    this->experienceToNextLevel = level * 100;
-    this->experienceToNextLevel *= 1 + (level / 10);
-    this->maxHitpoints = this->baseHitpoints + (10 * level);
-    this->maxHitpoints *= 1 + (level / 100);
-    this->hitpoints = this->maxHitpoints;
-}
-
-bool Character::collectExperience(int points) {
-    this->experience += points;
-    bool levelUp = false;
-
-    while (this->experience >= this->experienceToNextLevel) {
-        this->level++;
-        this->adjustToLevel();
-        levelUp = true;
-    }
-    return levelUp;
-}
-
 void Character::setBase(int hp, int str, int dex, int def) {
-    this->baseHitpoints = hp;
+    this->maxHitpoints = hp;
     this->baseStrength = str;
     this->baseDexterity = dex;
     this->baseDefense = def;
-    adjustToLevel();
-}
-
-void Character::setLevel(int level) {
-    this->level = level;
-    adjustToLevel();
-}
-
-int Character::releaseExperience() const {
-    int factor = (rand() % 20);
-    return level * factor;
+    this->hitpoints = hp;
 }
 
 int Character::damage(int d, bool isProjectile) {
@@ -62,10 +32,6 @@ int Character::getStrength() const {
 
 int Character::getDexterity() const {
     return baseDexterity;
-}
-
-std::tuple<int, int> Character::getExperience() {
-    return {this->experience, this->experienceToNextLevel};
 }
 
 std::tuple<int, int> Character::getHitpoints() {

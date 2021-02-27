@@ -86,8 +86,7 @@ void placeKakta(int x, int y, Topology &top) {
     kakta->addComponent<Stats>(false);
     auto stats = kakta->getComponent<Stats>();
     stats->inventory.equip(std::make_shared<Stone>());
-    stats->character.setBase(10, 2, 1, 1);
-    stats->character.setLevel(1);
+    stats->character.setBase(10, 20, 10, 1);
 
     auto transform = kakta->getComponent<Transform>();
     kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0});
@@ -115,7 +114,6 @@ void placeSpider(int x, int y, Topology &top) {
 
     skeleton->addComponent<Stats>(false);
     auto stats = skeleton->getComponent<Stats>();
-    stats->character.setLevel(1);
     stats->character.setBase(10, 1, 1, 10);
 
     auto transform = skeleton->getComponent<Transform>();
