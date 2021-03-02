@@ -136,6 +136,7 @@ void Inventory::render() {
     int currentSlot = 0;
 
     auto texture = Assets::instance().getTexture(SPRITES);
+    auto font = Assets::instance().getTexture(BITMAPFONT);
 
     for (auto &slot : slots) {
         SDL_Rect source;
@@ -155,27 +156,27 @@ void Inventory::render() {
         }
 
         if (slot.number > 1) {
-            Gfx::pick(source, Text::fromInt(slot.number), texture->w);
+            Gfx::pickText(source, Text::fromInt(slot.number), font->w);
 
             target.x += configTileSize;
             target.w = configTileSize;
             target.h = configTileSize;
 
-            SDL_SetTextureColorMod(texture->mem, 128, 255, 128);
-            Draw::instance().draw(texture->mem, source, target);
-            SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
+            SDL_SetTextureColorMod(font->mem, 128, 255, 128);
+            Draw::instance().draw(font->mem, source, target);
+            SDL_SetTextureColorMod(font->mem, 255, 255, 255);
         }
 
         if (slot.item && slot.item->equipped) {
-            Gfx::pick(source, Text::fromChar('e'), texture->w);
+            Gfx::pickText(source, Text::fromChar('e'), font->w);
 
             target.x += configTileSize;
             target.w = configTileSize;
             target.h = configTileSize;
 
-            SDL_SetTextureColorMod(texture->mem, 128, 255, 128);
-            Draw::instance().draw(texture->mem, source, target);
-            SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
+            SDL_SetTextureColorMod(font->mem, 128, 255, 128);
+            Draw::instance().draw(font->mem, source, target);
+            SDL_SetTextureColorMod(font->mem, 255, 255, 255);
         }
 
         x += increment;

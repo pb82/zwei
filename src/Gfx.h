@@ -8,6 +8,8 @@
 #define Gfx_Window Gfx::instance().window
 #define Gfx_Tile_Size Gfx::instance().tileSize
 
+#define PIXELFONT_WIDTH 7
+#define PIXELFONT_HEIGHT 9
 
 // Shared SDL and GL structures
 class Gfx {
@@ -22,6 +24,8 @@ public:
     void operator=(Gfx const &) = delete;
 
     static void pick(SDL_Rect &source, int tileId, int textureWidth);
+
+    static void pickText(SDL_Rect &source, int tileId, int textureWidth);
 
     SDL_GLContext glContext;
     SDL_Renderer *renderer;

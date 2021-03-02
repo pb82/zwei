@@ -67,7 +67,6 @@ if(UNIX AND NOT APPLE)
             PRIVATE ${SDL2_INCLUDE_DIRS}
             PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS}
             PRIVATE ${SDL2_MIXER_INCLUDE_DIRS}
-            PRIVATE ${SDL2_TTF_INCLUDE_DIRS}
     )
 
     target_link_libraries(
@@ -75,6 +74,5 @@ if(UNIX AND NOT APPLE)
         PRIVATE ${SDL2_LIBRARY}
         PRIVATE ${SDL2_IMAGE_LIBRARIES}
         PRIVATE ${SDL2_MIXER_LIBRARIES}
-        PRIVATE ${SDL2_TTF_LIBRARIES}
     )
 endif()

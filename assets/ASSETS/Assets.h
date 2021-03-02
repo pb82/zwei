@@ -18,6 +18,7 @@ enum Asset {
     SOUND_PICKUP,
     MUSIC_1,
     MUSIC_GAMEOVER,
+    BITMAPFONT,
     UNDEFINED,
 };
 
@@ -31,16 +32,6 @@ public:
     int w;
     int h;
 };
-
-class SDLFont {
-public:
-    SDLFont(TTF_Font *font) : mem(font) {}
-
-    ~SDLFont();
-
-    TTF_Font *mem;
-};
-
 
 class Assets {
 public:
@@ -62,8 +53,6 @@ public:
 
     void *getFont(Asset id);
 
-    std::shared_ptr<SDLFont> getSDLFont(Asset id);
-
     std::shared_ptr<Texture> getTexture(Asset id);
 
 private:
@@ -71,7 +60,6 @@ private:
 
     std::unordered_map<Asset, std::shared_ptr<Texture>> textures;
     std::unordered_map<Asset, EmbeddedAsset *> fonts;
-    std::unordered_map<Asset, std::shared_ptr<SDLFont>> ttf_fonts;
 
 };
 

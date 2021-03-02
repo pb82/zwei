@@ -6,18 +6,8 @@ Texture::~Texture() {
     SDL_DestroyTexture(this->mem);
 }
 
-SDLFont::~SDLFont() {
-    TTF_CloseFont(this->mem);
-}
-
 void Assets::addFont(Asset id, EmbeddedAsset &asset) {
     fonts.emplace(id, &asset);
-
-    auto raw = asset.raw();
-    SDL_RWops *stream = SDL_RWFromConstMem(std::get<0>(raw), std::get<1>(raw));
-    TTF_Font *font = TTF_OpenFontRW(stream, 1, 32);
-    auto storage = std::make_shared<SDLFont>(font);
-    ttf_fonts.emplace(id, storage);
 }
 
 void Assets::addTexture(Asset id, EmbeddedAsset &asset) {
@@ -45,14 +35,6 @@ void *Assets::getFont(Asset id) {
 
     auto raw = font->second->raw();
     return std::get<0>(raw);
-}
-
-std::shared_ptr<SDLFont> Assets::getSDLFont(Asset id) {
-    auto font = ttf_fonts.find(id);
-    if (font == ttf_fonts.end()) {
-        return nullptr;
-    }
-    return font->second;
 }
 
 std::shared_ptr<Texture> Assets::getTexture(Asset id) {

@@ -218,6 +218,13 @@ void renderGame(tp frameStart) {
     Manager::instance().render(SKY);
     Manager::instance().render(FOREGROUND);
 
+    if (!Rt_Commands.empty()) {
+        Rt_Commands.front()->render();
+        if (Rt_Commands.front()->done()) {
+            Rt_Commands.pop();
+        }
+    }
+
     // Flush
     SDL_GL_SwapWindow(Gfx_Window);
     SDL_RenderPresent(Gfx_Renderer);
@@ -231,8 +238,12 @@ void renderGame(tp frameStart) {
     float dt = std::max(millis, delay);
 
     // Update entities
-    Manager::instance().update(dt);
-    Col::collide(dt);
+    if (!Rt_Commands.empty()) {
+        Rt_Commands.front()->update(dt);
+    } else {
+        Manager::instance().update(dt);
+        Col::collide(dt);
+    }
 }
 
 void loop() {
@@ -319,6 +330,9 @@ void loop() {
         Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
     }, nullptr);
 
+    Rt_Commands.push(std::make_shared<SpeechBubble>("Welcome to the Game!", false));
+    Rt_Commands.push(std::make_shared<SpeechBubble>("It has text bubbles now."));
+
     // Global alpha
     float ga = 255.0f;
     bool eventValid = false;
@@ -340,7 +354,13 @@ void loop() {
             }
             if (RT_Input.map(&event, &gk)) {
                 gk.source = &event;
-                if (gk.state == GK_PUSHED && gk.key == GK_START) {
+
+                if (!Rt_Commands.empty()) {
+                    Rt_Commands.front()->key(gk);
+                    // Accept release events, otherwise the button
+                    // stays pushed even when the command is cleared
+                    if (gk.state == GK_RELEASED) Manager::instance().key(gk);
+                } else if (gk.state == GK_PUSHED && gk.key == GK_START) {
                     menu->getComponent<Menu>()->reset();
                     Rt::instance().context.state.toggleMenu();
                 } else {
@@ -405,6 +425,7 @@ void initAssets() {
     // Assets::instance().addTexture(TILES, assets_Tiles);
     Assets::instance().addTexture(TILES, "assets/RAW/beach.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
+    Assets::instance().addTexture(BITMAPFONT, "assets/RAW/bitmapfont.png");
 }
 
 void initSdl() {
@@ -424,10 +445,6 @@ void initSdl() {
     }
 
     if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-        exit(1);
-    }
-
-    if (TTF_Init() != 0) {
         exit(1);
     }
 
