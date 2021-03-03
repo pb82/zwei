@@ -1,5 +1,4 @@
 #include <ASSETS/Assets.h>
-#include <SDL_ttf.h>
 
 #include "Hud.h"
 #include "Entity.h"
