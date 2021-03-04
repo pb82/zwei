@@ -11,6 +11,9 @@ struct Text {
 
     static void toSequence(std::string &s, std::vector<int> &target);
 
+private:
+
+    static int nextWhitespace(std::string &s, int from);
 };
 
 

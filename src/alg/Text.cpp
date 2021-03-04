@@ -1,20 +1,56 @@
 #include "Text.h"
 
+int Text::nextWhitespace(std::string &s, int from) {
+    int x = 0;
+    for (int i = from; i < s.length(); i++) {
+        char c = s.at(i);
+        if (c == 32 || c == 9 || c == 10) break;
+        x += 14;
+    }
+    return x;
+}
+
 void Text::toSequence(std::string &s, std::vector<int> &target) {
     target.clear();
+    int maxx = 800 - 28;
+    int maxy = 240 - 18;
     int x = 0;
+    int y = 0;
     int last;
-    for (char c: s) {
-        last = fromChar(c);
+
+    for (int i = 0; i < s.length(); i++) {
+        // Y wrap
+        if (y >= maxy) {
+            target.push_back(-2);
+            y = 0;
+        }
+
+        last = fromChar(s.at(i));
         target.push_back(last);
-        x += 14;
-        if (x >= (800 - 28)) {
+
+        // Whitespace. Check if we should line-break here
+        if (last == 0) {
+            int lookahead = nextWhitespace(s, i + 1);
+            if (x + lookahead > maxx) {
+                // Insert line break
+                target.push_back(-1);
+                x = 0;
+                y += 18;
+                continue;
+            }
+        }
+
+        // Word too long but no line-break was possible
+        if (x >= maxx) {
             if (last != 0) {
                 target.push_back(13);
             }
             target.push_back(-1);
+            y += 18;
             x = 0;
         }
+
+        x += 14;
     }
 }
 

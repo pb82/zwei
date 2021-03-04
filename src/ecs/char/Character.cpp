@@ -23,6 +23,9 @@ int Character::damage(int d, bool isProjectile) {
 
     if (d < 0) d = 0;
     this->hitpoints -= d;
+    if (this->hitpoints < 0) {
+        this->hitpoints = 0;
+    }
     return d;
 }
 

@@ -168,7 +168,7 @@ void Inventory::render() {
         }
 
         if (slot.item && slot.item->equipped) {
-            Gfx::pickText(source, Text::fromChar('e'), font->w);
+            Gfx::pickText(source, Text::fromChar('E'), font->w);
 
             target.x += configTileSize;
             target.w = configTileSize;

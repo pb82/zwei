@@ -21,9 +21,11 @@ public:
 
 class SpeechBubble : public Command {
 public:
-    SpeechBubble(const char *text, bool last = true);
+    SpeechBubble(std::vector<int> &sequence, bool last = true);
 
     ~SpeechBubble() {}
+
+    static void split(const char *text, std::vector<std::shared_ptr<SpeechBubble>> &target);
 
     void render() override;
 
@@ -33,17 +35,15 @@ public:
 
     bool done();
 
+    bool last = true;
+
 private:
 
     float time = 0.0f;
 
     bool tick = false;
 
-    bool last = true;
-
     bool read = false;
-
-    std::string text;
 
     std::vector<int> sequence;
 };

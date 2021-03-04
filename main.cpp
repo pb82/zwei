@@ -48,6 +48,8 @@
 #include "src/ecs/Bar.h"
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
+std::string game_over("game over");
+
 
 void placeTrigger(int x, int y, trigger_Fn enter, trigger_Fn exit) {
     auto trigger = Manager::instance().addEntity(FLOOR);
@@ -86,7 +88,7 @@ void placeKakta(int x, int y, Topology &top) {
     kakta->addComponent<Stats>(false);
     auto stats = kakta->getComponent<Stats>();
     stats->inventory.equip(std::make_shared<Stone>());
-    stats->character.setBase(10, 20, 10, 1);
+    stats->character.setBase(10, 200, 10, 1);
 
     auto transform = kakta->getComponent<Transform>();
     kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0});
@@ -160,6 +162,7 @@ void renderMenu(tp frameStart) {
 void renderGameOver(tp frameStart, float *darkness) {
     auto t1 = Assets::instance().getTexture(TILES);
 
+    SDL_SetRenderDrawBlendMode(Gfx_Renderer, SDL_BLENDMODE_BLEND);
     SDL_SetTextureColorMod(t1->mem, 255, *darkness, *darkness);
     SDL_SetTextureAlphaMod(t1->mem, *darkness);
 
@@ -170,18 +173,17 @@ void renderGameOver(tp frameStart, float *darkness) {
     Manager::instance().render(SKY);
     Manager::instance().render(FOREGROUND);
 
-    auto texture = Assets::instance().getTexture(SPRITES);
-    std::string s("game over");
+    auto texture = Assets::instance().getTexture(BITMAPFONT);
 
     SDL_Rect target;
-    target.x = (configWindowWidth / 2) - ((s.length() * 24) / 2);
+    target.x = (configWindowWidth / 2) - ((game_over.length() * 24) / 2);
     target.y = (configWindowHeight / 2) - 12;
     target.w = 32;
     target.h = 32;
 
-    for (const char c : s) {
+    for (const char c : game_over) {
         SDL_Rect source;
-        Gfx::pick(source, Text::fromChar(c), texture->w);
+        Gfx::pickText(source, Text::fromChar(c), texture->w);
         Draw::instance().draw(texture->mem, source, target);
         target.x += 24;
     }
@@ -330,8 +332,14 @@ void loop() {
         Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
     }, nullptr);
 
-    Rt_Commands.push(std::make_shared<SpeechBubble>("Welcome to the Game!", false));
-    Rt_Commands.push(std::make_shared<SpeechBubble>("It has text bubbles now."));
+
+    const char *text = "Welcome!";
+    std::vector<std::shared_ptr<SpeechBubble>> bubbles;
+    SpeechBubble::split(text, bubbles);
+
+    for (auto &bubble : bubbles) {
+        Rt_Commands.push(bubble);
+    }
 
     // Global alpha
     float ga = 255.0f;

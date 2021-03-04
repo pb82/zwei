@@ -6,7 +6,28 @@
 #include "../config.h"
 #include "alg/Text.h"
 
-SpeechBubble::SpeechBubble(const char *text, bool last) : text(text), last(last) {}
+SpeechBubble::SpeechBubble(std::vector<int> &sequence, bool last) : sequence(sequence), last(last) {}
+
+void SpeechBubble::split(const char *text, std::vector<std::shared_ptr<SpeechBubble>> &target) {
+    std::string message = text;
+    std::vector<int> sequence;
+    Text::toSequence(message, sequence);
+
+    std::vector<int> m;
+    for (int i = 0; i < sequence.size(); i++) {
+        int j = sequence.at(i);
+        if (j == -2) {
+            target.emplace_back(std::make_shared<SpeechBubble>(m, false));
+            m.clear();
+            continue;
+        }
+        m.push_back(j);
+    }
+
+    if (!m.empty()) {
+        target.emplace_back(std::make_shared<SpeechBubble>(m, true));
+    }
+}
 
 void SpeechBubble::key(GameKeyEvent &ev) {
     if (!ev.valid) return;
@@ -37,9 +58,6 @@ void SpeechBubble::render() {
     background.h = 240;
 
     Draw::instance().box(color_Bubble, background);
-
-    sequence.clear();
-    Text::toSequence(text, sequence);
 
     SDL_Rect letter;
     letter.x = background.x + 4;
