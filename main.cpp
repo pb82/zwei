@@ -324,7 +324,6 @@ void loop() {
     placeKakta(5, 5, RT_Context.getTopology());
     placeKakta(2, 8, RT_Context.getTopology());
 
-
     placeTrigger(11, 8, [](float angle) {
         Manager::instance().setRenderHint(HINT_HIDE_ROOF_LAYER);
     }, nullptr);

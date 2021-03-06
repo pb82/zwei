@@ -18,15 +18,15 @@ St::St()
         : musicVolume(50),
           effectsVolume(50),
           selectedWindowSize(0) {
-    supportedSizes.push_back({800, 480});
-    supportedSizes.push_back({800, 600});
-    supportedSizes.push_back({1024, 640});
-    supportedSizes.push_back({1024, 800});
-    supportedSizes.push_back({1280, 640});
-    supportedSizes.push_back({1280, 800});
-    supportedSizes.push_back({1280, 1024});
-    supportedSizes.push_back({1366, 768});
-    supportedSizes.push_back({1920, 1080});
+    supportedSizes.emplace_back(800, 480);
+    supportedSizes.emplace_back(800, 600);
+    supportedSizes.emplace_back(1024, 640);
+    supportedSizes.emplace_back(1024, 800);
+    supportedSizes.emplace_back(1280, 640);
+    supportedSizes.emplace_back(1280, 800);
+    supportedSizes.emplace_back(1280, 1024);
+    supportedSizes.emplace_back(1366, 768);
+    supportedSizes.emplace_back(1920, 1080);
 
     supportedFps.push_back(60.0f);
     supportedFps.push_back(30.0f);

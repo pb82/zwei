@@ -97,9 +97,9 @@ public:
 
         for (int x = (int) x1; x <= maxX; x++) {
             if (steep) {
-                points.push_back({(float) y, (float) x, 0});
+                points.emplace_back((float) y, (float) x, 0);
             } else {
-                points.push_back({(float) x, (float) y, 0});
+                points.emplace_back((float) x, (float) y, 0);
             }
 
             error -= dy;

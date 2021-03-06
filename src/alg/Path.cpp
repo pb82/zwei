@@ -74,10 +74,10 @@ Position Topology::nearestAccessible(Position &p, bool includeOwn) {
 }
 
 void Topology::neighbours(int x, int y, std::vector<Position> &n) const {
-    if (accessible(x - 1, y)) n.push_back({(float) x - 1, (float) y});
-    if (accessible(x + 1, y)) n.push_back({(float) x + 1, (float) y});
-    if (accessible(x, y - 1)) n.push_back({(float) x, (float) y - 1});
-    if (accessible(x, y + 1)) n.push_back({(float) x, (float) y + 1});
+    if (accessible(x - 1, y)) n.emplace_back((float) x - 1, (float) y);
+    if (accessible(x + 1, y)) n.emplace_back((float) x + 1, (float) y);
+    if (accessible(x, y - 1)) n.emplace_back((float) x, (float) y - 1);
+    if (accessible(x, y + 1)) n.emplace_back((float) x, (float) y + 1);
 }
 
 Path::Path(const Topology &t) : topology(t) {}

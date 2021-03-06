@@ -43,7 +43,7 @@ void Acceleration::applyForce(const Force &force) {
 
 void Acceleration::applyForce(float angle, float power, float decay, float weight) {
     if (forces.size() >= 5) return;
-    forces.push_back(Force(angle, power, decay, weight));
+    forces.emplace_back(angle, power, decay, weight);
 }
 
 void Acceleration::accelerate() {
