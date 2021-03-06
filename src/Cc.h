@@ -41,9 +41,13 @@ private:
 
     float time = 0.0f;
 
+    float lastIndex = 0.0f;
+
     bool tick = false;
 
     bool read = false;
+
+    int index = 0;
 
     std::vector<int> sequence;
 };

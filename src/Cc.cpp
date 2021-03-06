@@ -32,15 +32,25 @@ void SpeechBubble::key(GameKeyEvent &ev) {
     if (!ev.valid) return;
     if (ev.state != GK_PUSHED) return;
     if (ev.key == GK_A) {
-        this->read = true;
+        if (this->index < this->sequence.size()) {
+            this->index = this->sequence.size();
+        } else {
+            this->read = true;
+        }
     }
 }
 
 void SpeechBubble::update(float dt) {
     time += dt;
+    if (time - lastIndex > 30.0f) {
+        if (index < sequence.size()) index++;
+        lastIndex = time;
+    }
+
     if (time >= 500) {
         tick = !tick;
         time = 0;
+        lastIndex = 0;
     }
 }
 
@@ -67,8 +77,9 @@ void SpeechBubble::render() {
     SDL_Rect source;
     auto font = Assets::instance().getTexture(BITMAPFONT);
 
-    for (int c: sequence) {
+    for (int i = 0; i < index; i++) {
         // Newline
+        char c = sequence.at(i);
         if (c == -1) {
             letter.y += 18;
             letter.x = background.x + 4;
