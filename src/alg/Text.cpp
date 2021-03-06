@@ -1,31 +1,36 @@
 #include "Text.h"
 
-int Text::nextWhitespace(std::string &s, int from) {
+#include <cstring>
+
+int Text::nextWhitespace(const char *s, int from) {
     int x = 0;
-    for (int i = from; i < s.length(); i++) {
-        char c = s.at(i);
+    int len = std::strlen(s);
+    for (int i = from; i < len; i++) {
+        char c = s[i];
         if (c == 32 || c == 9 || c == 10) break;
         x += 14;
     }
     return x;
 }
 
-void Text::toSequence(std::string &s, std::vector<int> &target) {
+void Text::toSequence(const char *s, std::vector<int> &target) {
     target.clear();
     int maxx = 800 - 28;
     int maxy = 240 - 18;
     int x = 0;
     int y = 0;
     int last;
+    int len = std::strlen(s);
 
-    for (int i = 0; i < s.length(); i++) {
+
+    for (int i = 0; i < len; i++) {
         // Y wrap
+        last = fromChar(s[i]);
         if (y >= maxy) {
             target.push_back(-2);
             y = 0;
         }
 
-        last = fromChar(s.at(i));
         target.push_back(last);
 
         // Whitespace. Check if we should line-break here

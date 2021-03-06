@@ -332,7 +332,15 @@ void loop() {
     }, nullptr);
 
 
-    const char *text = "Welcome!";
+    const char *text = "\n"
+                       "\n"
+                       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque sem vel mauris semper cursus. Vivamus dictum quis mauris id molestie. Cras eu elementum libero. Sed in nisl et tortor tempus vehicula. Suspendisse non bibendum felis, vitae molestie augue. Fusce vel accumsan libero. Mauris malesuada non leo eu vulputate. Aenean elit eros, semper eget tincidunt vitae, feugiat sodales augue. Integer vel justo dignissim, suscipit erat ut, tristique ipsum. Morbi vestibulum elit at urna commodo gravida. Fusce in velit leo. Morbi tempor placerat nisl vel lobortis.\n"
+                       "\n"
+                       "Aenean quis semper nunc. Morbi at odio magna. In vel augue congue, efficitur tellus sit amet, ultrices erat. Quisque sit amet est libero. Suspendisse sem quam, egestas ac dolor at, tincidunt gravida odio. Nulla eget convallis purus, et bibendum leo. Ut hendrerit posuere volutpat. Suspendisse convallis libero vel diam hendrerit tincidunt. Nam sed orci hendrerit, viverra lectus sit amet, tristique nunc. Nunc et dui eleifend, interdum magna gravida, efficitur eros. Integer vel nunc sed diam tincidunt eleifend. Nam at lacus orci. Suspendisse potenti. Aenean posuere, mi nec tristique molestie, tortor orci tempor ligula, eget aliquet justo nisl et ex.\n"
+                       "\n"
+                       "Maecenas porta dolor lorem, eget consequat magna imperdiet aliquam. Fusce ipsum enim, euismod vel enim vel, mollis sodales sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tortor arcu, porttitor ac feugiat quis, rhoncus sit amet sapien. Vestibulum accumsan magna at ultricies lacinia. Donec tincidunt est sit amet ex semper imperdiet. Aenean sit amet hendrerit ex. Aliquam erat volutpat. Integer lorem magna, porttitor vitae massa vel, convallis mollis libero.\n"
+                       "\n"
+                       "Sed et cursus neque. Aenean a sapien euismod, tempus sapien id, efficitur turpis. Praesent aliquam augue sit amet enim elementum, at vestibulum diam pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec eget purus et sapien feugiat consectetur vitae nec mi. Orci varius natoque penatibus nam. ";
     std::vector<std::shared_ptr<SpeechBubble>> bubbles;
     SpeechBubble::split(text, bubbles);
 

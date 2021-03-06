@@ -9,11 +9,11 @@ struct Text {
 
     static int fromInt(int c);
 
-    static void toSequence(std::string &s, std::vector<int> &target);
+    static void toSequence(const char *s, std::vector<int> &target);
 
 private:
 
-    static int nextWhitespace(std::string &s, int from);
+    static int nextWhitespace(const char *s, int from);
 };
 
 
