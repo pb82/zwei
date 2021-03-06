@@ -8,6 +8,10 @@
 
 SpeechBubble::SpeechBubble(std::vector<int> &sequence, bool last) : sequence(sequence), last(last) {}
 
+SpeechBubble::SpeechBubble(const char *text, bool last) : last(last) {
+    Text::toSequence(text, sequence);
+}
+
 void SpeechBubble::split(const char *text, std::vector<std::shared_ptr<SpeechBubble>> &target) {
     std::vector<int> sequence;
     Text::toSequence(text, sequence);

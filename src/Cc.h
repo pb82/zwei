@@ -23,6 +23,8 @@ class SpeechBubble : public Command {
 public:
     SpeechBubble(std::vector<int> &sequence, bool last = true);
 
+    SpeechBubble(const char *text, bool last = true);
+
     ~SpeechBubble() {}
 
     static void split(const char *text, std::vector<std::shared_ptr<SpeechBubble>> &target);

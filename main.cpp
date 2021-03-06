@@ -317,6 +317,7 @@ void loop() {
     auto hud = Manager::instance().addEntity(FOREGROUND);
     hud->addComponent<Hud>();
 
+    Rt_Commands.push(std::make_shared<SpeechBubble>("Hello", true));
 
     placeItem(7, 4, STICK);
     placeItem(8, 24, BOW);
@@ -330,15 +331,6 @@ void loop() {
     placeTrigger(11, 10, [](float angle) {
         Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
     }, nullptr);
-
-
-    const char *text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque sem vel mauris semper cursus. Vivamus dictum quis mauris id molestie. Cras eu elementum libero. Sed in nisl et tortor tempus vehicula. Suspendisse non bibendum felis, vitae molestie augue. Fusce vel accumsan libero. Mauris malesuada non leo eu vulputate. Aenean elit eros, semper eget tincidunt vitae, feugiat sodales augue. Integer vel justo dignissim, suscipit erat ut, tristique ipsum. Morbi vestibulum elit at urna commodo gravida. Fusce in velit leo. Morbi tempor placerat nisl vel lobortis.  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed scelerisque sem vel mauris semper cursus. Vivamus dictum quis mauris id molestie. Cras eu elementum libero. Sed in nisl et tortor tempus vehicula. Suspendisse non bibendum felis, vitae molestie augue. Fusce vel accumsan libero. Mauris malesuada non leo eu vulputate. Aenean elit eros, semper eget tincidunt vitae, feugiat sodales augue. Integer vel justo dignissim, suscipit erat ut, tristique ipsum. Morbi vestibulum elit at urna commodo gravida. Fusce in velit leo. Morbi tempor placerat nisl vel lobortis.";
-    std::vector<std::shared_ptr<SpeechBubble>> bubbles;
-    SpeechBubble::split(text, bubbles);
-
-    for (auto &bubble : bubbles) {
-        Rt_Commands.push(bubble);
-    }
 
     // Global alpha
     float ga = 255.0f;
