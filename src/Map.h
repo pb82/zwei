@@ -74,6 +74,8 @@ public:
 
     void getSize(LayerType layer, int *w, int *h);
 
+    void clear();
+
 private:
     std::string baseDir;
 

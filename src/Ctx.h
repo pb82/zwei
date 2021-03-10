@@ -32,7 +32,11 @@ class Ctx {
 public:
     void setPlayer(std::shared_ptr<Entity> player);
 
+    void setMenu(std::shared_ptr<Entity> menu);
+
     std::shared_ptr<Entity> getPlayer();
+
+    std::shared_ptr<Entity> getMenu();
 
     Topology &getTopology() {
         return topology;
@@ -41,7 +45,9 @@ public:
     GameStateMachine state;
 
 private:
-    std::shared_ptr<Entity> player;
+    std::shared_ptr<Entity> player = nullptr;
+
+    std::shared_ptr<Entity> menu = nullptr;
 
     Topology topology;
 

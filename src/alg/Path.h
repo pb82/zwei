@@ -35,6 +35,8 @@ public:
     // Unregister mobile barrier
     void unregisterMobile(Position *position);
 
+    void clear();
+
 private:
 
     std::vector<bool> topology;

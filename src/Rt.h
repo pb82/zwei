@@ -7,6 +7,7 @@
 #include "Ctx.h"
 #include "in/Input.h"
 #include "Cc.h"
+#include "Map.h"
 
 #define RT_Running Rt::instance().running
 #define RT_Stop Rt::instance().stop
@@ -14,6 +15,10 @@
 #define RT_Context Rt::instance().context
 #define RT_Input Rt::instance().in
 #define Rt_Commands Rt::instance().commands
+#define Rt_Map Rt::instance().map
+#define RT_Topology RT_Context.getTopology()
+#define RT_Player RT_Context.getPlayer()
+#define RT_Menu RT_Context.getMenu()
 
 // Shared runtime state
 class Rt {
@@ -31,6 +36,7 @@ public:
     Camera camera;
     Ctx context;
     Input in;
+    Map map;
 
     std::queue<std::shared_ptr<Command>> commands;
 
@@ -39,7 +45,7 @@ public:
     }
 
 private:
-    Rt() : running(true) {}
+    Rt() : running(true), map("./assets/RAW") {}
 };
 
 #endif

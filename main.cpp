@@ -47,6 +47,8 @@
 #include "src/St.h"
 #include "src/ecs/Bar.h"
 
+#include "src/Api.h"
+
 float targetMillis = (1 / St::instance().getFps()) * 1000;
 std::string game_over("game over");
 
@@ -256,85 +258,14 @@ void loop() {
         // return;
     }
 
-    auto menu = Manager::instance().addEntity(UI);
-    menu->addComponent<Menu>();
-
-    Player::instance().playMusic(MUSIC_1);
-
-    Map m("./assets/RAW");
-    m.load("beach.json");
-
-    // Set map boundaries for the camera
-    int mapSizeX, mapSizeY;
-    m.getSize(FLOOR, &mapSizeX, &mapSizeY);
-    RT_Camera.setMapSize(mapSizeX, mapSizeY);
-
-    // Topology topology(mapSizeX, mapSizeY);
-    RT_Context.getTopology().make(mapSizeX, mapSizeY);
-    m.topology(RT_Context.getTopology().data());
-
-    // Insert some sprite
-    auto sprite = Manager::instance().addEntity(OBJECTS);
-    RT_Context.setPlayer(sprite);
-
-    sprite->addComponent<Transform>(7, 28);
-    sprite->addComponent<Sprite>(SPRITES);
-    sprite->addComponent<Animation>(200, true);
-    sprite->addComponent<Acceleration>(3.0f, VM_25_PI);
-    sprite->addComponent<Controller>();
-    sprite->addComponent<Attack>();
-    sprite->addComponent<Analytics>();
-    sprite->addComponent<Stats>(true);
-
-    sprite->getComponent<Animation>()->addAnimationFrame(48, 0, 32, 16);
-    sprite->getComponent<Animation>()->addAnimationFrame(49, 1, 33, 17);
-    sprite->getComponent<Animation>()->addAnimationFrame(50, 2, 34, 18);
-
-    sprite->getComponent<Animation>()->addAttackFrame(51, 3, 35, 19, 100);
-    sprite->getComponent<Animation>()->addAttackFrame(52, 4, 36, 20, 100);
-    sprite->getComponent<Animation>()->addAttackFrame(53, 5, 37, 21, 100);
-
-    sprite->getComponent<Animation>()->addAttackFrame(54, 6, 38, 22, 100, true);
-    sprite->getComponent<Animation>()->addAttackFrame(55, 7, 39, 23, 100, true);
-    sprite->getComponent<Animation>()->addAttackFrame(56, 8, 40, 24, 100, true);
-
-    sprite->getComponent<Animation>()->stop();
-    // Track the sprite
-    auto transform = sprite->getComponent<Transform>();
-    RT_Camera.track(&transform->p);
-
-    // Make the sprite collision aware
-    sprite->addComponent<Collider>(transform, CT_PLAYER,
-                                   Padding{.3, .3, 0.6, 0});
-
-    auto tweakUi = Manager::instance().addEntity(UI);
-    // tweakUi->addComponent<Tweak>(sprite);
-
-    auto stats = sprite->getComponent<Stats>();
-    stats->character.setBase(30, 10, 1, 1);
-
-
-    auto hud = Manager::instance().addEntity(FOREGROUND);
-    hud->addComponent<Hud>();
-
-    Rt_Commands.push(std::make_shared<SpeechBubble>("Hello", true));
-
-    placeItem(7, 4, STICK);
-    placeItem(8, 24, BOW);
-
-    placeKakta(5, 5, RT_Context.getTopology());
-    placeKakta(2, 8, RT_Context.getTopology());
-
-    placeTrigger(11, 8, [](float angle) {
-        Manager::instance().setRenderHint(HINT_HIDE_ROOF_LAYER);
-    }, nullptr);
-    placeTrigger(11, 10, [](float angle) {
-        Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
-    }, nullptr);
+    Api::init();
+    Api::setPlayerSpeed(3);
+    Api::setPlayerPosition(7, 28);
+    Api::setPlayerStats(20, 10, 10, 10);
+    Api::loadMap("beach.json");
 
     // Global alpha
     float ga = 255.0f;
-    bool eventValid = false;
 
     while (RT_Running) {
         auto frameStart = std::chrono::system_clock::now();
@@ -360,7 +291,7 @@ void loop() {
                     // stays pushed even when the command is cleared
                     if (gk.state == GK_RELEASED) Manager::instance().key(gk);
                 } else if (gk.state == GK_PUSHED && gk.key == GK_START) {
-                    menu->getComponent<Menu>()->reset();
+                    RT_Menu->getComponent<Menu>()->reset();
                     Rt::instance().context.state.toggleMenu();
                 } else {
                     if (RT_Context.state.currentState() == MainMenu) {

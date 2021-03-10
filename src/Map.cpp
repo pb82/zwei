@@ -263,3 +263,7 @@ void Map::topology(std::vector<bool> &t) {
     auto layer = layers.at(WALLS);
     layer->topology(t);
 }
+
+void Map::clear() {
+    this->layers.clear();
+}

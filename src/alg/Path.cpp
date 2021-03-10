@@ -10,6 +10,11 @@ void Topology::make(int w, int h) {
     this->h = h;
 }
 
+void Topology::clear() {
+    topology.clear();
+    mobiles.clear();
+}
+
 std::vector<bool> &Topology::data() {
     return this->topology;
 }
