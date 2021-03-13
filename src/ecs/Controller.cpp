@@ -4,6 +4,8 @@
 #include "Acceleration.h"
 #include "Animation.h"
 #include "Attack.h"
+#include "Transform.h"
+#include "Interactible.h"
 
 #define P_UP (activeKeys[GK_UP] == true)
 #define P_DOWN (activeKeys[GK_DOWN] == true)
@@ -89,6 +91,38 @@ void Controller::drop() {
 }
 
 void Controller::use() {
+    // Interact?
+    auto transform = this->parent.getComponent<Transform>();
+    auto acceleration = this->parent.getComponent<Acceleration>();
+
+    Position p;
+    transform->p.nearestTile(p);
+
+    switch (acceleration->getDirection()) {
+        case N:
+            p.y -= 1;
+            break;
+        case S:
+            p.y += 1;
+            break;
+        case W:
+            p.x -= 1;
+            break;
+        case E:
+            p.x += 1;
+            break;
+        case NONE:
+        default:
+            break;
+    }
+
+    auto interactible = Manager::instance().getInteractible(p.x, p.y);
+    if (interactible) {
+        resetKeys();
+        interactible->interact();
+        return;
+    }
+
     if (parent.hasComponent<Stats>()) {
         auto stats = parent.getComponent<Stats>();
         stats->inventory.use();

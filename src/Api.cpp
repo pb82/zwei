@@ -8,8 +8,11 @@
 #include "ecs/Acceleration.h"
 #include "ecs/Controller.h"
 #include "ecs/Attack.h"
+#include "ecs/Interactible.h"
+#include "ecs/Collider.h"
 #include "Col.h"
 #include "ecs/Hud.h"
+#include "ecs/Trigger.h"
 
 namespace Api {
 
@@ -121,4 +124,51 @@ namespace Api {
         RT_Camera.setMapSize(0, 0);
     }
 
+    void setRoofHideTrigger(int entryX, int entryY) {
+        auto trigger = Manager::instance().addEntity(FLOOR);
+        trigger->addComponent<Transform>(entryX, entryY);
+
+        auto transform = trigger->getComponent<Transform>();
+        trigger->addComponent<Collider>(transform, CT_TRIGGER);
+        trigger->addComponent<Trigger>();
+
+        auto handler = trigger->getComponent<Trigger>();
+        handler->onEnter([](float) {
+            Manager::instance().setRenderHint(HINT_HIDE_ROOF_LAYER);
+        });
+        handler->onExit(nullptr);
+    }
+
+    void setRoofShowTrigger(int entryX, int entryY) {
+        auto trigger = Manager::instance().addEntity(FLOOR);
+        trigger->addComponent<Transform>(entryX, entryY);
+
+        auto transform = trigger->getComponent<Transform>();
+        trigger->addComponent<Collider>(transform, CT_TRIGGER);
+        trigger->addComponent<Trigger>();
+
+        auto handler = trigger->getComponent<Trigger>();
+        handler->onEnter([](float) {
+            Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
+        });
+        handler->onExit(nullptr);
+    }
+
+    void setDoor(int x, int y) {
+        Position p(x, y);
+        auto wall = Manager::instance().getWall(p);
+        if (wall) {
+            wall->addComponent<Interactible>();
+            auto action = wall->getComponent<Interactible>();
+            action->onInteract([x, y](Entity &parent) {
+                Position p(x, y);
+                bool accessible = RT_Topology.flipBarrier(p);
+                if (accessible) {
+                    parent.removeComponent<Collider>();
+                } else {
+
+                }
+            });
+        }
+    }
 }

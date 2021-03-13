@@ -1,6 +1,7 @@
 #ifndef ZWEI_API_H
 #define ZWEI_API_H
 
+
 namespace Api {
     // Init
     void init();
@@ -22,6 +23,12 @@ namespace Api {
     bool loadMap(const char *file);
 
     void unloadMap();
+
+    void setRoofHideTrigger(int entryX, int entryY);
+
+    void setRoofShowTrigger(int entryX, int entryY);
+
+    void setDoor(int x, int y);
 
 }
 

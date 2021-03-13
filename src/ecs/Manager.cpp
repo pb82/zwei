@@ -2,6 +2,7 @@
 
 #include "Collider.h"
 #include "Group.h"
+#include "Interactible.h"
 
 Manager::Manager() {
     entities.emplace(LayerType::FOREGROUND, std::vector<std::shared_ptr<Entity>>());
@@ -119,6 +120,30 @@ void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
     }
 }
 
+std::shared_ptr<Interactible> Manager::getInteractible(int x, int y) {
+    for (auto &entity : entities.at(WALLS)) {
+        if (entity->hasComponent<Interactible>() && entity->hasComponent<Transform>()) {
+            auto transform = entity->getComponent<Transform>();
+            Position p;
+            transform->p.nearestTile(p);
+            if (p.x == x && p.y == y) {
+                return entity->getComponent<Interactible>();
+            }
+        }
+    }
+    for (auto &entity : entities.at(OBJECTS)) {
+        if (entity->hasComponent<Interactible>() && entity->hasComponent<Transform>()) {
+            auto transform = entity->getComponent<Transform>();
+            Position p;
+            transform->p.nearestTile(p);
+            if (p.x == x && p.y == y) {
+                return entity->getComponent<Interactible>();
+            }
+        }
+    }
+    return nullptr;
+}
+
 bool Manager::hasEntities(Position p, LayerType layer) {
     for (auto &entity : entities.at(layer)) {
         if (entity->hasComponent<Transform>()) {
@@ -129,4 +154,16 @@ bool Manager::hasEntities(Position p, LayerType layer) {
         }
     }
     return false;
+}
+
+std::shared_ptr<Entity> Manager::getWall(Position &p) {
+    for (auto &entity : entities.at(WALLS)) {
+        if (entity->hasComponent<Transform>()) {
+            auto t = entity->getComponent<Transform>();
+            if (t->p == p) {
+                return entity;
+            }
+        }
+    }
+    return nullptr;
 }

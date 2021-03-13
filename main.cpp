@@ -264,6 +264,10 @@ void loop() {
     Api::setPlayerStats(20, 10, 10, 10);
     Api::loadMap("beach.json");
 
+    Api::setRoofHideTrigger(11, 8);
+    Api::setRoofShowTrigger(11, 10);
+    Api::setDoor(10, 9);
+
     // Global alpha
     float ga = 255.0f;
 

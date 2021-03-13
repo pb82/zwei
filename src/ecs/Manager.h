@@ -13,6 +13,8 @@ const uint8_t HINT_HIDE_ROOF_LAYER = 1 << 0;
 
 class Collider;
 
+class Interactible;
+
 struct QueueEntity {
     std::shared_ptr<Entity> entity;
     LayerType layer;
@@ -33,10 +35,14 @@ public:
 
     void enqueue(std::shared_ptr<Entity> entity, LayerType layer);
 
+    std::shared_ptr<Entity> getWall(Position &p);
+
     // add new entities and garbage collect disabled ones
     void collect();
 
     void getColliders(std::vector<std::shared_ptr<Collider>> &target);
+
+    std::shared_ptr<Interactible> getInteractible(int x, int y);
 
     void update(float dt);
 

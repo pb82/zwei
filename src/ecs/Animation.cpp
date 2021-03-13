@@ -42,6 +42,7 @@ void Animation::addAttackFrame(int n, int s, int e, int w, float duration, bool 
     f.frames[S] = s;
     f.frames[E] = e;
     f.frames[W] = w;
+
     f.duration = duration;
     if (projectile) {
         projectileAttackFrames.push_back(f);
@@ -57,6 +58,12 @@ void Animation::queueAttackFrames() {
 }
 
 void Animation::queueProjectileFrames() {
+    for (auto &frame : projectileAttackFrames) {
+        mixinFrames.push(frame);
+    }
+}
+
+void Animation::queueStateFramesForward() {
     for (auto &frame : projectileAttackFrames) {
         mixinFrames.push(frame);
     }

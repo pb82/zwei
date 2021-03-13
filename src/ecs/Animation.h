@@ -33,6 +33,8 @@ public:
 
     void queueProjectileFrames();
 
+    void queueStateFramesForward();
+
     int getCurrentFrame(Direction d = N);
 
     void start();
@@ -64,6 +66,8 @@ private:
     std::vector<MixinFrame> attackFrames;
 
     std::vector<MixinFrame> projectileAttackFrames;
+
+    std::vector<MixinFrame> stateFrames;
 
 };
 

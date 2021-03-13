@@ -35,6 +35,8 @@ public:
     // Unregister mobile barrier
     void unregisterMobile(Position *position);
 
+    bool flipBarrier(Position &p);
+
     void clear();
 
 private:
