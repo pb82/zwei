@@ -16,9 +16,9 @@ class Tileset {
 public:
     void load(const char *file);
 
-    bool getFrames(int tileId, std::vector<int> &frames);
+    bool getFrames(int tileId, const char *key, std::vector<int> &frames);
 
-    bool getSpeed(int tileId, int *speed);
+    bool getInt(int tileId, const char *key, int *speed);
 
     bool getPadding(int tileId, Padding &p);
 

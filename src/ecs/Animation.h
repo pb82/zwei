@@ -9,6 +9,36 @@
 #include "../alg/Direction.h"
 
 struct MixinFrame {
+    MixinFrame(int n) {
+        frames[N] = n;
+        frames[S] = n;
+        frames[E] = n;
+        frames[W] = n;
+    }
+
+    MixinFrame(int n, float speed) {
+        frames[N] = n;
+        frames[S] = n;
+        frames[E] = n;
+        frames[W] = n;
+        duration = speed;
+    }
+
+    MixinFrame(int n, int s, int e, int w) {
+        frames[N] = n;
+        frames[S] = s;
+        frames[E] = e;
+        frames[W] = w;
+    }
+
+    MixinFrame(int n, int s, int e, int w, float speed) {
+        frames[N] = n;
+        frames[S] = s;
+        frames[E] = e;
+        frames[W] = w;
+        duration = speed;
+    }
+
     std::unordered_map<Direction, int> frames;
     float duration = 0.0f;
 };
@@ -27,6 +57,8 @@ public:
 
     void addMixinFrame(int n, int s, int e, int w);
 
+    void addStateFrame(int n, int speed);
+
     void addAttackFrame(int n, int s, int e, int w, float duration, bool projectile = false);
 
     void queueAttackFrames();
@@ -34,6 +66,8 @@ public:
     void queueProjectileFrames();
 
     void queueStateFramesForward();
+
+    void queueStateFramesBackward();
 
     int getCurrentFrame(Direction d = N);
 

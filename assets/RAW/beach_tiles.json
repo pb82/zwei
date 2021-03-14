@@ -212,6 +212,20 @@
                 }]
         }, 
         {
+         "id":122,
+         "properties":[
+                {
+                 "name":"interactAnimation",
+                 "type":"string",
+                 "value":"[122,123,124]"
+                }, 
+                {
+                 "name":"interactSpeed",
+                 "type":"int",
+                 "value":100
+                }]
+        }, 
+        {
          "id":130,
          "properties":[
                 {

@@ -27,28 +27,19 @@ void Animation::addMixinFrame(int a) {
 }
 
 void Animation::addMixinFrame(int n, int s, int e, int w) {
-    auto f = MixinFrame();
-    f.frames[N] = n;
-    f.frames[S] = s;
-    f.frames[E] = e;
-    f.frames[W] = w;
-    f.duration = 100;
-    mixinFrames.push(f);
+    mixinFrames.emplace(n, s, e, w, 100);
 }
 
 void Animation::addAttackFrame(int n, int s, int e, int w, float duration, bool projectile) {
-    auto f = MixinFrame();
-    f.frames[N] = n;
-    f.frames[S] = s;
-    f.frames[E] = e;
-    f.frames[W] = w;
-
-    f.duration = duration;
     if (projectile) {
-        projectileAttackFrames.push_back(f);
+        projectileAttackFrames.emplace_back(n, s, e, w, duration);
     } else {
-        attackFrames.push_back(f);
+        attackFrames.emplace_back(n, s, e, w, duration);
     }
+}
+
+void Animation::addStateFrame(int n, int speed) {
+    stateFrames.emplace_back(n, speed);
 }
 
 void Animation::queueAttackFrames() {
@@ -64,9 +55,47 @@ void Animation::queueProjectileFrames() {
 }
 
 void Animation::queueStateFramesForward() {
-    for (auto &frame : projectileAttackFrames) {
+    int lastN = 0;
+    int lastS = 0;
+    int lastW = 0;
+    int lastE = 0;
+    for (int i = 1; i <= stateFrames.size() - 1; i++) {
+        auto frame = this->stateFrames.at(i);
         mixinFrames.push(frame);
+        lastN = frame.frames[N];
+        lastS = frame.frames[S];
+        lastE = frame.frames[E];
+        lastW = frame.frames[W];
     }
+
+    // Set final frame
+    int size = this->frames.at(N).size() - 1;
+    this->frames.at(N).at(size) = lastN;
+    this->frames.at(S).at(size) = lastS;
+    this->frames.at(E).at(size) = lastE;
+    this->frames.at(W).at(size) = lastW;
+}
+
+void Animation::queueStateFramesBackward() {
+    int lastN = 0;
+    int lastS = 0;
+    int lastW = 0;
+    int lastE = 0;
+    for (int i = this->stateFrames.size() - 2; i >= 0; i--) {
+        auto frame = this->stateFrames.at(i);
+        mixinFrames.push(frame);
+        lastN = frame.frames[N];
+        lastS = frame.frames[S];
+        lastE = frame.frames[E];
+        lastW = frame.frames[W];
+    }
+
+    // Set final frame
+    int size = this->frames.at(N).size() - 1;
+    this->frames.at(N).at(size) = lastN;
+    this->frames.at(S).at(size) = lastS;
+    this->frames.at(E).at(size) = lastE;
+    this->frames.at(W).at(size) = lastW;
 }
 
 int Animation::getCurrentFrame(Direction d) {

@@ -50,6 +50,8 @@ public:
 
     bool checked;
 
+    bool suspended = false;
+
     Padding padding;
 
 private:

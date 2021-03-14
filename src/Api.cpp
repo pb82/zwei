@@ -163,10 +163,11 @@ namespace Api {
             action->onInteract([x, y](Entity &parent) {
                 Position p(x, y);
                 bool accessible = RT_Topology.flipBarrier(p);
+                parent.getComponent<Collider>()->suspended = accessible;
                 if (accessible) {
-                    parent.removeComponent<Collider>();
+                    parent.getComponent<Animation>()->queueStateFramesForward();
                 } else {
-
+                    parent.getComponent<Animation>()->queueStateFramesBackward();
                 }
             });
         }

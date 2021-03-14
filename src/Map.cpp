@@ -40,8 +40,8 @@ JSON::Value Tileset::getProperty(int tileId, const char *name) {
     return JSON::null;
 }
 
-bool Tileset::getFrames(int tileId, std::vector<int> &frames) {
-    auto prop = getProperty(tileId, "animation");
+bool Tileset::getFrames(int tileId, const char *key, std::vector<int> &frames) {
+    auto prop = getProperty(tileId, key);
     if (!prop.is(JSON::JSON_STRING)) {
         return false;
     }
@@ -55,8 +55,8 @@ bool Tileset::getFrames(int tileId, std::vector<int> &frames) {
     return true;
 }
 
-bool Tileset::getSpeed(int tileId, int *speed) {
-    auto s = getProperty(tileId, "speed");
+bool Tileset::getInt(int tileId, const char *key, int *speed) {
+    auto s = getProperty(tileId, key);
     if (!s.is(JSON::JSON_NUMBER)) {
         return false;
     }
@@ -159,16 +159,26 @@ void Layer::load(JSON::Value &layer) {
 
         if (tileset && tileset->hasProps(tileId)) {
             int speed;
+            int interactSpeed = 300;
             std::vector<int> frames;
 
-            if (tileset->getFrames(tileId, frames)) {
+            if (tileset->getInt(tileId, "speed", &speed)) {
+                entity->getComponent<Animation>()->speed = speed;
+            }
+
+            if (tileset->getFrames(tileId, "animation", frames)) {
                 for (int frame : frames) {
                     entity->getComponent<Animation>()->addAnimationFrame(frame);
                 }
             }
-            if (tileset->getSpeed(tileId, &speed)) {
-                entity->getComponent<Animation>()->speed = speed;
+            frames.clear();
+            if (tileset->getFrames(tileId, "interactAnimation", frames)) {
+                tileset->getInt(tileId, "interactSpeed", &interactSpeed);
+                for (int frame : frames) {
+                    entity->getComponent<Animation>()->addStateFrame(frame, interactSpeed);
+                }
             }
+
 
             Padding p;
             if (tileset->getPadding(tileId, p) && entity->hasComponent<Collider>()) {

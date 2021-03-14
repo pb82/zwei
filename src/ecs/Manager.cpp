@@ -100,6 +100,7 @@ void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
     for (auto &entity : entities.at(WALLS)) {
         if (entity->hasComponent<Collider>()) {
             auto collider = entity->getComponent<Collider>();
+            if (collider->suspended) continue;
             collider->checked = false;
             target.push_back(collider);
         }
@@ -107,6 +108,7 @@ void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
     for (auto &entity : entities.at(OBJECTS)) {
         if (entity->hasComponent<Collider>()) {
             auto collider = entity->getComponent<Collider>();
+            if (collider->suspended) continue;
             collider->checked = false;
             target.push_back(collider);
         }
@@ -114,6 +116,7 @@ void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
     for (auto &entity : entities.at(ITEMS)) {
         if (entity->hasComponent<Collider>()) {
             auto collider = entity->getComponent<Collider>();
+            if (collider->suspended) continue;
             collider->checked = false;
             target.push_back(collider);
         }

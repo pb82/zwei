@@ -14,8 +14,10 @@ void Interactible::interact() {
     auto t = this->parent.getComponent<Transform>();
     auto p = RT_Player->getComponent<Transform>();
 
-    // enforce min distance for interaction
-    if (t->p.distance(p->p) <= 1) {
+    float distance = t->p.distance(p->p);
+
+    // enforce min and max distance for interaction
+    if (distance >= 0.5 && distance <= 1.2) {
         this->fn(this->parent);
     }
 }
