@@ -161,8 +161,7 @@ namespace Api {
             wall->addComponent<Interactible>();
             auto action = wall->getComponent<Interactible>();
             action->onInteract([x, y](Entity &parent) {
-                Position p(x, y);
-                bool accessible = RT_Topology.flipBarrier(p);
+                bool accessible = RT_Topology.flipBarrier(x, y);
                 parent.getComponent<Collider>()->suspended = accessible;
                 if (accessible) {
                     parent.getComponent<Animation>()->queueStateFramesForward();

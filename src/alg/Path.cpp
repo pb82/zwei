@@ -85,10 +85,10 @@ void Topology::neighbours(int x, int y, std::vector<Position> &n) const {
     if (accessible(x, y + 1)) n.emplace_back((float) x, (float) y + 1);
 }
 
-bool Topology::flipBarrier(Position &p) {
-    int i = index(p);
+bool Topology::flipBarrier(int x, int y) {
+    int i = index(x, y);
     topology.at(i).flip();
-    return accessible(p.x, p.y);
+    return accessible(x, y);
 }
 
 Path::Path(const Topology &t) : topology(t) {}

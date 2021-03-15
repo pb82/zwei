@@ -47,6 +47,8 @@
 #include "src/St.h"
 #include "src/ecs/Bar.h"
 
+#include "src/snc/Entry.h"
+
 #include "src/Api.h"
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
@@ -66,7 +68,7 @@ void placeTrigger(int x, int y, trigger_Fn enter, trigger_Fn exit) {
     handler->onExit(exit);
 }
 
-void placeKakta(int x, int y, Topology &top) {
+void placeKakta(int x, int y) {
     auto kakta = Manager::instance().addEntity(OBJECTS);
     kakta->addComponent<Transform>(x, y);
     kakta->addComponent<Sprite>(SPRITES);
@@ -94,13 +96,13 @@ void placeKakta(int x, int y, Topology &top) {
 
     auto transform = kakta->getComponent<Transform>();
     kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0});
-    top.registerMobile(&transform->p);
+    RT_Topology.registerMobile(&transform->p);
 
     auto ai = kakta->getComponent<Ai>();
     ai->brainify<Kakta>();
 }
 
-void placeSpider(int x, int y, Topology &top) {
+void placeSpider(int x, int y) {
     auto skeleton = Manager::instance().addEntity(OBJECTS);
     skeleton->addComponent<Transform>(x, y);
     skeleton->addComponent<Sprite>(SPRITES);
@@ -122,7 +124,7 @@ void placeSpider(int x, int y, Topology &top) {
 
     auto transform = skeleton->getComponent<Transform>();
     skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.3, 0.7});
-    top.registerMobile(&transform->p);
+    RT_Topology.registerMobile(&transform->p);
 
     auto ai = skeleton->getComponent<Ai>();
     ai->brainify<Spider>();
@@ -258,17 +260,8 @@ void loop() {
         // return;
     }
 
-    Api::init();
-    Api::setPlayerSpeed(3);
-    Api::setPlayerPosition(7, 28);
-    Api::setPlayerStats(20, 10, 10, 10);
-    Api::loadMap("beach.json");
-
-    Api::setRoofHideTrigger(11, 8);
-    Api::setRoofShowTrigger(11, 10);
-    Api::setDoor(11, 9);
-    Api::setDoor(12, 13);
-
+    RT_Context.addScene<Entry>();
+    RT_Context.setActiveScene<Entry>();
 
     // Global alpha
     float ga = 255.0f;
@@ -277,8 +270,6 @@ void loop() {
         auto frameStart = std::chrono::system_clock::now();
 
         Manager::instance().collect();
-
-        // glClear(GL_COLOR_BUFFER_BIT);
 
         SDL_RenderClear(Gfx_Renderer);
 

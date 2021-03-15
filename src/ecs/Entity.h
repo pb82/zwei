@@ -33,12 +33,6 @@ public:
         return std::dynamic_pointer_cast<T>(component);
     }
 
-    template<typename T>
-    void removeComponent() {
-        auto type = std::type_index(typeid(T));
-        components.erase(type);
-    }
-
     void update(float dt) {
         if (!isActive) return;
 
