@@ -19,6 +19,7 @@
 #define RT_Topology RT_Context.getTopology()
 #define RT_Player RT_Context.getPlayer()
 #define RT_Menu RT_Context.getMenu()
+#define RT_Memory RT_Context.getMemory()
 
 // Shared runtime state
 class Rt {

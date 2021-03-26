@@ -47,9 +47,9 @@
 #include "src/St.h"
 #include "src/ecs/Bar.h"
 
-#include "src/snc/Entry.h"
-
 #include "src/Api.h"
+#include "src/scn/Start.h"
+#include "src/scn/Entry.h"
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
 std::string game_over("game over");
@@ -164,11 +164,11 @@ void renderMenu(tp frameStart) {
 }
 
 void renderGameOver(tp frameStart, float *darkness) {
-    auto t1 = Assets::instance().getTexture(TILES);
+    // auto t1 = Assets::instance().getTexture(TILES);
 
     SDL_SetRenderDrawBlendMode(Gfx_Renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetTextureColorMod(t1->mem, 255, *darkness, *darkness);
-    SDL_SetTextureAlphaMod(t1->mem, *darkness);
+    // SDL_SetTextureColorMod(t1->mem, 255, *darkness, *darkness);
+    // SDL_SetTextureAlphaMod(t1->mem, *darkness);
 
     Manager::instance().render(BACKGROUND);
     Manager::instance().render(FLOOR);
@@ -261,6 +261,7 @@ void loop() {
     }
 
     RT_Context.addScene<Entry>();
+    RT_Context.addScene<Start>();
     RT_Context.setActiveScene<Entry>();
 
     // Global alpha
@@ -288,7 +289,7 @@ void loop() {
                     // stays pushed even when the command is cleared
                     if (gk.state == GK_RELEASED) Manager::instance().key(gk);
                 } else if (gk.state == GK_PUSHED && gk.key == GK_START) {
-                    RT_Menu->getComponent<Menu>()->reset();
+                    RT_Menu->getComponent<Menu>()->reset(0);
                     Rt::instance().context.state.toggleMenu();
                 } else {
                     if (RT_Context.state.currentState() == MainMenu) {
@@ -350,7 +351,8 @@ void initAssets() {
 
     Assets::instance().addFont(FONT, assets_Font);
     // Assets::instance().addTexture(TILES, assets_Tiles);
-    Assets::instance().addTexture(TILES, "assets/RAW/beach.png");
+    Assets::instance().addTexture(TILES_DUNGEON, "assets/RAW/dungeon_sheet.png");
+    Assets::instance().addTexture(TILES_BEACH, "assets/RAW/beach.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
     Assets::instance().addTexture(BITMAPFONT, "assets/RAW/bitmapfont.png");
 }

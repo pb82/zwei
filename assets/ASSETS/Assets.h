@@ -12,7 +12,8 @@
 
 enum Asset {
     FONT = 0,
-    TILES,
+    TILES_BEACH,
+    TILES_DUNGEON,
     SPRITES,
     SOUND_PICKUP,
     MUSIC_1,

@@ -5,7 +5,6 @@
 
 class Entry : public Scene {
 public:
-
     void init();
 
     void exit();

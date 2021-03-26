@@ -4,8 +4,12 @@
 
 #include "../config.h"
 #include "../Rt.h"
+#include "../scn/Start.h"
 
 #define WINDOW_MARGIN 0
+
+// WARNING !!!
+// This is possibly the worst implementation of a menu that has ever been written
 
 static void getWinSize(ImVec2 &s) {
     s.x = configWindowWidth - WINDOW_MARGIN;
@@ -30,6 +34,14 @@ static ImVec4 white() {
 
 static ImVec4 black() {
     return ImVec4{0, 0, 0, 1};
+}
+
+static ImVec4 grey() {
+    return ImVec4{0.3, 0.3, 0.3, 1};
+}
+
+static ImVec4 lightgrey() {
+    return ImVec4{0.5, 0.5, 0.5, 1};
 }
 
 static int getWinFlags() {
@@ -101,16 +113,31 @@ void MenuOption::render() {
     ImGui::SetCursorPosX((configWindowWidth / 2) - (s.x / 2));
 
     if (this->selected) {
-        ImGui::PushStyleColor(ImGuiCol_Button, white());
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, white());
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, white());
-        ImGui::PushStyleColor(ImGuiCol_Text, black());
+        if (!enabled) {
+            ImGui::PushStyleColor(ImGuiCol_Button, lightgrey());
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, lightgrey());
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, lightgrey());
+            ImGui::PushStyleColor(ImGuiCol_Text, grey());
+        } else {
+            ImGui::PushStyleColor(ImGuiCol_Button, white());
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, white());
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, white());
+            ImGui::PushStyleColor(ImGuiCol_Text, black());
+        }
+    }
+
+    if (!this->enabled) {
+        ImGui::PushStyleColor(ImGuiCol_Text, grey());
     }
 
     ImGui::Button(this->text.c_str(), s);
 
     if (this->selected) {
         ImGui::PopStyleColor(4);
+    }
+
+    if (!enabled) {
+        ImGui::PopStyleColor(1);
     }
 }
 
@@ -165,14 +192,26 @@ void MenuMusicVolume::render() {
     }
 }
 
+void Menu::newGameEnabled(bool enabled) {
+    menu_Main.at(0)->enabled = enabled;
+}
+
 Menu::Menu(Entity &parent) : Component(parent) {
     this->level.push(Main);
+
+    menu_Main.push_back(std::make_unique<MenuOption>("New Game", [](GameKeyEvent &key) {
+        if (key.key == GK_A) {
+            RT_Context.setActiveScene<Start>();
+        }
+    }));
+    menu_Main.at(0)->enabled = false;
 
     menu_Main.push_back(std::make_unique<MenuOption>("Settings", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.push(Settings);
         this->selectedIndex = 0;
     }));
+
     menu_Main.push_back(std::make_unique<MenuOption>("Quit", [](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         St::instance().serialize();
@@ -442,10 +481,10 @@ void Menu::key(GameKeyEvent &key) {
     } else {
         switch (this->level.top()) {
             case Main:
-                this->menu_Main.at(selectedIndex)->invoke(key);
+                if (this->menu_Main.at(selectedIndex)->enabled) this->menu_Main.at(selectedIndex)->invoke(key);
                 break;
             case Settings:
-                this->menu_Settings.at(selectedIndex)->invoke(key);
+                if (this->menu_Settings.at(selectedIndex)->enabled) this->menu_Settings.at(selectedIndex)->invoke(key);
                 break;
             case AudioSettings:
                 this->menu_AudioSettings.at(selectedIndex)->invoke(key);
@@ -489,8 +528,8 @@ int Menu::currentMenuItems() {
     }
 }
 
-void Menu::reset() {
+void Menu::reset(int selectedIndex) {
     while (!this->level.empty()) this->level.pop();
     this->level.push(Main);
-    this->selectedIndex = 0;
+    this->selectedIndex = selectedIndex;
 }

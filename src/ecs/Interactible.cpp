@@ -24,7 +24,7 @@ void Interactible::interact() {
     float distance = t->p.distance(p->p);
 
     // enforce min and max distance for interaction
-    if (distance >= 0.7 && distance <= 1.1) {
+    if (distance >= 0.5 && distance <= 1.1) {
         // The player is standing inside the interactible object
         // This could trap the player when e.g. a door is closed
         // Correct the position to never overlap with the other

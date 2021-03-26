@@ -108,6 +108,8 @@ int Text::fromChar(char c) {
             return 14;
         case '/':
             return 15;
+        case '?':
+            return 31;
         case '0':
             return 16;
         case '1':

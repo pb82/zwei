@@ -16,7 +16,7 @@ void Analytics::render() {
             auto collider = parent.getComponent<Collider>();
             SDL_Rect source;
 
-            auto texture = Assets::instance().getTexture(TILES);
+            auto texture = Assets::instance().getTexture(SPRITES);
 
             Gfx::pick(source, 15, texture->w);
             Draw::instance().draw(texture->mem, source, collider->boundingBox);

@@ -27,8 +27,8 @@
         "9": 10,
         "97": 6
     },
-    "effectsVolume": 0,
+    "effectsVolume": 50,
     "fps": 0,
-    "musicVolume": 0,
+    "musicVolume": 10,
     "window": 3
 }

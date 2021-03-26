@@ -10,9 +10,10 @@
 #include "ecs/Attack.h"
 #include "ecs/Interactible.h"
 #include "ecs/Collider.h"
-#include "Col.h"
 #include "ecs/Hud.h"
 #include "ecs/Trigger.h"
+#include "ecs/Analytics.h"
+#include "Cc.h"
 
 namespace Api {
 
@@ -21,7 +22,9 @@ namespace Api {
         auto menu = Manager::instance().addEntity(UI);
         RT_Context.setMenu(menu);
         menu->addComponent<Menu>();
+    }
 
+    void initPlayer() {
         // Player
         auto player = Manager::instance().addEntity(OBJECTS);
         RT_Context.setPlayer(player);
@@ -31,6 +34,7 @@ namespace Api {
         player->addComponent<Controller>();
         player->addComponent<Attack>();
         player->addComponent<Stats>(true);
+        player->addComponent<Analytics>();
         player->getComponent<Animation>()->stop();
 
         // Movement
@@ -55,6 +59,9 @@ namespace Api {
         // Hud
         auto hud = Manager::instance().addEntity(FOREGROUND);
         hud->addComponent<Hud>();
+
+        setPlayerSpeed(3);
+        setPlayerStats(20, 1, 1, 1);
     }
 
     void setPlayerPosition(float x, float y) {
@@ -124,6 +131,10 @@ namespace Api {
         RT_Camera.setMapSize(0, 0);
     }
 
+    void showNewGameMenu(bool show) {
+        RT_Menu->getComponent<Menu>()->newGameEnabled(show);
+    }
+
     void setRoofHideTrigger(int entryX, int entryY) {
         auto trigger = Manager::instance().addEntity(FLOOR);
         trigger->addComponent<Transform>(entryX, entryY);
@@ -169,6 +180,29 @@ namespace Api {
                     parent.getComponent<Animation>()->queueStateFramesBackward();
                 }
             });
+        }
+    }
+
+    void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit) {
+        auto e = std::make_shared<Entity>();
+        e->addComponent<Transform>(x, y);
+        e->addComponent<Trigger>();
+
+        auto transform = e->getComponent<Transform>();
+        e->addComponent<Collider>(transform, CT_TRIGGER);
+
+        auto t = e->getComponent<Trigger>();
+        t->onEnter(onEnter);
+        t->onExit(onExit);
+
+        Manager::instance().enqueue(e, OBJECTS);
+    }
+
+    void createSpeechBubble(const char *text) {
+        std::vector<std::shared_ptr<SpeechBubble>> bubbles;
+        SpeechBubble::split(text, bubbles);
+        for (auto &bubble : bubbles) {
+            Rt_Commands.push(bubble);
         }
     }
 }

@@ -10,6 +10,7 @@
 #include "Scene.h"
 #include "ecs/Entity.h"
 #include "alg/Path.h"
+#include "Mem.h"
 
 enum GameState {
     Game,
@@ -64,6 +65,10 @@ public:
         return topology;
     }
 
+    Mem &getMemory() {
+        return memory;
+    }
+
     GameStateMachine state;
 
 private:
@@ -76,6 +81,8 @@ private:
     std::shared_ptr<Scene> activeScene = nullptr;
 
     Topology topology;
+
+    Mem memory;
 
 };
 

@@ -28,7 +28,7 @@ typedef std::function<void(GameKeyEvent &key)> menu_Callback;
 
 class MenuAction {
 public:
-    MenuAction(const char* text, menu_Callback cb) : text(text), cb(cb) {}
+    MenuAction(const char *text, menu_Callback cb) : text(text), cb(cb) {}
 
     virtual ~MenuAction() {}
 
@@ -39,6 +39,8 @@ public:
     void select() { this->selected = true; }
 
     void unselect() { this->selected = false; }
+
+    bool enabled = true;
 
 protected:
 
@@ -102,7 +104,9 @@ public:
 
     void key(GameKeyEvent &key) override;
 
-    void reset();
+    void reset(int selectedIndex);
+
+    void newGameEnabled(bool enabled);
 
 private:
 
