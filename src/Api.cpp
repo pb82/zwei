@@ -25,6 +25,10 @@ namespace Api {
     }
 
     void initPlayer() {
+        if (RT_Context.getPlayer() != nullptr) {
+            return;
+        }
+
         // Player
         auto player = Manager::instance().addEntity(OBJECTS);
         RT_Context.setPlayer(player);
@@ -72,7 +76,7 @@ namespace Api {
             auto transform = RT_Player->getComponent<Transform>();
             RT_Camera.track(&transform->p);
             RT_Player->addComponent<Collider>(transform, CT_PLAYER,
-                                              Padding{.3, .3, 0.6, 0});
+                                              Padding{.5, .5, 1, 0});
 
         } else {
             RT_Player->getComponent<Transform>()->p = {x, y};

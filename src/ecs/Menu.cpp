@@ -5,6 +5,7 @@
 #include "../config.h"
 #include "../Rt.h"
 #include "../scn/Start.h"
+#include "../scn/Beach.h"
 
 #define WINDOW_MARGIN 0
 

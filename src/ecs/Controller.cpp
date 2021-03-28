@@ -6,6 +6,7 @@
 #include "Attack.h"
 #include "Transform.h"
 #include "Interactible.h"
+#include "Collider.h"
 
 #define P_UP (activeKeys[GK_UP] == true)
 #define P_DOWN (activeKeys[GK_DOWN] == true)
@@ -94,9 +95,12 @@ void Controller::use() {
     // Interact?
     auto transform = this->parent.getComponent<Transform>();
     auto acceleration = this->parent.getComponent<Acceleration>();
+    auto c = this->parent.getComponent<Collider>();
 
-    Position p;
-    transform->p.nearestTile(p);
+    Position p = transform->p;
+    p.x += (c->padding.left / 2);
+    p.y += (c->padding.top / 2);
+    p.nearestTile(p);
 
     switch (acceleration->getDirection()) {
         case N:

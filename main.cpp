@@ -50,6 +50,7 @@
 #include "src/Api.h"
 #include "src/scn/Start.h"
 #include "src/scn/Entry.h"
+#include "src/scn/Beach.h"
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
 std::string game_over("game over");
@@ -262,6 +263,7 @@ void loop() {
 
     RT_Context.addScene<Entry>();
     RT_Context.addScene<Start>();
+    RT_Context.addScene<Beach>();
     RT_Context.setActiveScene<Entry>();
 
     // Global alpha
