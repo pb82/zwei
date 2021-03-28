@@ -15,7 +15,7 @@ public:
 
     void update(float dt) override;
 
-    void render() override;
+    void render(uint8_t) override;
 
     void pause(float duration);
 

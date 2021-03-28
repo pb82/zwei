@@ -100,7 +100,7 @@ class Menu : public Component {
 public:
     Menu(Entity &parent);
 
-    void render() override;
+    void render(uint8_t) override;
 
     void key(GameKeyEvent &key) override;
 

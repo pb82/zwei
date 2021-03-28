@@ -35,7 +35,7 @@ void Ai::pause(float duration) {
     this->_pause = duration;
 }
 
-void Ai::render() {
+void Ai::render(uint8_t) {
     if (mind) {
         mind->render();
     }

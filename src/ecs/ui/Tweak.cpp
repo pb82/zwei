@@ -21,7 +21,7 @@ static void getWinPos(ImVec2 &p) {
     p.y = 1;
 }
 
-void Tweak::render() {
+void Tweak::render(uint8_t) {
     ImVec2 size;
     getWinSize(size);
 

@@ -25,7 +25,7 @@ public:
 
     virtual void update(float dt) {}
 
-    virtual void render() {}
+    virtual void render(uint8_t hints) {}
 
     virtual void key(GameKeyEvent &key) {}
 

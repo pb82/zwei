@@ -10,7 +10,7 @@
 
 Collectable::Collectable(Entity &parent, std::shared_ptr<Item> item) : Component(parent), item(item) {}
 
-void Collectable::render() {
+void Collectable::render(uint8_t) {
     auto texture = Assets::instance().getTexture(SPRITES);
 
     // Tilemap rect

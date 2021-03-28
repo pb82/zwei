@@ -14,7 +14,7 @@ class Sprite : public Component {
 public:
     Sprite(Entity &parent, Asset id);
 
-    void render() override;
+    void render(uint8_t) override;
 
     void update(float dt) override;
 

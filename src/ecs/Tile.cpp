@@ -21,7 +21,7 @@ void Tile::pick(SDL_Rect &source) {
     Gfx::pick(source, scalar, texture->w);
 }
 
-void Tile::render() {
+void Tile::render(uint8_t) {
     // Tilemap rect
     SDL_Rect source;
     pick(source);

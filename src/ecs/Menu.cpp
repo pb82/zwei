@@ -415,7 +415,7 @@ void Menu::populateGamepadMenu() {
     addGamepadMenuItem(GK_SELECT, bound);
 }
 
-void Menu::render() {
+void Menu::render(uint8_t) {
     ImVec2 size;
     getWinSize(size);
 

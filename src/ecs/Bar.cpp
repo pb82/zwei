@@ -20,7 +20,7 @@ void Bar::update(float dt) {
     visible -= dt;
 }
 
-void Bar::render() {
+void Bar::render(uint8_t) {
     if (visible <= 0.0f) {
         return;
     }

@@ -7,7 +7,7 @@ class Hud : public Component {
 public:
     Hud(Entity &parent);
 
-    void render() override;
+    void render(uint8_t) override;
 
 private:
 

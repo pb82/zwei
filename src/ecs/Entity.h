@@ -41,11 +41,11 @@ public:
         }
     }
 
-    void render() {
+    void render(uint8_t hints) {
         if (!isActive) return;
 
         for (const auto &component: components) {
-            component.second->render();
+            component.second->render(hints);
         }
     }
 

@@ -9,7 +9,7 @@ class Tweak : public Component {
 public:
     Tweak(Entity &parent, std::shared_ptr<Entity> client);
 
-    void render() override;
+    void render(uint8_t) override;
 
 private:
     std::shared_ptr<Entity> client;

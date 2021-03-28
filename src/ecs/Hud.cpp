@@ -23,7 +23,7 @@ void Hud::fastNums(int num, int *h, int *t, int *o) {
     *o = r % 10;
 }
 
-void Hud::render() {
+void Hud::render(uint8_t) {
     auto player = RT_Context.getPlayer();
     auto stats = player->getComponent<Stats>();
     stats->inventory.render();

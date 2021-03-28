@@ -10,7 +10,7 @@ class Collectable : public Component {
 public:
     Collectable(Entity &parent, std::shared_ptr<Item> item);
 
-    void render() override;
+    void render(uint8_t) override;
 
     void collect();
 

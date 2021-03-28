@@ -30,7 +30,7 @@ float Sprite::pick(SDL_Rect &source) {
     return animation->rotate;
 }
 
-void Sprite::render() {
+void Sprite::render(uint8_t) {
     // Tilemap rect
     SDL_Rect source;
     auto rotate = pick(source);

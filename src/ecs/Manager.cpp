@@ -80,7 +80,7 @@ void Manager::render(LayerType layer) {
     }
 
     for (auto &entity : entities.at(layer)) {
-        entity->render();
+        entity->render(renderHints);
     }
 }
 

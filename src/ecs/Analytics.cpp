@@ -10,7 +10,7 @@ Analytics::Analytics(Entity &parent) : Component(parent) {}
 
 void Analytics::update(float dt) {}
 
-void Analytics::render() {
+void Analytics::render(uint8_t) {
     if (Debug::drawBoundingBoxes) {
         if (parent.hasComponent<Collider>()) {
             auto collider = parent.getComponent<Collider>();

@@ -12,7 +12,7 @@ class Bar : public Component {
 public:
     Bar(Entity &parent);
 
-    void render() override;
+    void render(uint8_t) override;
 
     void update(float dt) override;
 

@@ -7,7 +7,7 @@ class Analytics : public Component {
 public:
     Analytics(Entity &parent);
 
-    void render() override;
+    void render(uint8_t) override;
 
     void update(float dt) override;
 
