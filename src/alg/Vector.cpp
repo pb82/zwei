@@ -10,6 +10,18 @@ void Vector::translate(float *x, float *y) {
 }
 
 Direction Vector::getDirection() {
+    /*
+    var compassReading = radians * (180 / Math.PI);
+
+    var coordNames = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
+    var coordIndex = Math.round(compassReading / 45);
+    if (coordIndex < 0) {
+        coordIndex = coordIndex + 8
+    };
+
+    return coordNames[coordIndex]; // returns the coordinate value
+    */
+
     int compass = (((int) round(angle / (2 * VM_100_PI / 8))) + 8) % 8;
     switch (compass) {
         case 0:

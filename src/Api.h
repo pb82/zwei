@@ -39,6 +39,10 @@ namespace Api {
 
     void createSpeechBubble(const char *text);
 
+    // Effects
+
+    void lineOfSight(bool enabled);
+
 }
 
 #endif //ZWEI_API_H

@@ -209,4 +209,12 @@ namespace Api {
             Rt_Commands.push(bubble);
         }
     }
+
+    void lineOfSight(bool enabled) {
+        if (enabled) {
+            Manager::instance().setRenderHint(HINT_LINE_OF_SIGHT);
+        } else {
+            Manager::instance().clearRenderHint(HINT_LINE_OF_SIGHT);
+        }
+    }
 }

@@ -274,6 +274,7 @@ void loop() {
 
         Manager::instance().collect();
 
+        SDL_SetRenderDrawColor(Gfx_Renderer, 47, 40, 58, 255);
         SDL_RenderClear(Gfx_Renderer);
 
         while (SDL_PollEvent(&event)) {
@@ -370,6 +371,7 @@ void initSdl() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetSwapInterval(1);
+
 
     if (SDL_Init(sdlFlags) != 0) {
         exit(1);

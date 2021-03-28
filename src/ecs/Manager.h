@@ -10,6 +10,7 @@
 #include "../alg/Position.h"
 
 const uint8_t HINT_HIDE_ROOF_LAYER = 1 << 0;
+const uint8_t HINT_LINE_OF_SIGHT = 1 << 1;
 
 class Collider;
 

@@ -6,6 +6,7 @@
 #include <ASSETS/Assets.h>
 
 #include "Component.h"
+#include "../alg/Position.h"
 
 class Tile : public Component {
 public:
@@ -19,6 +20,8 @@ private:
     Asset id;
 
     std::shared_ptr<Texture> texture;
+
+    std::vector<Position> path;
 };
 
 #endif

@@ -9,6 +9,11 @@ void Start::init() {
     Api::setPlayerPosition(26, 15);
     Api::showNewGameMenu(false);
     Api::loadMap("dungeon2.json");
+
+    // Turn on line of sight mode
+    Api::lineOfSight(true);
+
+    // Switch to game mode
     Api::setGameState();
 
     // Doors

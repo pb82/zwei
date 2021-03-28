@@ -21,6 +21,8 @@ public:
 
     bool allAccessible(std::vector<Position> &line, Position &own);
 
+    bool allAccessible(std::vector<Position> &line, Position &own, Position &other);
+
     Position nearestAccessible(Position &p, bool includeOwn = false);
 
     void neighbours(int x, int y, std::vector<Position> &n) const;
