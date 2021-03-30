@@ -10,6 +10,7 @@ enum ItemType {
     HEALTH_POTION,
     STICK,
     BOW,
+    TORCH,
 };
 
 class Item {
@@ -22,7 +23,7 @@ public:
 
     virtual bool canEquip() { return false; }
 
-    virtual void use(std::shared_ptr<Entity> on) {}
+    virtual bool use(std::shared_ptr<Entity> on) { return false; }
 
     virtual void equip(std::shared_ptr<Entity> on) {}
 

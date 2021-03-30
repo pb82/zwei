@@ -13,6 +13,7 @@
 #include "ecs/Hud.h"
 #include "ecs/Trigger.h"
 #include "ecs/Analytics.h"
+#include "ecs/Timer.h"
 #include "Cc.h"
 
 namespace Api {
@@ -175,7 +176,7 @@ namespace Api {
         if (wall) {
             wall->addComponent<Interactible>();
             auto action = wall->getComponent<Interactible>();
-            action->onInteract([x, y](Entity &parent) {
+            action->onInteract([x, y](Entity &parent, JSON::Value &) {
                 bool accessible = RT_Topology.flipBarrier(x, y);
                 parent.getComponent<Collider>()->suspended = accessible;
                 if (accessible) {
@@ -202,6 +203,20 @@ namespace Api {
         Manager::instance().enqueue(e, OBJECTS);
     }
 
+    void setInteractible(int x, int y, interact_Fn onInteract) {
+        auto e = std::make_shared<Entity>();
+        e->addComponent<Interactible>();
+        e->addComponent<Transform>(x, y);
+
+        auto transform = e->getComponent<Transform>();
+        e->addComponent<Collider>(transform, CT_UNSPECIFIED);
+
+        auto i = e->getComponent<Interactible>();
+        i->onInteract(onInteract);
+
+        Manager::instance().enqueue(e, OBJECTS);
+    }
+
     void createSpeechBubble(const char *text) {
         std::vector<std::shared_ptr<SpeechBubble>> bubbles;
         SpeechBubble::split(text, bubbles);
@@ -210,11 +225,16 @@ namespace Api {
         }
     }
 
-    void lineOfSight(bool enabled) {
+    void createSingleSpeechBubble(const char *text, bool more) {
+        auto b = std::make_shared<SpeechBubble>(text, !more);
+        Rt_Commands.push(b);
+    }
+
+    void setEnableLights(bool enabled) {
         if (enabled) {
-            Manager::instance().setRenderHint(HINT_LINE_OF_SIGHT);
+            Manager::instance().clearRenderHint(HINT_TURN_LIGHTS_OUT);
         } else {
-            Manager::instance().clearRenderHint(HINT_LINE_OF_SIGHT);
+            Manager::instance().setRenderHint(HINT_TURN_LIGHTS_OUT);
         }
     }
 }

@@ -10,7 +10,7 @@
 
 Collectable::Collectable(Entity &parent, std::shared_ptr<Item> item) : Component(parent), item(item) {}
 
-void Collectable::render(uint8_t) {
+void Collectable::render(uint8_t hints) {
     auto texture = Assets::instance().getTexture(SPRITES);
 
     // Tilemap rect
@@ -27,9 +27,19 @@ void Collectable::render(uint8_t) {
         return;
     }
 
-    SDL_SetTextureAlphaMod(texture->mem, alpha);
-    Draw::instance().draw(texture->mem, source, target);
-    SDL_SetTextureAlphaMod(texture->mem, 255);
+    if ((hints & HINT_TURN_LIGHTS_OUT) == HINT_TURN_LIGHTS_OUT) {
+        auto t = this->parent.getComponent<Transform>();
+        uint8_t a = RT_Player->getComponent<Stats>()->inventory.getAlphaForTileAt(t->p);
+        Draw::instance().pushAlpha(texture->mem);
+        SDL_SetTextureAlphaMod(texture->mem, a + alpha);
+        Draw::instance().draw(texture->mem, source, target);
+        Draw::instance().popAlpha();
+    } else {
+        Draw::instance().pushAlpha(texture->mem);
+        SDL_SetTextureAlphaMod(texture->mem, alpha);
+        Draw::instance().draw(texture->mem, source, target);
+        Draw::instance().popAlpha();
+    }
 }
 
 void Collectable::collect() {

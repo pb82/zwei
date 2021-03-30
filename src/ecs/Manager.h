@@ -10,7 +10,7 @@
 #include "../alg/Position.h"
 
 const uint8_t HINT_HIDE_ROOF_LAYER = 1 << 0;
-const uint8_t HINT_LINE_OF_SIGHT = 1 << 1;
+const uint8_t HINT_TURN_LIGHTS_OUT = 1 << 1;
 
 class Collider;
 
@@ -59,12 +59,16 @@ public:
 
     void clearRenderHint(uint8_t hint);
 
+    void addTimer(int tile, float duration);
+
 private:
     Manager();
 
     std::unordered_map<LayerType, std::vector<std::shared_ptr<Entity>>> entities;
 
     std::queue<QueueEntity> pendingEntities;
+
+    std::shared_ptr<Entity> timers;
 
     uint8_t renderHints;
 };

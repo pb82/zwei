@@ -8,9 +8,10 @@
 #include "Transform.h"
 #include "SelfDestruct.h"
 
-Stats::Stats(Entity &parent, bool render) : Component(parent) {}
+Stats::Stats(Entity &parent, bool render) : Component(parent), inventory(parent) {}
 
 void Stats::update(float dt) {
+    inventory.update(dt);
     auto hp = this->character.getHitpoints();
     if (std::get<0>(hp) <= 0) {
         // Removed entity is no longer blocking the way

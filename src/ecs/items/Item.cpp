@@ -6,6 +6,7 @@
 #include "StickItem.h"
 #include "BowItem.h"
 #include "../Analytics.h"
+#include "Torch.h"
 
 std::shared_ptr<Entity> Item::make(Position p, ItemType type) {
     std::shared_ptr<Item> item = nullptr;
@@ -20,6 +21,9 @@ std::shared_ptr<Entity> Item::make(Position p, ItemType type) {
             break;
         case BOW:
             item = std::make_shared<BowItem>();
+            break;
+        case TORCH:
+            item = std::make_shared<Torch>();
             break;
         default:
             return nullptr;

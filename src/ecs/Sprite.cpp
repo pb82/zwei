@@ -6,7 +6,7 @@
 
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
-#include "../Debug.h"
+#include "Stats.h"
 
 Sprite::Sprite(Entity &parent, Asset id)
         : Component(parent),
@@ -30,7 +30,7 @@ float Sprite::pick(SDL_Rect &source) {
     return animation->rotate;
 }
 
-void Sprite::render(uint8_t) {
+void Sprite::render(uint8_t hints) {
     // Tilemap rect
     SDL_Rect source;
     auto rotate = pick(source);
@@ -49,8 +49,18 @@ void Sprite::render(uint8_t) {
     if (!filters.empty()) filters.front()->render(texture->mem, &transform->p);
 
     // Draw
-    Draw::instance().draw(texture->mem, source, target, rotate);
-    SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
+    if ((hints & HINT_TURN_LIGHTS_OUT) == HINT_TURN_LIGHTS_OUT) {
+        auto t = this->parent.getComponent<Transform>();
+        uint8_t alpha = RT_Player->getComponent<Stats>()->inventory.getAlphaForTileAt(t->p);
+        Draw::instance().pushAlpha(texture->mem);
+        SDL_SetTextureAlphaMod(texture->mem, alpha);
+        Draw::instance().draw(texture->mem, source, target, rotate);
+        SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
+        Draw::instance().popAlpha();
+    } else {
+        Draw::instance().draw(texture->mem, source, target, rotate);
+        SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
+    }
 }
 
 void Sprite::update(float dt) {

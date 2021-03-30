@@ -1,0 +1,25 @@
+#include "Torch.h"
+
+#include "../Manager.h"
+#include "../Stats.h"
+#include "../inv/TorchModifier.h"
+
+Torch::Torch() : Item(TORCH) {}
+
+bool Torch::stackable() {
+    return true;
+}
+
+int Torch::tile() {
+    return 108;
+}
+
+bool Torch::use(std::shared_ptr<Entity> on) {
+    auto stats = on->getComponent<Stats>();
+    if (!stats->inventory.hasModifier(CIRCLE_OF_LIGHT)) {
+        Manager::instance().addTimer(tile(), lifetime);
+        stats->inventory.addModifier<TorchModifier>(this->lifetime);
+        return true;
+    }
+    return false;
+}

@@ -47,6 +47,7 @@ void Bar::render(uint8_t) {
         Draw::instance().box(color_EnemyBad, target);
     }
 
+    /*
     if (stats->inventory.hasWeapon() && this->parent.hasComponent<Attack>()) {
         auto attack = this->parent.getComponent<Attack>();
         percent = 1.0f;
@@ -62,4 +63,5 @@ void Bar::render(uint8_t) {
         RT_Camera.project(target, transform->p.x, transform->p.y, p);
         Draw::instance().box(color_EnemyBlue, target);
     }
+    */
 }

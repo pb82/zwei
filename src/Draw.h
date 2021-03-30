@@ -7,6 +7,11 @@
 
 #include "alg/Color.h"
 
+struct TextureAlpha {
+    SDL_Texture *texture;
+    uint8_t alpha;
+};
+
 class Draw {
 public:
     static Draw &instance() {
@@ -31,10 +36,15 @@ public:
 
     void popColor();
 
+    void pushAlpha(SDL_Texture *texture);
+
+    void popAlpha();
+
 private:
     Draw() {}
 
     std::stack<SDL_Color> colors;
+    std::stack<TextureAlpha> alphas;
 };
 
 #endif

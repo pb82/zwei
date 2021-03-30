@@ -40,3 +40,16 @@ void Draw::popColor() {
     SDL_SetRenderDrawColor(Gfx_Renderer, c.r, c.g, c.b, c.a);
     colors.pop();
 }
+
+void Draw::pushAlpha(SDL_Texture *texture) {
+    TextureAlpha t;
+    t.texture = texture;
+    SDL_GetTextureAlphaMod(texture, &t.alpha);
+    alphas.push(t);
+}
+
+void Draw::popAlpha() {
+    auto &t = alphas.top();
+    SDL_SetTextureAlphaMod(t.texture, t.alpha);
+    alphas.pop();
+}

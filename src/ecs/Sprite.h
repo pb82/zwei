@@ -28,6 +28,7 @@ private:
     Asset assetId;
 
     std::shared_ptr<Texture> texture;
+
 };
 
 

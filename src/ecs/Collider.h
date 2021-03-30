@@ -19,6 +19,7 @@ enum ColliderTag {
     CT_PROJECTILE,
     CT_TRIGGER,
     CT_ITEM,
+    CT_UNSPECIFIED
 };
 
 class Collider : public Component {

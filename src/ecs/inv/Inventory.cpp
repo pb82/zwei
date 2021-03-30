@@ -1,5 +1,7 @@
 #include "Inventory.h"
 
+#include <cmath>
+
 #include <ASSETS/Assets.h>
 
 #include "../../Gfx.h"
@@ -7,14 +9,30 @@
 #include "../../../config.h"
 #include "../../alg/Text.h"
 #include "../../Rt.h"
-#include "../Transform.h"
 #include "../Collectable.h"
 #include "../Collider.h"
 #include "../Manager.h"
 #include "../../snd/Player.h"
 
-Inventory::Inventory() {
+Inventory::Inventory(Entity &parent) : parent(parent) {
     this->slots.resize(MAX_SLOTS);
+}
+
+bool Inventory::hasModifier(ModifierType type) {
+    for (auto &m : modifiers) {
+        if (m->type == type) return true;
+    }
+    return false;
+}
+
+void Inventory::update(float dt) {
+    modifiers.erase(std::remove_if(modifiers.begin(), modifiers.end(), [](std::shared_ptr<Modifier> &m) {
+        return !m->running();
+    }), modifiers.end());
+
+    for (auto &m : modifiers) {
+        m->update(dt);
+    }
 }
 
 void Inventory::next() {
@@ -122,8 +140,38 @@ void Inventory::use() {
             slot.item->equip(RT_Context.getPlayer());
         }
     } else {
-        slot.item->use(RT_Context.getPlayer());
+        if (slot.number > 0) {
+            bool used = slot.item->use(RT_Context.getPlayer());
+            if (!used) return;
+
+            if (slot.number > 1) {
+                slot.number--;
+            } else {
+                slot.item.reset();
+                slot.type = EMPTY_SLOT;
+            }
+        }
     }
+}
+
+float Inventory::getCircleOfLight() {
+    float base = 512.0f;
+    if (!modifiers.empty()) {
+        for (auto &m : modifiers) {
+            if (m->type == CIRCLE_OF_LIGHT) {
+                base = m->modify(base);
+            }
+        }
+    }
+    return base;
+}
+
+uint8_t Inventory::getAlphaForTileAt(Position &p) {
+    auto t = parent.getComponent<Transform>();
+    float d = std::abs(t->p.distance(p));
+    float a = getCircleOfLight() / (d * d * d);
+    a = std::min<float>(a, 255);
+    return static_cast<uint8_t>(a);
 }
 
 void Inventory::render() {

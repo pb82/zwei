@@ -82,11 +82,8 @@ void Col::collide(float dt) {
                 if (group.has(CT_PLAYER)) {
                     group.subject->stop();
                     group.subject->pause(100);
-                    if (group.has(CT_ENEMY)) {
-                        for (auto &involved : group.involved.at(CT_ENEMY)) {
-                            involved->stop();
-                            involved->pause(1000);
-                        }
+                    for (auto &involved : group.involved.at(CT_PLAYER)) {
+                        involved->stop();
                     }
                 }
 

@@ -49,6 +49,6 @@ void Interactible::interact() {
             }
         }
 
-        this->fn(this->parent);
+        this->fn(this->parent, internalState);
     }
 }

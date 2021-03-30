@@ -2,6 +2,7 @@
 #define ZWEI_API_H
 
 #include "ecs/Trigger.h"
+#include "ecs/Interactible.h"
 
 namespace Api {
     // Init
@@ -37,11 +38,16 @@ namespace Api {
 
     void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit);
 
+    void setInteractible(int x, int y, interact_Fn onInteract);
+
     void createSpeechBubble(const char *text);
+
+    void createSingleSpeechBubble(const char *text, bool more);
+
 
     // Effects
 
-    void lineOfSight(bool enabled);
+    void setEnableLights(bool enabled);
 
 }
 

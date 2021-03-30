@@ -3,6 +3,7 @@
 #include "Collider.h"
 #include "Group.h"
 #include "Interactible.h"
+#include "Timer.h"
 
 Manager::Manager() {
     entities.emplace(LayerType::FOREGROUND, std::vector<std::shared_ptr<Entity>>());
@@ -14,6 +15,16 @@ Manager::Manager() {
     entities.emplace(LayerType::WALLS, std::vector<std::shared_ptr<Entity>>());
     entities.emplace(LayerType::ROOF, std::vector<std::shared_ptr<Entity>>());
     entities.emplace(LayerType::SKY, std::vector<std::shared_ptr<Entity>>());
+
+    // Globally accessible timer component
+    timers = std::make_shared<Entity>();
+    timers->addComponent<Timer>();
+    enqueue(timers, FOREGROUND);
+}
+
+void Manager::addTimer(int tile, float duration) {
+    auto t = timers->getComponent<Timer>();
+    t->addTimer(tile, duration);
 }
 
 void Manager::setRenderHint(uint8_t hint) {

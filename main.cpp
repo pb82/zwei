@@ -51,6 +51,7 @@
 #include "src/scn/Start.h"
 #include "src/scn/Entry.h"
 #include "src/scn/Beach.h"
+#include "src/ecs/arms/Stick.h"
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
 std::string game_over("game over");
@@ -69,7 +70,7 @@ void placeTrigger(int x, int y, trigger_Fn enter, trigger_Fn exit) {
     handler->onExit(exit);
 }
 
-void placeKakta(int x, int y) {
+void placeKakta(int x, int y, bool stick) {
     auto kakta = Manager::instance().addEntity(OBJECTS);
     kakta->addComponent<Transform>(x, y);
     kakta->addComponent<Sprite>(SPRITES);
@@ -92,8 +93,9 @@ void placeKakta(int x, int y) {
 
     kakta->addComponent<Stats>(false);
     auto stats = kakta->getComponent<Stats>();
-    stats->inventory.equip(std::make_shared<Stone>());
-    stats->character.setBase(10, 200, 10, 1);
+    if (stick) stats->inventory.equip(std::make_shared<Stick>());
+    else stats->inventory.equip(std::make_shared<Stone>());
+    stats->character.setBase(10, 5, 10, 1);
 
     auto transform = kakta->getComponent<Transform>();
     kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0});
@@ -218,8 +220,8 @@ void renderGameOver(tp frameStart, float *darkness) {
 void renderGame(tp frameStart) {
     Manager::instance().render(BACKGROUND);
     Manager::instance().render(FLOOR);
-    Manager::instance().render(ITEMS);
     Manager::instance().render(WALLS);
+    Manager::instance().render(ITEMS);
     Manager::instance().render(OBJECTS);
     Manager::instance().render(ROOF);
     Manager::instance().render(SKY);
@@ -265,6 +267,12 @@ void loop() {
     RT_Context.addScene<Start>();
     RT_Context.addScene<Beach>();
     RT_Context.setActiveScene<Entry>();
+
+    placeItem(32, 13, TORCH);
+    placeItem(32, 15, STICK);
+    placeKakta(22, 2, true);
+    placeKakta(26, 5, false);
+
 
     // Global alpha
     float ga = 255.0f;
