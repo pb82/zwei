@@ -140,6 +140,7 @@ bool Input::mapEvent(SDL_Event *e, GameKeyEvent *g, GameEventType type) {
     }
 
     if (g->key == key && locked) return false;
+    locked = true;
     g->key = key;
     return true;
 }

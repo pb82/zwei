@@ -130,6 +130,7 @@ void Controller::use() {
     if (parent.hasComponent<Stats>()) {
         auto stats = parent.getComponent<Stats>();
         stats->inventory.use();
+        resetKeys();
     }
 }
 
