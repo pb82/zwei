@@ -204,17 +204,14 @@ namespace Api {
     }
 
     void setInteractible(int x, int y, interact_Fn onInteract) {
-        auto e = std::make_shared<Entity>();
+        Position p(x, y);
+        auto e = Manager::instance().getWall(p);
+        if (!e) {
+            return;
+        }
         e->addComponent<Interactible>();
-        e->addComponent<Transform>(x, y);
-
-        auto transform = e->getComponent<Transform>();
-        e->addComponent<Collider>(transform, CT_UNSPECIFIED);
-
         auto i = e->getComponent<Interactible>();
         i->onInteract(onInteract);
-
-        Manager::instance().enqueue(e, OBJECTS);
     }
 
     void createSpeechBubble(const char *text) {

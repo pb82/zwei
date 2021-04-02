@@ -3,8 +3,12 @@
 
 #include <queue>
 #include <memory>
+#include <typeindex>
+#include <typeinfo>
 
 #include "in/Input.h"
+#include "Scene.h"
+#include "alg/Color.h"
 
 class Command {
 public:
@@ -17,6 +21,33 @@ public:
     virtual void key(GameKeyEvent &ev) {}
 
     virtual bool done() = 0;
+};
+
+class ScreenTransition : public Command {
+public:
+
+    ScreenTransition(std::shared_ptr<Scene> newScene);
+
+    void render();
+
+    void update(float dt);
+
+    bool done();
+
+private:
+
+    bool switched = false;
+
+    int frames = 0;
+
+    SDL_Rect r;
+
+    Color c;
+
+    bool ready = false;
+
+    std::shared_ptr<Scene> newScene;
+
 };
 
 class SpeechBubble : public Command {

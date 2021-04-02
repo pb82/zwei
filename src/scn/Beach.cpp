@@ -10,6 +10,7 @@ void Beach::init() {
     Api::showNewGameMenu(false);
     Api::loadMap("beach.json");
     Api::setGameState();
+    Api::setEnableLights(true);
     Player::instance().playMusic(MUSIC_1);
 }
 

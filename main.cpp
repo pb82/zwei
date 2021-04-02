@@ -263,16 +263,9 @@ void loop() {
         // return;
     }
 
-    RT_Context.addScene<Entry>();
-    RT_Context.addScene<Start>();
-    RT_Context.addScene<Beach>();
-    RT_Context.setActiveScene<Entry>();
+    RT_Context.setActiveScene(std::make_shared<Entry>());
 
     placeItem(32, 13, TORCH);
-    placeItem(32, 15, STICK);
-    placeKakta(22, 2, true);
-    placeKakta(26, 5, false);
-
 
     // Global alpha
     float ga = 255.0f;

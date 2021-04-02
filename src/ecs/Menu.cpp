@@ -202,7 +202,7 @@ Menu::Menu(Entity &parent) : Component(parent) {
 
     menu_Main.push_back(std::make_unique<MenuOption>("New Game", [](GameKeyEvent &key) {
         if (key.key == GK_A) {
-            RT_Context.setActiveScene<Start>();
+            RT_Context.setActiveScene(std::make_shared<Start>());
         }
     }));
     menu_Main.at(0)->enabled = false;

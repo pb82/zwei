@@ -31,5 +31,7 @@ extern Color color_EnemyBad;
 extern Color color_EnemyBlue;
 
 extern Color color_Bubble;
+extern Color color_Black;
+extern Color color_Dark;
 
 #endif

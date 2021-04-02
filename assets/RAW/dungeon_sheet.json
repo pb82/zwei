@@ -198,6 +198,20 @@
                 }]
         }, 
         {
+         "id":168,
+         "properties":[
+                {
+                 "name":"interactAnimation",
+                 "type":"string",
+                 "value":"[168,169]"
+                }, 
+                {
+                 "name":"interactSpeed",
+                 "type":"int",
+                 "value":100
+                }]
+        }, 
+        {
          "id":172,
          "properties":[
                 {

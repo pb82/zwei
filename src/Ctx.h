@@ -39,21 +39,12 @@ public:
 
     void setMenu(std::shared_ptr<Entity> menu);
 
-    template<typename T>
-    void addScene() {
-        std::shared_ptr<Scene> scene = std::make_shared<T>();
-        auto type = std::type_index(typeid(T));
-        scenes.template emplace(type, scene);
-    }
-
-    template<typename T>
-    void setActiveScene() {
+    void setActiveScene(std::shared_ptr<Scene> s) {
         if (activeScene) {
             activeScene->exit();
-            activeScene = nullptr;
+            activeScene.reset();
         }
-        auto type = std::type_index(typeid(T));
-        activeScene = scenes.at(type);
+        activeScene = s;
         activeScene->init();
     }
 
@@ -75,8 +66,6 @@ private:
     std::shared_ptr<Entity> player = nullptr;
 
     std::shared_ptr<Entity> menu = nullptr;
-
-    std::unordered_map<std::type_index, std::shared_ptr<Scene>> scenes;
 
     std::shared_ptr<Scene> activeScene = nullptr;
 

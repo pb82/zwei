@@ -94,6 +94,8 @@ int Text::fromChar(char c) {
             return 1;
         case '&':
             return 6;
+        case '\'':
+            return 7;
         case '(':
             return 8;
         case ')':

@@ -5,6 +5,46 @@
 #include "Gfx.h"
 #include "../config.h"
 #include "alg/Text.h"
+#include "Rt.h"
+
+ScreenTransition::ScreenTransition(std::shared_ptr<Scene> newScene) : newScene(newScene) {}
+
+void ScreenTransition::update(float dt) {
+    frames += 8;
+    if (frames > 255 && switched == false) {
+        RT_Context.setActiveScene(newScene);
+        switched = true;
+        frames = 0;
+    } else if (frames > 255 && switched == true) {
+        ready = true;
+    }
+}
+
+void ScreenTransition::render() {
+    r.x = 0;
+    r.y = 0;
+    r.w = configWindowWidth;
+    r.h = configWindowHeight;
+
+    c.r = 0;
+    c.g = 0;
+    c.b = 0;
+    if (!switched) {
+        c.a = frames;
+        if (c.a > 255) c.a = 255;
+    } else {
+        if (frames > 255) frames = 255;
+        c.a = 255 - frames;
+        if (c.a > 255) c.a = 255;
+    }
+
+    Draw::instance().box(c, r);
+}
+
+bool ScreenTransition::done() {
+    return ready;
+}
+
 
 SpeechBubble::SpeechBubble(std::vector<int> &sequence, bool last) : sequence(sequence), last(last) {}
 
