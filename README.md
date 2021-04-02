@@ -15,6 +15,8 @@ Game engine for 2d action RPG style games. Work in progress, still very rough.
 
 # Screenshots
 
+[![Gameplay Video](https://img.youtube.com/vi/rK77goqBpAo/0.jpg)](https://www.youtube.com/watch?v=rK77goqBpAo)
+
 ![Gameplay](./media/screenshot.png)
 
 ![Menu](./media/menu.png)
