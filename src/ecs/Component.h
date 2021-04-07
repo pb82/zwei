@@ -1,6 +1,10 @@
 #ifndef ZWEI_COMPONENT_H
 #define ZWEI_COMPONENT_H
 
+#include <memory>
+
+#include <JSON/value.h>
+
 #include "../in/Input.h"
 
 enum LayerType {
@@ -28,6 +32,12 @@ public:
     virtual void render(uint8_t hints) {}
 
     virtual void key(GameKeyEvent &key) {}
+
+    virtual void serialize(JSON::Value &to) {};
+
+    virtual void deserialize(JSON::Value &from) {};
+
+    virtual std::string name() { return "<todo>"; }
 
 protected:
     Entity &parent;

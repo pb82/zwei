@@ -2,6 +2,14 @@
 
 Character::Character() {}
 
+void Character::serialize(JSON::Value &to) {
+    to["character"]["hitpoints"] = this->hitpoints;
+    to["character"]["maxHitpoints"] = this->maxHitpoints;
+    to["character"]["baseStrength"] = this->baseStrength;
+    to["character"]["baseDexterity"] = this->baseDexterity;
+    to["character"]["baseDefense"] = this->baseDefense;
+}
+
 void Character::setBase(int hp, int str, int dex, int def) {
     this->maxHitpoints = hp;
     this->baseStrength = str;

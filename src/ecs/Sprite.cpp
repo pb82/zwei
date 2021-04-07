@@ -14,6 +14,10 @@ Sprite::Sprite(Entity &parent, Asset id)
     texture = Assets::instance().getTexture(assetId);
 }
 
+void Sprite::serialize(JSON::Value &to) {
+    to["assetId"] = this->assetId;
+}
+
 float Sprite::pick(SDL_Rect &source) {
     auto animation = parent.getComponent<Animation>();
 

@@ -33,6 +33,10 @@ public:
 
     void update(float dt) override;
 
+    void serialize(JSON::Value &to) override;
+
+    std::string name() { return "timer"; }
+
     void addTimer(int tile, float max);
 
 private:

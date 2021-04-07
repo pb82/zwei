@@ -3,6 +3,8 @@
 
 #include <tuple>
 
+#include <JSON/value.h>
+
 class Character {
 public:
     Character();
@@ -16,6 +18,8 @@ public:
     int getDexterity() const;
 
     std::tuple<int, int> getHitpoints();
+
+    void serialize(JSON::Value &to);
 
     bool dead() const;
 

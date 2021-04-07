@@ -13,6 +13,18 @@ public:
 
     Position p;
     Padding padding;
+
+    std::string name() { return "transform"; }
+
+    void serialize(JSON::Value &to) {
+        to["position"]["x"] = p.x;
+        to["position"]["y"] = p.y;
+        to["position"]["p"] = p.p;
+        to["padding"]["bottom"] = padding.bottom;
+        to["padding"]["top"] = padding.top;
+        to["padding"]["left"] = padding.left;
+        to["padding"]["right"] = padding.right;
+    }
 };
 
 #endif

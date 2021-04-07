@@ -61,6 +61,10 @@ public:
 
     void addTimer(int tile, float duration);
 
+    void serialize();
+
+    std::shared_ptr<Component> fromName(Entity &e, std::string &name);
+
 private:
     Manager();
 

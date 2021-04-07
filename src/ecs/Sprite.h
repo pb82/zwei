@@ -20,6 +20,10 @@ public:
 
     void addFilter(std::shared_ptr<Filter> f);
 
+    void serialize(JSON::Value &to) override;
+
+    std::string name() { return "sprite"; }
+
 private:
     float pick(SDL_Rect &source);
 

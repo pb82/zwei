@@ -65,6 +65,22 @@ public:
         return !this->isActive;
     }
 
+    void serialize(JSON::Value &to) {
+        JSON::Array c;
+        for (auto pair : components) {
+            auto name = pair.second->name();
+
+            JSON::Value component = JSON::Object{{"type", pair.second->name()}};
+            pair.second->serialize(component);
+            c.push_back(component);
+        }
+        to["components"] = c;
+    }
+
+    void deserialize(JSON::Value &from) {
+
+    }
+
 private:
     std::unordered_map<std::type_index, std::shared_ptr<Component>> components;
     bool isActive;

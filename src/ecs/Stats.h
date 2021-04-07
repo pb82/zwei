@@ -14,6 +14,10 @@ public:
 
     void update(float dt) override;
 
+    void serialize(JSON::Value &to) override;
+
+    std::string name() { return "stats"; }
+
     // Properties
 
     Character character;

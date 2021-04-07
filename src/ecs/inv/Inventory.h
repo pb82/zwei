@@ -57,6 +57,8 @@ public:
 
     bool hasModifier(ModifierType type);
 
+    void serialize(JSON::Value &to);
+
 private:
 
     float getCircleOfLight();

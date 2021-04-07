@@ -1,9 +1,12 @@
 #include "Manager.h"
 
+#include <JSON/printer.h>
+
 #include "Collider.h"
 #include "Group.h"
 #include "Interactible.h"
 #include "Timer.h"
+#include "../io/Out.h"
 
 Manager::Manager() {
     entities.emplace(LayerType::FOREGROUND, std::vector<std::shared_ptr<Entity>>());
@@ -180,4 +183,36 @@ std::shared_ptr<Entity> Manager::getWall(Position &p) {
         }
     }
     return nullptr;
+}
+
+std::shared_ptr<Component> Manager::fromName(Entity &e, std::string &name) {
+    if (name.compare("timer") == 0) {
+        e.addComponent<Timer>();
+        return e.getComponent<Timer>();
+    }
+
+    return nullptr;
+}
+
+void Manager::serialize() {
+    JSON::Value dump;
+    for (auto pair : this->entities) {
+        auto layerKey = std::to_string(pair.first);
+        JSON::Array a;
+        for (auto entity : pair.second) {
+            JSON::Value e;
+            entity->serialize(e);
+            a.push_back(e);
+        }
+        dump[layerKey] = a;
+    }
+
+    Out f("out.json");
+    if (f.open()) {
+        JSON::PrettyPrinter p;
+        std::ostringstream s;
+        p.print(dump, s);
+        auto str = s.str();
+        f.write(str);
+    }
 }

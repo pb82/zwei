@@ -1,11 +1,7 @@
-#include <cmath>
-
 #include "Tile.h"
 #include "Entity.h"
 #include "Transform.h"
 #include "Animation.h"
-#include "Collider.h"
-#include "Acceleration.h"
 #include "Stats.h"
 
 #include "../Gfx.h"
@@ -17,6 +13,9 @@ Tile::Tile(Entity &parent, Asset id)
     texture = Assets::instance().getTexture(id);
 }
 
+void Tile::serialize(JSON::Value &to) {
+    to["assetId"] = this->id;
+}
 
 void Tile::pick(SDL_Rect &source) {
     auto animation = parent.getComponent<Animation>();

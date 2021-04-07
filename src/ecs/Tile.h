@@ -14,6 +14,10 @@ public:
 
     void render(uint8_t) override;
 
+    void serialize(JSON::Value &to) override;
+
+    std::string name() { return "tile"; }
+
 private:
     void pick(SDL_Rect &source);
 
@@ -21,7 +25,6 @@ private:
 
     std::shared_ptr<Texture> texture;
 
-    std::vector<Position> path;
 };
 
 #endif

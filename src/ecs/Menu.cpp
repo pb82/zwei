@@ -207,6 +207,13 @@ Menu::Menu(Entity &parent) : Component(parent) {
     }));
     menu_Main.at(0)->enabled = false;
 
+    menu_Main.push_back(std::make_unique<MenuOption>("Save Game", [](GameKeyEvent &key) {
+        if (key.key == GK_A) {
+            Manager::instance().serialize();
+        }
+    }));
+
+
     menu_Main.push_back(std::make_unique<MenuOption>("Settings", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.push(Settings);

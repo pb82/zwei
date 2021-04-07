@@ -18,6 +18,14 @@ Inventory::Inventory(Entity &parent) : parent(parent) {
     this->slots.resize(MAX_SLOTS);
 }
 
+void Inventory::serialize(JSON::Value &to) {
+    to["selectedSlot"] = this->selectedSlot;
+    for (int i = 0; i < this->slots.size(); i++) {
+        to["slot"][i]["number"] = this->slots.at(i).number;
+        to["slot"][i]["type"] = this->slots.at(i).type;
+    }
+}
+
 bool Inventory::hasModifier(ModifierType type) {
     for (auto &m : modifiers) {
         if (m->type == type) return true;

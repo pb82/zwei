@@ -10,6 +10,18 @@
 
 Timer::Timer(Entity &parent) : Component(parent) {}
 
+void Timer::serialize(JSON::Value &to) {
+    JSON::Array a;
+    for (auto &v: this->timers) {
+        a.push_back(JSON::Object{
+                {"max",  v.max},
+                {"tile", v.max},
+                {"cur",  v.max},
+        });
+    }
+    to["timers"] = a;
+}
+
 void Timer::update(float dt) {
     if (timers.empty()) return;
 

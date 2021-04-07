@@ -10,6 +10,10 @@
 
 Stats::Stats(Entity &parent, bool render) : Component(parent), inventory(parent) {}
 
+void Stats::serialize(JSON::Value &to) {
+
+}
+
 void Stats::update(float dt) {
     inventory.update(dt);
     auto hp = this->character.getHitpoints();
