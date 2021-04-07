@@ -65,12 +65,14 @@ public:
         return !this->isActive;
     }
 
+    bool canSerialize = true;
+
     void serialize(JSON::Value &to) {
         JSON::Array c;
         for (auto pair : components) {
             auto name = pair.second->name();
 
-            JSON::Value component = JSON::Object{{"type", pair.second->name()}};
+            JSON::Value component = JSON::Object{{"component_type", pair.second->name()}};
             pair.second->serialize(component);
             c.push_back(component);
         }

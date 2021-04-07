@@ -11,6 +11,8 @@ public:
 
     float modify(float in) override;
 
+    void serialize(JSON::Value &to) override;
+
 private:
 
     float duration = 0.0f;

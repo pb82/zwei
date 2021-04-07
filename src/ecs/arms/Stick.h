@@ -21,6 +21,8 @@ public:
 
     bool isProjectile() override;
 
+    int id() { return 1; }
+
 private:
 
     int damageTable[10] = {3, 3, 3, 3, 3, 4, 5, 5, 5, 6};

@@ -20,9 +20,26 @@ Inventory::Inventory(Entity &parent) : parent(parent) {
 
 void Inventory::serialize(JSON::Value &to) {
     to["selectedSlot"] = this->selectedSlot;
+
+    JSON::Array inventory;
     for (int i = 0; i < this->slots.size(); i++) {
-        to["slot"][i]["number"] = this->slots.at(i).number;
-        to["slot"][i]["type"] = this->slots.at(i).type;
+        inventory.push_back(JSON::Object{
+                {"type",   this->slots.at(i).type},
+                {"number", this->slots.at(i).number},
+        });
+    }
+    to["inventory"] = inventory;
+
+    JSON::Array mods;
+    for (int i = 0; i < this->modifiers.size(); i++) {
+        JSON::Value m;
+        this->modifiers.at(i)->serialize(m);
+        mods.push_back(m);
+    }
+    to["modifiers"] = mods;
+
+    if (this->weapon) {
+        to["weapon"] = this->weapon->id();
     }
 }
 

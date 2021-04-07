@@ -23,6 +23,12 @@ namespace Api {
         auto menu = Manager::instance().addEntity(UI);
         RT_Context.setMenu(menu);
         menu->addComponent<Menu>();
+        menu->canSerialize = false;
+
+        // Hud
+        auto hud = Manager::instance().addEntity(FOREGROUND);
+        hud->addComponent<Hud>();
+        hud->canSerialize = false;
     }
 
     void initPlayer() {
@@ -60,10 +66,6 @@ namespace Api {
         // Stats
         auto stats = player->getComponent<Stats>();
         stats->character.setBase(30, 10, 1, 1);
-
-        // Hud
-        auto hud = Manager::instance().addEntity(FOREGROUND);
-        hud->addComponent<Hud>();
 
         setPlayerSpeed(3);
         setPlayerStats(20, 1, 1, 1);

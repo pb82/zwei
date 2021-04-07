@@ -200,6 +200,7 @@ void Manager::serialize() {
         auto layerKey = std::to_string(pair.first);
         JSON::Array a;
         for (auto entity : pair.second) {
+            if (!entity->canSerialize) continue;
             JSON::Value e;
             entity->serialize(e);
             a.push_back(e);

@@ -26,6 +26,8 @@ public:
 
     ModifierType type;
 
+    virtual void serialize(JSON::Value &to) = 0;
+
 private:
 
     float lifetime = 0.0f;

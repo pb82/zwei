@@ -23,6 +23,8 @@ public:
 
     int getProjectileTile() override;
 
+    int id() { return 0; }
+
     void getParams(float *power, float *weight, float *decay) override;
 
 private:

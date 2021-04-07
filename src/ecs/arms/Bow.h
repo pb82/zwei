@@ -25,6 +25,8 @@ public:
 
     void getParams(float *power, float *weight, float *decay) override;
 
+    int id() { return 2; }
+
 private:
     int damageTable[10] = {2, 2, 3, 3, 3, 3, 4, 5, 6, 8};
 };

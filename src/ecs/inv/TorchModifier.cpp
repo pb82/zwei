@@ -2,6 +2,11 @@
 
 TorchModifier::TorchModifier(float lifetime) : Modifier(CIRCLE_OF_LIGHT, lifetime) {}
 
+void TorchModifier::serialize(JSON::Value &to) {
+    to["type"] = this->type;
+    to["duration"] = this->duration;
+}
+
 void TorchModifier::update(float dt) {
     Modifier::update(dt);
     duration += dt;

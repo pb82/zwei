@@ -17,6 +17,10 @@ public:
 
     float value;
 
+    void serialize(JSON::Value &to) override;
+
+    std::string name() { return "selfDestruct"; }
+
 private:
 
     void updateDistance(float dt);

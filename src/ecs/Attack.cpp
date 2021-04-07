@@ -151,6 +151,7 @@ void Attack::launchProjectileWeapon(std::shared_ptr<Stats> stats) {
     Force f(angle, 0);
     stats->inventory.weapon->getParams(&f.power, &f.weight, &f.decay);
     p->getComponent<Acceleration>()->applyForce(f);
+    p->canSerialize = false;
 
     Manager::instance().enqueue(p, OBJECTS);
 }
@@ -227,6 +228,7 @@ void Attack::launchStickWeapon(std::shared_ptr<Stats> stats) {
     // Self destruct weapon projectile
     p->addComponent<SelfDestruct>(DISTANCE, 0.75);
     p->getComponent<Acceleration>()->accelerate();
+    p->canSerialize = false;
 
     Manager::instance().enqueue(p, OBJECTS);
 }
