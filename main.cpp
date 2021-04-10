@@ -319,7 +319,8 @@ void loop() {
                 } else if (gk.state == GK_PUSHED && gk.key == GK_START) {
                     Rt::instance().context.state.toggleMenu();
                 } else {
-                    if (RT_State.currentState() == MainMenu || RT_State.currentState() == Start) {
+                    if (RT_State.currentState() == StateMainMenu ||
+                        RT_State.currentState() == StateStart) {
                         Manager::instance().uiInput(gk);
                     } else {
                         Manager::instance().key(gk);
@@ -329,17 +330,17 @@ void loop() {
         }
 
         switch (RT_Context.state.currentState()) {
-            case Game:
+            case StateGame:
                 renderGame(frameStart);
                 break;
-            case GameOver:
+            case StateGameOver:
                 renderGameOver(frameStart);
                 break;
-            case MainMenu:
-            case Start:
+            case StateMainMenu:
+            case StateStart:
                 renderMenu(frameStart);
                 break;
-            case Saving:
+            case StateSaving:
                 renderSave(frameStart);
             default:
                 continue;

@@ -102,15 +102,15 @@ namespace Api {
     }
 
     void setMenuState() {
-        RT_Context.state.pushState(MainMenu);
+        RT_State.pushState(StateMainMenu);
     }
 
     void setGameState() {
-        RT_Context.state.pushState(Game);
+        RT_State.pushState(StateGame);
     }
 
     void setGameOverState() {
-        RT_Context.state.pushState(GameOver);
+        RT_State.pushState(StateGameOver);
     }
 
     bool loadMap(const char *file) {

@@ -13,12 +13,12 @@
 #include "Mem.h"
 
 enum GameState {
-    Game,
-    GameOver,
-    Start,
-    MainMenu,
-    Saving,
-    Loading
+    StateGame,
+    StateGameOver,
+    StateStart,
+    StateMainMenu,
+    StateSaving,
+    StateLoading
 };
 
 struct GameStateMachine {

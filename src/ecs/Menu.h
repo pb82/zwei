@@ -28,10 +28,13 @@ enum GameMenu {
 
 enum MenuItemType {
     ItemNewGame,
+    ItemSettings,
     ItemAudioSettings,
     ItemMusicVolume,
     ItemEffectsVolume,
     ItemVideoSettings,
+    ItemKeyboardSettings,
+    ItemGamepadSettings,
     ItemFps,
     ItemWindowSize,
     ItemQuit,
@@ -52,6 +55,8 @@ public:
 
     MenuItem(std::string key, std::string *value, menu_Callback cb);
 
+    MenuItem(const char *key, const char *value, menu_Callback cb);
+
     void call(GameKeyEvent &key);
 
     void render(bool selected = false);
@@ -63,6 +68,8 @@ private:
     std::string key;
 
     std::string *value = nullptr;
+
+    std::string value2;
 
     menu_Callback cb;
 
@@ -77,6 +84,14 @@ public:
     void key(GameKeyEvent &key) override;
 
 private:
+
+    void addGamepadMenuItem(GameKey k, SDL_GameControllerButton button);
+
+    void addKeyboardMenuItem(GameKey k, SDL_Keycode button);
+
+    void populateKeyboardMenu();
+
+    void populateGamepadMenu();
 
     std::string currentFps;
 

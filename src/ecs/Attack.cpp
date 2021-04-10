@@ -55,7 +55,7 @@ void Attack::defend(std::shared_ptr<Projectile> projectile) {
             }
         } else {
             if (&this->parent == RT_Context.getPlayer().get()) {
-                RT_Context.state.pushState(GameOver);
+                RT_State.pushState(StateGameOver);
                 Player::instance().playMusic(MUSIC_GAMEOVER);
             }
         }

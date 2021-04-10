@@ -2,6 +2,7 @@
 #include "Menu.h"
 
 #include "../Rt.h"
+#include "../scn/Start.h"
 
 #define WINDOW_MARGIN 0
 
@@ -49,7 +50,15 @@ Menu::Menu(Entity &parent) : Component(parent) {
     this->level.push(Main);
 
     allItems.emplace(ItemNewGame, std::make_shared<MenuItem>("New Game", [](GameKeyEvent &key) {
+        if (key.key == GK_A) {
+            RT_Context.setActiveScene(std::make_shared<Start>());
+        }
+    }));
+
+    allItems.emplace(ItemSettings, std::make_shared<MenuItem>("Settings", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
+        this->level.push(Settings);
+        this->selectedIndex = 0;
     }));
 
     allItems.emplace(ItemBack, std::make_shared<MenuItem>("Back", [this](GameKeyEvent &key) {
@@ -106,6 +115,18 @@ Menu::Menu(Entity &parent) : Component(parent) {
         this->selectedIndex = 0;
     }));
 
+    allItems.emplace(ItemKeyboardSettings, std::make_shared<MenuItem>("Keyboard", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        this->level.push(Keyboard);
+        this->selectedIndex = 0;
+    }));
+
+    allItems.emplace(ItemGamepadSettings, std::make_shared<MenuItem>("Gamepad", [this](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        this->level.push(Gamepad);
+        this->selectedIndex = 0;
+    }));
+
     allItems.emplace(ItemQuit, std::make_shared<MenuItem>("Quit", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.push(AreYouSure);
@@ -134,7 +155,6 @@ void Menu::render(uint8_t) {
     this->musicVolume = std::to_string(St::instance().getMusicVolume());
     this->effectsVolume = std::to_string(St::instance().getEffectsVolume());
     St::instance().getWindowSize(this->windowSize);
-
 
     buildMenu();
 
@@ -195,9 +215,15 @@ void Menu::buildStartMenu() {
     switch (this->level.top()) {
         case Main:
             this->items.push_back(allItems.at(ItemNewGame));
+            this->items.push_back(allItems.at(ItemSettings));
+            this->items.push_back(allItems.at(ItemQuit));
+            return;
+        case Settings:
             this->items.push_back(allItems.at(ItemAudioSettings));
             this->items.push_back(allItems.at(ItemVideoSettings));
-            this->items.push_back(allItems.at(ItemQuit));
+            this->items.push_back(allItems.at(ItemKeyboardSettings));
+            this->items.push_back(allItems.at(ItemGamepadSettings));
+            this->items.push_back(allItems.at(ItemBack));
             return;
         case AreYouSure:
             this->items.push_back(allItems.at(ItemAreYouSure));
@@ -214,6 +240,14 @@ void Menu::buildStartMenu() {
             this->items.push_back(allItems.at(ItemFps));
             this->items.push_back(allItems.at(ItemBack));
             return;
+        case Keyboard:
+            populateKeyboardMenu();
+            this->items.push_back(allItems.at(ItemBack));
+            return;
+        case Gamepad:
+            populateGamepadMenu();
+            this->items.push_back(allItems.at(ItemBack));
+            return;
         default:
             return;
     }
@@ -221,14 +255,128 @@ void Menu::buildStartMenu() {
 
 void Menu::buildMenu() {
     switch (RT_State.currentState()) {
-        case Start:
+        case StateStart:
             buildStartMenu();
             return;
-        case Game:
+        case StateGame:
             return;
         default:
             return;
     }
+}
+
+void Menu::addGamepadMenuItem(GameKey k, SDL_GameControllerButton button) {
+    auto bound = Input::toString(k);
+    auto b = SDL_GameControllerGetStringForButton(button);
+    items.push_back(
+            std::make_unique<MenuItem>(bound.c_str(), b, [this, button](GameKeyEvent &key) {
+                if (this->menuState == Normal && key.key != GK_A) return;
+                if (!key.source) return;
+                if (key.source->type != SDL_CONTROLLERBUTTONDOWN) return;
+                if (this->menuState == Normal) {
+                    this->menuState = AwaitBinding;
+                } else if (this->menuState == AwaitBinding) {
+                    Input::rebind(button, key.key);
+                    this->menuState = Normal;
+                }
+            }));
+}
+
+void Menu::addKeyboardMenuItem(GameKey k, SDL_Keycode button) {
+    auto bound = Input::toString(k);
+    auto b = SDL_GetKeyName(button);
+    items.push_back(
+            std::make_unique<MenuItem>(bound.c_str(), b, [this, button](GameKeyEvent &key) {
+                if (this->menuState == Normal && key.key != GK_A) return;
+                if (!key.source) return;
+                if (key.source->type != SDL_KEYDOWN) return;
+                if (this->menuState == Normal) {
+                    this->menuState = AwaitBinding;
+                } else if (this->menuState == AwaitBinding) {
+                    Input::rebind(button, key.key);
+                    this->menuState = Normal;
+                }
+            }));
+}
+
+void Menu::populateKeyboardMenu() {
+    SDL_Keycode bound;
+
+    bound = Input::boundKey(GK_UP);
+    addKeyboardMenuItem(GK_UP, bound);
+
+    bound = Input::boundKey(GK_DOWN);
+    addKeyboardMenuItem(GK_DOWN, bound);
+
+    bound = Input::boundKey(GK_LEFT);
+    addKeyboardMenuItem(GK_LEFT, bound);
+
+    bound = Input::boundKey(GK_RIGHT);
+    addKeyboardMenuItem(GK_RIGHT, bound);
+
+    bound = Input::boundKey(GK_A);
+    addKeyboardMenuItem(GK_A, bound);
+
+    bound = Input::boundKey(GK_B);
+    addKeyboardMenuItem(GK_B, bound);
+
+    bound = Input::boundKey(GK_X);
+    addKeyboardMenuItem(GK_X, bound);
+
+    bound = Input::boundKey(GK_Y);
+    addKeyboardMenuItem(GK_Y, bound);
+
+    bound = Input::boundKey(GK_L);
+    addKeyboardMenuItem(GK_L, bound);
+
+    bound = Input::boundKey(GK_R);
+    addKeyboardMenuItem(GK_R, bound);
+
+    bound = Input::boundKey(GK_START);
+    addKeyboardMenuItem(GK_START, bound);
+
+    bound = Input::boundKey(GK_SELECT);
+    addKeyboardMenuItem(GK_SELECT, bound);
+}
+
+void Menu::populateGamepadMenu() {
+    SDL_GameControllerButton bound;
+
+    bound = Input::bound(GK_UP);
+    addGamepadMenuItem(GK_UP, bound);
+
+    bound = Input::bound(GK_DOWN);
+    addGamepadMenuItem(GK_DOWN, bound);
+
+    bound = Input::bound(GK_LEFT);
+    addGamepadMenuItem(GK_LEFT, bound);
+
+    bound = Input::bound(GK_RIGHT);
+    addGamepadMenuItem(GK_RIGHT, bound);
+
+    bound = Input::bound(GK_A);
+    addGamepadMenuItem(GK_A, bound);
+
+    bound = Input::bound(GK_B);
+    addGamepadMenuItem(GK_B, bound);
+
+    bound = Input::bound(GK_X);
+    addGamepadMenuItem(GK_X, bound);
+
+    bound = Input::bound(GK_Y);
+    addGamepadMenuItem(GK_Y, bound);
+
+    bound = Input::bound(GK_L);
+    addGamepadMenuItem(GK_L, bound);
+
+    bound = Input::bound(GK_R);
+    addGamepadMenuItem(GK_R, bound);
+
+    bound = Input::bound(GK_START);
+    addGamepadMenuItem(GK_START, bound);
+
+    bound = Input::bound(GK_SELECT);
+    addGamepadMenuItem(GK_SELECT, bound);
 }
 
 MenuItem::MenuItem(std::string key) : key(key), cb(nullptr), canSelect(false) {}
@@ -237,6 +385,10 @@ MenuItem::MenuItem(std::string key, menu_Callback cb) : key(key), cb(cb), canSel
 
 MenuItem::MenuItem(std::string key, std::string *value, menu_Callback cb) : key(key), value(value), cb(cb),
                                                                             canSelect(true) {}
+
+MenuItem::MenuItem(const char *key, const char *value, menu_Callback cb) : key(key), value2(value), cb(cb),
+                                                                           canSelect(true) {}
+
 
 void MenuItem::call(GameKeyEvent &key) {
     if (this->cb) cb(key);
@@ -254,11 +406,19 @@ void MenuItem::render(bool selected) {
     }
 
     if (this->value) {
+        // Two rows: key and value from pointer
         s.x = s.x / 2;
         ImGui::Button(this->key.c_str(), s);
         ImGui::SameLine();
         ImGui::Button(this->value->c_str(), s);
+    } else if (this->value2.size() > 0) {
+        // Two rows: key and value from prepopulated string
+        s.x = s.x / 2;
+        ImGui::Button(this->key.c_str(), s);
+        ImGui::SameLine();
+        ImGui::Button(this->value2.c_str(), s);
     } else {
+        // One row only
         ImGui::Button(this->key.c_str(), s);
     }
 

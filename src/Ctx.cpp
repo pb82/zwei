@@ -3,7 +3,7 @@
 #include "snd/Player.h"
 
 GameStateMachine::GameStateMachine() {
-    this->current.push(Start);
+    this->current.push(StateStart);
 }
 
 GameState GameStateMachine::currentState() {
@@ -12,15 +12,17 @@ GameState GameStateMachine::currentState() {
 
 void GameStateMachine::toggleMenu() {
     // Can't get out of the initial start menu by pressing esc
-    if (this->current.top() == Start) return;
+    if (this->current.top() == StateStart) return;
+    if (this->current.top() == StateSaving) return;
+    if (this->current.top() == StateLoading) return;
 
     // In-game allow to toggle the menu
-    if (this->current.top() == MainMenu) {
+    if (this->current.top() == StateMainMenu) {
         Player::instance().resume();
         this->current.pop();
     } else {
         Player::instance().pause();
-        this->current.push(MainMenu);
+        this->current.push(StateMainMenu);
     }
 }
 
