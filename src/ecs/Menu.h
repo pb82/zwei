@@ -2,6 +2,7 @@
 #define ZWEI_MENU_H
 
 #include <stack>
+#include <map>
 #include <memory>
 #include <vector>
 #include <functional>
@@ -19,81 +20,52 @@ enum GameMenu {
     Settings,
     AudioSettings,
     VideoSettings,
+    AreYouSure,
     Controls,
     Keyboard,
     Gamepad
 };
 
+enum MenuItemType {
+    ItemNewGame,
+    ItemAudioSettings,
+    ItemMusicVolume,
+    ItemEffectsVolume,
+    ItemVideoSettings,
+    ItemFps,
+    ItemWindowSize,
+    ItemQuit,
+    ItemAreYouSure,
+    ItemYes,
+    ItemNo,
+    ItemBack,
+};
+
 typedef std::function<void(GameKeyEvent &key)> menu_Callback;
 
-class MenuAction {
+class MenuItem {
 public:
-    MenuAction(const char *text, menu_Callback cb) : text(text), cb(cb) {}
 
-    virtual ~MenuAction() {}
+    MenuItem(std::string text);
 
-    virtual void invoke(GameKeyEvent &key) { this->cb(key); }
+    MenuItem(std::string key, menu_Callback cb);
 
-    virtual void render() = 0;
+    MenuItem(std::string key, std::string *value, menu_Callback cb);
 
-    void select() { this->selected = true; }
+    void call(GameKeyEvent &key);
 
-    void unselect() { this->selected = false; }
+    void render(bool selected = false);
 
-    bool enabled = true;
+    bool canSelect = true;
 
-protected:
+private:
 
-    std::string text;
+    std::string key;
+
+    std::string *value = nullptr;
 
     menu_Callback cb;
 
-    bool selected = false;
-
-};
-
-class MenuOption : public MenuAction {
-public:
-    MenuOption(const char *text, menu_Callback cb);
-
-    void render() override;
-
-};
-
-class MenuMusicVolume : public MenuAction {
-public:
-    MenuMusicVolume(bool music, menu_Callback cb);
-
-    void render() override;
-
-private:
-
-    bool music;
-
-};
-
-class MenuScreenResolution : public MenuAction {
-public:
-    MenuScreenResolution(menu_Callback cb);
-
-    void render() override;
-};
-
-class MenuFps : public MenuAction {
-public:
-    MenuFps(menu_Callback cb);
-
-    void render() override;
-};
-
-class MenuKeyBinding : public MenuAction {
-public:
-    MenuKeyBinding(const char *action, const char *bound, menu_Callback cb);
-
-    void render() override;
-
-private:
-    std::string bound;
 };
 
 class Menu : public Component {
@@ -104,41 +76,34 @@ public:
 
     void key(GameKeyEvent &key) override;
 
-    void reset(int selectedIndex);
-
-    void newGameEnabled(bool enabled);
-
 private:
 
-    void renderMenu(std::vector<std::unique_ptr<MenuAction>> &menu);
+    std::string currentFps;
 
-    void renderBindingMenu(std::vector<std::unique_ptr<MenuAction>> &menu);
+    std::string windowSize;
 
-    void renderControllerSettings();
+    std::string musicVolume;
 
-    int currentMenuItems();
+    std::string effectsVolume;
 
-    void populateGamepadMenu();
+    std::vector<std::shared_ptr<MenuItem>> items;
 
-    void populateKeyboardMenu();
+    std::map<MenuItemType, std::shared_ptr<MenuItem>> allItems;
 
-    void addGamepadMenuItem(GameKey k, SDL_GameControllerButton button);
+    void buildMenu();
 
-    void addKeyboardMenuItem(GameKey k, SDL_Keycode button);
+    // On game start, no map has been loaded yet
+    void buildStartMenu();
 
-    std::stack<GameMenu> level;
+    void up();
 
-    std::vector<std::unique_ptr<MenuAction>> menu_Main;
-    std::vector<std::unique_ptr<MenuAction>> menu_Settings;
-    std::vector<std::unique_ptr<MenuAction>> menu_AudioSettings;
-    std::vector<std::unique_ptr<MenuAction>> menu_VideoSettings;
-    std::vector<std::unique_ptr<MenuAction>> menu_ControllerSettings;
-    std::vector<std::unique_ptr<MenuAction>> menu_GamecontrollerSettings;
-    std::vector<std::unique_ptr<MenuAction>> menu_KeyboardSettings;
+    void down();
 
     int selectedIndex = 0;
 
     MenuState menuState = Normal;
+
+    std::stack<GameMenu> level;
 };
 
 

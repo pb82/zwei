@@ -59,14 +59,13 @@ namespace Api {
 
         // Stats
         auto stats = player->getComponent<Stats>();
-        stats->character.setBase(30, 10, 1, 1);
 
         // Hud
         auto hud = Manager::instance().addEntity(FOREGROUND);
         hud->addComponent<Hud>();
 
         setPlayerSpeed(3);
-        setPlayerStats(20, 1, 1, 1);
+        setPlayerStats(1, 1, 1, 1);
     }
 
     void setPlayerPosition(float x, float y) {
@@ -134,10 +133,6 @@ namespace Api {
         Rt_Map.clear();
         RT_Topology.clear();
         RT_Camera.setMapSize(0, 0);
-    }
-
-    void showNewGameMenu(bool show) {
-        RT_Menu->getComponent<Menu>()->newGameEnabled(show);
     }
 
     void setRoofHideTrigger(int entryX, int entryY) {

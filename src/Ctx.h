@@ -15,7 +15,10 @@
 enum GameState {
     Game,
     GameOver,
+    Start,
     MainMenu,
+    Saving,
+    Loading
 };
 
 struct GameStateMachine {

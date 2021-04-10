@@ -20,6 +20,7 @@
 #define RT_Player RT_Context.getPlayer()
 #define RT_Menu RT_Context.getMenu()
 #define RT_Memory RT_Context.getMemory()
+#define RT_State RT_Context.state
 
 // Shared runtime state
 class Rt {

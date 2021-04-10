@@ -28,8 +28,8 @@ St::St()
     supportedSizes.emplace_back(1366, 768);
     supportedSizes.emplace_back(1920, 1080);
 
-    supportedFps.push_back(60.0f);
     supportedFps.push_back(30.0f);
+    supportedFps.push_back(60.0f);
 }
 
 int St::getMusicVolume() {
@@ -90,9 +90,17 @@ ScreenResolution St::getWindowSize() {
     return supportedSizes.at(selectedWindowSize);
 }
 
+void St::getWindowSize(std::string &s) {
+    std::stringstream ss;
+    ss << supportedSizes.at(selectedWindowSize).w;
+    ss << " x ";
+    ss << supportedSizes.at(selectedWindowSize).h;
+    s = ss.str();
+}
+
 void St::incFps() {
     selectedFps++;
-    selectedFps %= supportedFps.size();
+    if (selectedFps >= supportedFps.size()) selectedFps = supportedFps.size() - 1;
 }
 
 void St::decFps() {

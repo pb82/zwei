@@ -10,7 +10,6 @@
 void Start::init() {
     Api::initPlayer();
     Api::setPlayerPosition(26, 15);
-    Api::showNewGameMenu(false);
     Api::loadMap("dungeon2.json");
 
     // Turn lights off initialls

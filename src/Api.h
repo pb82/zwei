@@ -23,8 +23,6 @@ namespace Api {
 
     void setGameOverState();
 
-    void showNewGameMenu(bool show);
-
     // Maps
     bool loadMap(const char *file);
 

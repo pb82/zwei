@@ -55,6 +55,7 @@
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
 std::string game_over("game over");
+std::string saving_game("saving game...");
 
 
 void placeTrigger(int x, int y, trigger_Fn enter, trigger_Fn exit) {
@@ -166,13 +167,41 @@ void renderMenu(tp frameStart) {
     if (delay > 0) SDL_Delay(delay);
 }
 
-void renderGameOver(tp frameStart, float *darkness) {
-    // auto t1 = Assets::instance().getTexture(TILES);
+void renderSave(tp frameStart) {
+    auto texture = Assets::instance().getTexture(BITMAPFONT);
+    SDL_Rect target;
+    target.x = (configWindowWidth / 2) - ((game_over.length() * 24) / 2);
+    target.y = (configWindowHeight / 2) - 12;
+    target.w = 32;
+    target.h = 32;
 
-    SDL_SetRenderDrawBlendMode(Gfx_Renderer, SDL_BLENDMODE_BLEND);
-    // SDL_SetTextureColorMod(t1->mem, 255, *darkness, *darkness);
-    // SDL_SetTextureAlphaMod(t1->mem, *darkness);
+    SDL_SetRenderDrawColor(Gfx_Renderer, 0, 0, 255, 255);
 
+    for (const char c : saving_game) {
+        SDL_Rect source;
+        Gfx::pickText(source, Text::fromChar(c), texture->w);
+        Draw::instance().draw(texture->mem, source, target);
+        target.x += 24;
+    }
+
+    // Flush
+    SDL_GL_SwapWindow(Gfx_Window);
+    SDL_RenderPresent(Gfx_Renderer);
+    // glFinish();
+
+    auto frameTime = std::chrono::system_clock::now() - frameStart;
+    float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
+    float delay = targetMillis - millis;
+
+    if (delay > 0) {
+        SDL_Delay(delay);
+    }
+
+    float dt = std::max(millis, delay);
+    Manager::instance().update(dt);
+}
+
+void renderGameOver(tp frameStart) {
     Manager::instance().render(BACKGROUND);
     Manager::instance().render(FLOOR);
     Manager::instance().render(WALLS);
@@ -195,8 +224,6 @@ void renderGameOver(tp frameStart, float *darkness) {
         target.x += 24;
     }
 
-    RT_Camera.magnify(0.999);
-
     // Flush
     SDL_GL_SwapWindow(Gfx_Window);
     SDL_RenderPresent(Gfx_Renderer);
@@ -212,9 +239,6 @@ void renderGameOver(tp frameStart, float *darkness) {
 
     float dt = std::max(millis, delay);
     Manager::instance().update(dt);
-
-    *darkness -= 0.5f;
-    if (*darkness <= 0) *darkness = 0.0f;
 }
 
 void renderGame(tp frameStart) {
@@ -267,9 +291,9 @@ void loop() {
 
     placeItem(32, 13, TORCH);
 
-    // Global alpha
-    float ga = 255.0f;
+    placeKakta(32, 15, true);
 
+    // Global alpha
     while (RT_Running) {
         auto frameStart = std::chrono::system_clock::now();
 
@@ -293,10 +317,9 @@ void loop() {
                     // stays pushed even when the command is cleared
                     if (gk.state == GK_RELEASED) Manager::instance().key(gk);
                 } else if (gk.state == GK_PUSHED && gk.key == GK_START) {
-                    RT_Menu->getComponent<Menu>()->reset(0);
                     Rt::instance().context.state.toggleMenu();
                 } else {
-                    if (RT_Context.state.currentState() == MainMenu) {
+                    if (RT_State.currentState() == MainMenu || RT_State.currentState() == Start) {
                         Manager::instance().uiInput(gk);
                     } else {
                         Manager::instance().key(gk);
@@ -307,15 +330,17 @@ void loop() {
 
         switch (RT_Context.state.currentState()) {
             case Game:
-                ga = 255.0f;
                 renderGame(frameStart);
                 break;
             case GameOver:
-                renderGameOver(frameStart, &ga);
+                renderGameOver(frameStart);
                 break;
             case MainMenu:
+            case Start:
                 renderMenu(frameStart);
                 break;
+            case Saving:
+                renderSave(frameStart);
             default:
                 continue;
         }

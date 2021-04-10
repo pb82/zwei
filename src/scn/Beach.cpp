@@ -7,7 +7,6 @@
 void Beach::init() {
     Api::initPlayer();
     Api::setPlayerPosition(7, 24);
-    Api::showNewGameMenu(false);
     Api::loadMap("beach.json");
     Api::setGameState();
     Api::setEnableLights(true);

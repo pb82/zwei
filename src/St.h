@@ -44,6 +44,8 @@ public:
 
     ScreenResolution getWindowSize();
 
+    void getWindowSize(std::string &s);
+
     void incFps();
 
     void decFps();

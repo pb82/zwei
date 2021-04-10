@@ -28,8 +28,8 @@ public:
     }
 
     void magnify(float factor) {
-        if (z >= 5) return;
-        if (z <= 0.1) return;
+        if (z >= 10) return;
+        if (z <= 1) return;
         this->z *= abs(factor);
     }
 
