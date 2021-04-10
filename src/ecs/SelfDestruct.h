@@ -17,7 +17,7 @@ public:
 
     float value;
 
-    void serialize(JSON::Value &to) override;
+    bool serialize(JSON::Value &to) override;
 
     std::string name() { return "selfDestruct"; }
 

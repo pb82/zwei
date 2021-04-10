@@ -20,7 +20,7 @@ public:
 
     void addFilter(std::shared_ptr<Filter> f);
 
-    void serialize(JSON::Value &to) override;
+    bool serialize(JSON::Value &to) override;
 
     std::string name() { return "sprite"; }
 

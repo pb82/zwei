@@ -10,13 +10,14 @@
 
 Stats::Stats(Entity &parent, bool render) : Component(parent), inventory(parent) {}
 
-void Stats::serialize(JSON::Value &to) {
+bool Stats::serialize(JSON::Value &to) {
     JSON::Value i;
     JSON::Value c;
     this->inventory.serialize(i);
     this->character.serialize(c);
     to["inventory"] = i;
     to["character"] = c;
+    return true;
 }
 
 void Stats::update(float dt) {

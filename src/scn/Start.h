@@ -9,6 +9,8 @@ public:
 
     void exit();
 
+    int id() { return 1; }
+
 };
 
 

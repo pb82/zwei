@@ -8,6 +8,9 @@ public:
     void init();
 
     void exit();
+
+    int id() { return 0; }
+
 };
 
 

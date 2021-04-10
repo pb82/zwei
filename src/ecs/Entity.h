@@ -73,8 +73,9 @@ public:
             auto name = pair.second->name();
 
             JSON::Value component = JSON::Object{{"component_type", pair.second->name()}};
-            pair.second->serialize(component);
-            c.push_back(component);
+            if (pair.second->serialize(component)) {
+                c.push_back(component);
+            }
         }
         to["components"] = c;
     }

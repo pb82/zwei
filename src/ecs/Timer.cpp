@@ -10,7 +10,7 @@
 
 Timer::Timer(Entity &parent) : Component(parent) {}
 
-void Timer::serialize(JSON::Value &to) {
+bool Timer::serialize(JSON::Value &to) {
     JSON::Array a;
     for (auto &v: this->timers) {
         a.push_back(JSON::Object{
@@ -20,6 +20,7 @@ void Timer::serialize(JSON::Value &to) {
         });
     }
     to["timers"] = a;
+    return true;
 }
 
 void Timer::update(float dt) {

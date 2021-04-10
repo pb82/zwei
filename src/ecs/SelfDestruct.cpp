@@ -5,10 +5,11 @@
 SelfDestruct::SelfDestruct(Entity &parent, SelfDestructType type, float value)
         : type(type), value(value), Component(parent) {}
 
-void SelfDestruct::serialize(JSON::Value &to) {
+bool SelfDestruct::serialize(JSON::Value &to) {
     to["type"] = this->type;
     to["current"] = this->current;
     to["value"] = this->value;
+    return true;
 }
 
 void SelfDestruct::update(float dt) {

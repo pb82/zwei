@@ -33,7 +33,7 @@ public:
 
     virtual void key(GameKeyEvent &key) {}
 
-    virtual void serialize(JSON::Value &to) {};
+    virtual bool serialize(JSON::Value &to) { return false; };
 
     virtual void deserialize(JSON::Value &from) {};
 

@@ -14,7 +14,7 @@ public:
 
     void render(uint8_t) override;
 
-    void serialize(JSON::Value &to) override;
+    bool serialize(JSON::Value &to) override;
 
     std::string name() { return "tile"; }
 

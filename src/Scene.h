@@ -9,6 +9,8 @@ public:
 
     virtual void exit() = 0;
 
+    virtual int id() = 0;
+
 };
 
 #endif //ZWEI_SCENE_H

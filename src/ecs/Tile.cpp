@@ -13,8 +13,9 @@ Tile::Tile(Entity &parent, Asset id)
     texture = Assets::instance().getTexture(id);
 }
 
-void Tile::serialize(JSON::Value &to) {
+bool Tile::serialize(JSON::Value &to) {
     to["assetId"] = this->id;
+    return true;
 }
 
 void Tile::pick(SDL_Rect &source) {
