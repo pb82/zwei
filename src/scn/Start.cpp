@@ -26,20 +26,13 @@ void Start::init() {
     Api::setDoor(34, 1);
 
     // Button to switch lights
-    Api::setInteractible(31, 12, [lights](Entity &p, JSON::Value &internalState) {
-        bool pushed = !lights;
-        auto button = internalState["pushed"];
-
-        if (button.is(JSON::JSON_BOOL)) {
-            pushed = button.as<bool>();
-        }
-
+    Api::setInteractible(31, 12, [lights](Entity &p) {
+        bool pushed = RT_Memory.getBool("scene.dungeon.button", false);
         auto animation = p.getComponent<Animation>();
-        if (pushed) animation->queueStateFramesForward();
+        if (!pushed) animation->queueStateFramesForward();
         else animation->queueStateFramesBackward();
-
-        Api::setEnableLights(pushed);
-        internalState["pushed"] = !pushed;
+        Api::setEnableLights(!pushed);
+        RT_Memory.setBool("scene.dungeon.button", !pushed);
     });
 
     Player::instance().playMusic(MUSIC_1);

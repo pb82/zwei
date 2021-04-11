@@ -4,7 +4,6 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "Acceleration.h"
-#include "../Rt.h"
 
 Interactible::Interactible(Entity &parent) : Component(parent) {}
 
@@ -49,6 +48,6 @@ void Interactible::interact() {
             }
         }
 
-        this->fn(this->parent, internalState);
+        this->fn(this->parent);
     }
 }

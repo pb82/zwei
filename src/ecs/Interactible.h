@@ -8,7 +8,7 @@
 #include "Component.h"
 
 
-typedef std::function<void(Entity &, JSON::Value &)> interact_Fn;
+typedef std::function<void(Entity &)> interact_Fn;
 
 class Interactible : public Component {
 public:
@@ -23,8 +23,6 @@ public:
 private:
 
     interact_Fn fn;
-
-    JSON::Value internalState;
 
 };
 

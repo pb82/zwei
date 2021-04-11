@@ -48,6 +48,8 @@ public:
 
     void save();
 
+    void load();
+
     void setActiveScene(SceneType s) {
         if (scenes.find(s) == scenes.end()) return;
         auto &scene = scenes.at(s);

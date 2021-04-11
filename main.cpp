@@ -52,6 +52,7 @@
 float targetMillis = (1 / St::instance().getFps()) * 1000;
 std::string game_over("game over");
 std::string saving_game("saving game...");
+std::string loading_game("loading game...");
 Color blackbox{0, 0, 0, 0};
 int globalFrameCounter = 0;
 int artificialDelay = St::instance().getFps();
@@ -163,6 +164,68 @@ void renderMenu(tp frameStart) {
     float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
     float delay = targetMillis - millis;
     if (delay > 0) SDL_Delay(delay);
+}
+
+void renderLoad(tp frameStart) {
+    auto texture = Assets::instance().getTexture(BITMAPFONT);
+    SDL_SetRenderDrawColor(Gfx_Renderer, 0, 0, 255, 255);
+
+    std::string message;
+    if (globalFrameCounter < artificialDelay) {
+        if (globalFrameCounter == 0) {
+            RT_Context.load();
+        }
+        message = saving_game;
+    } else {
+        RT_State.popState();
+        RT_State.pushState(StateGame);
+    }
+
+    SDL_Rect target;
+    target.x = (configWindowWidth / 2) - ((message.length() * 24) / 2);
+    target.y = (configWindowHeight / 2) - 12;
+    target.w = 32;
+    target.h = 32;
+
+    for (const char c : message) {
+        SDL_Rect source;
+        Gfx::pickText(source, Text::fromChar(c), texture->w);
+        Draw::instance().draw(texture->mem, source, target);
+        target.x += 24;
+    }
+
+    target.x = (configWindowWidth / 2) - (200 / 2);
+    target.y = (configWindowHeight / 2) + 32;
+    target.w = 200;
+    target.h = 32;
+
+    Draw::instance().rect(color_White, target);
+
+    target.x += 1;
+    target.y += 1;
+
+    float w = (100 / (float) artificialDelay) * (float) globalFrameCounter;
+    target.w = static_cast<int>(w * 2);
+    target.h -= 2;
+
+    Draw::instance().box(color_Blue, target);
+
+    // Flush
+    SDL_GL_SwapWindow(Gfx_Window);
+    SDL_RenderPresent(Gfx_Renderer);
+    // glFinish();
+
+    auto frameTime = std::chrono::system_clock::now() - frameStart;
+    float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
+    float delay = targetMillis - millis;
+
+    if (delay > 0) {
+        SDL_Delay(delay);
+    }
+
+    float dt = std::max(millis, delay);
+    Manager::instance().update(dt);
+    globalFrameCounter++;
 }
 
 void renderSave(tp frameStart) {

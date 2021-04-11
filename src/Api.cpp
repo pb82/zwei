@@ -171,7 +171,7 @@ namespace Api {
         if (wall) {
             wall->addComponent<Interactible>();
             auto action = wall->getComponent<Interactible>();
-            action->onInteract([x, y](Entity &parent, JSON::Value &) {
+            action->onInteract([x, y](Entity &parent) {
                 bool accessible = RT_Topology.flipBarrier(x, y);
                 parent.getComponent<Collider>()->suspended = accessible;
                 if (accessible) {
