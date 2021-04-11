@@ -23,7 +23,7 @@ enum GameMenu {
     AreYouSure,
     Controls,
     Keyboard,
-    Gamepad
+    Gamepad,
 };
 
 enum MenuItemType {
@@ -42,6 +42,7 @@ enum MenuItemType {
     ItemYes,
     ItemNo,
     ItemBack,
+    ItemSave,
 };
 
 typedef std::function<void(GameKeyEvent &key)> menu_Callback;
@@ -83,6 +84,8 @@ public:
 
     void key(GameKeyEvent &key) override;
 
+    void resetMenu();
+
 private:
 
     void addGamepadMenuItem(GameKey k, SDL_GameControllerButton button);
@@ -107,8 +110,7 @@ private:
 
     void buildMenu();
 
-    // On game start, no map has been loaded yet
-    void buildStartMenu();
+    void buildStartMenu(bool started);
 
     void up();
 

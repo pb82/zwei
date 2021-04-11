@@ -4,6 +4,10 @@ Mem::Mem() {
     memory = JSON::Object{};
 }
 
+void Mem::serialize(JSON::Value &to) {
+    to["memory"] = this->memory;
+}
+
 void Mem::del(const char *key) {
     memory[key] = JSON::null;
 }

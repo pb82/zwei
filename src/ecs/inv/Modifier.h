@@ -26,8 +26,6 @@ public:
 
     ModifierType type;
 
-private:
-
     float lifetime = 0.0f;
 
 };

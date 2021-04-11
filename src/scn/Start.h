@@ -5,6 +5,8 @@
 
 class Start : public Scene {
 public:
+    Start();
+
     void init();
 
     void exit();

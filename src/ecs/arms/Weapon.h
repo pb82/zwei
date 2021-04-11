@@ -29,8 +29,6 @@ public:
         *weight = 0;
         *decay = 0;
     }
-
-private:
 };
 
 #endif

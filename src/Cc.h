@@ -26,7 +26,7 @@ public:
 class ScreenTransition : public Command {
 public:
 
-    ScreenTransition(std::shared_ptr<Scene> newScene);
+    ScreenTransition(SceneType newScene);
 
     void render();
 
@@ -46,7 +46,7 @@ private:
 
     bool ready = false;
 
-    std::shared_ptr<Scene> newScene;
+    SceneType newScene;
 
 };
 

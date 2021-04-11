@@ -51,7 +51,13 @@ Menu::Menu(Entity &parent) : Component(parent) {
 
     allItems.emplace(ItemNewGame, std::make_shared<MenuItem>("New Game", [](GameKeyEvent &key) {
         if (key.key == GK_A) {
-            RT_Context.setActiveScene(std::make_shared<Start>());
+            RT_Context.setActiveScene(SceneDungeon);
+        }
+    }));
+
+    allItems.emplace(ItemSave, std::make_shared<MenuItem>("Save Game", [](GameKeyEvent &key) {
+        if (key.key == GK_A) {
+            RT_State.pushState(StateSaving);
         }
     }));
 
@@ -209,12 +215,20 @@ void Menu::key(GameKeyEvent &key) {
     }
 }
 
-void Menu::buildStartMenu() {
-    this->items.clear();
+void Menu::resetMenu() {
+    while (!this->level.empty()) this->level.pop();
+    this->level.push(Main);
+    this->selectedIndex = 0;
+}
 
+void Menu::buildStartMenu(bool started) {
     switch (this->level.top()) {
         case Main:
-            this->items.push_back(allItems.at(ItemNewGame));
+            if (!started) {
+                this->items.push_back(allItems.at(ItemNewGame));
+            } else {
+                this->items.push_back(allItems.at(ItemSave));
+            }
             this->items.push_back(allItems.at(ItemSettings));
             this->items.push_back(allItems.at(ItemQuit));
             return;
@@ -254,11 +268,16 @@ void Menu::buildStartMenu() {
 }
 
 void Menu::buildMenu() {
-    switch (RT_State.currentState()) {
+    this->items.clear();
+
+    auto state = RT_State.currentState();
+
+    switch (state) {
         case StateStart:
-            buildStartMenu();
+            buildStartMenu(false);
             return;
-        case StateGame:
+        case StateMainMenu:
+            buildStartMenu(true);
             return;
         default:
             return;

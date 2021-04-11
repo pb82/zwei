@@ -41,6 +41,8 @@ public:
 
     void dropWeapon();
 
+    void serialize(JSON::Value &to);
+
     // Why is this here?
     // To allow adding 'torches' to the game that can expire.
     // If the player uses a torch, which is inside the inventory, then

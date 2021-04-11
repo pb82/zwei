@@ -1,6 +1,8 @@
 #ifndef ZWEI_CHARACTER_H
 #define ZWEI_CHARACTER_H
 
+#include <JSON/value.h>
+
 #include <tuple>
 
 class Character {
@@ -18,6 +20,8 @@ public:
     std::tuple<int, int> getHitpoints();
 
     bool dead() const;
+
+    void serialize(JSON::Value &to);
 
 private:
 

@@ -22,7 +22,6 @@
 #include "src/ecs/Transform.h"
 #include "src/ecs/Sprite.h"
 #include "src/ecs/Acceleration.h"
-#include "src/ecs/Controller.h"
 #include "src/ecs/Collider.h"
 #include "src/ecs/Ai.h"
 #include "src/ecs/Attack.h"
@@ -48,15 +47,14 @@
 #include "src/ecs/Bar.h"
 
 #include "src/Api.h"
-#include "src/scn/Start.h"
-#include "src/scn/Entry.h"
-#include "src/scn/Beach.h"
 #include "src/ecs/arms/Stick.h"
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
 std::string game_over("game over");
 std::string saving_game("saving game...");
-
+Color blackbox{0, 0, 0, 0};
+int globalFrameCounter = 0;
+int artificialDelay = St::instance().getFps();
 
 void placeTrigger(int x, int y, trigger_Fn enter, trigger_Fn exit) {
     auto trigger = Manager::instance().addEntity(FLOOR);
@@ -169,20 +167,47 @@ void renderMenu(tp frameStart) {
 
 void renderSave(tp frameStart) {
     auto texture = Assets::instance().getTexture(BITMAPFONT);
+    SDL_SetRenderDrawColor(Gfx_Renderer, 0, 0, 255, 255);
+
+    std::string message;
+    if (globalFrameCounter < artificialDelay) {
+        if (globalFrameCounter == 0) {
+            RT_Context.save();
+        }
+        message = saving_game;
+    } else {
+        RT_State.popState();
+        RT_State.pushState(StateGame);
+    }
+
     SDL_Rect target;
-    target.x = (configWindowWidth / 2) - ((game_over.length() * 24) / 2);
+    target.x = (configWindowWidth / 2) - ((message.length() * 24) / 2);
     target.y = (configWindowHeight / 2) - 12;
     target.w = 32;
     target.h = 32;
 
-    SDL_SetRenderDrawColor(Gfx_Renderer, 0, 0, 255, 255);
-
-    for (const char c : saving_game) {
+    for (const char c : message) {
         SDL_Rect source;
         Gfx::pickText(source, Text::fromChar(c), texture->w);
         Draw::instance().draw(texture->mem, source, target);
         target.x += 24;
     }
+
+    target.x = (configWindowWidth / 2) - (200 / 2);
+    target.y = (configWindowHeight / 2) + 32;
+    target.w = 200;
+    target.h = 32;
+
+    Draw::instance().rect(color_White, target);
+
+    target.x += 1;
+    target.y += 1;
+
+    float w = (100 / (float) artificialDelay) * (float) globalFrameCounter;
+    target.w = static_cast<int>(w * 2);
+    target.h -= 2;
+
+    Draw::instance().box(color_Blue, target);
 
     // Flush
     SDL_GL_SwapWindow(Gfx_Window);
@@ -199,6 +224,7 @@ void renderSave(tp frameStart) {
 
     float dt = std::max(millis, delay);
     Manager::instance().update(dt);
+    globalFrameCounter++;
 }
 
 void renderGameOver(tp frameStart) {
@@ -212,6 +238,17 @@ void renderGameOver(tp frameStart) {
     auto texture = Assets::instance().getTexture(BITMAPFONT);
 
     SDL_Rect target;
+
+    target.x = 0;
+    target.y = 0;
+    target.w = configWindowWidth;
+    target.h = configWindowHeight;
+
+    Draw::instance().box(blackbox, target);
+    if (blackbox.a < 255) {
+        blackbox.a++;
+    }
+
     target.x = (configWindowWidth / 2) - ((game_over.length() * 24) / 2);
     target.y = (configWindowHeight / 2) - 12;
     target.w = 32;
@@ -287,11 +324,9 @@ void loop() {
         // return;
     }
 
-    RT_Context.setActiveScene(std::make_shared<Entry>());
+    RT_Context.setActiveScene(SceneStart);
 
     placeItem(32, 13, TORCH);
-
-    placeKakta(32, 15, true);
 
     // Global alpha
     while (RT_Running) {
@@ -317,7 +352,10 @@ void loop() {
                     // stays pushed even when the command is cleared
                     if (gk.state == GK_RELEASED) Manager::instance().key(gk);
                 } else if (gk.state == GK_PUSHED && gk.key == GK_START) {
-                    Rt::instance().context.state.toggleMenu();
+                    if (RT_State.toggleMenu()) {
+                        auto m = RT_Menu->getComponent<Menu>();
+                        m->resetMenu();
+                    }
                 } else {
                     if (RT_State.currentState() == StateMainMenu ||
                         RT_State.currentState() == StateStart) {
@@ -331,6 +369,8 @@ void loop() {
 
         switch (RT_Context.state.currentState()) {
             case StateGame:
+                blackbox.a = 0;
+                globalFrameCounter = 0;
                 renderGame(frameStart);
                 break;
             case StateGameOver:
@@ -398,7 +438,6 @@ void initSdl() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetSwapInterval(1);
-
 
     if (SDL_Init(sdlFlags) != 0) {
         exit(1);

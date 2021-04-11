@@ -5,6 +5,8 @@
 
 class Beach : public Scene {
 public:
+    Beach();
+
     void init();
 
     void exit();

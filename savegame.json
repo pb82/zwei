@@ -1,0 +1,47 @@
+{
+    "inventory": {
+        "items": [{
+            "number": 0,
+            "type": 0
+        }, {
+            "number": 0,
+            "type": 0
+        }, {
+            "number": 0,
+            "type": 0
+        }, {
+            "number": 0,
+            "type": 0
+        }, {
+            "number": 0,
+            "type": 0
+        }, {
+            "number": 0,
+            "type": 0
+        }, {
+            "number": 0,
+            "type": 0
+        }, {
+            "number": 0,
+            "type": 0
+        }, {
+            "number": 0,
+            "type": 0
+        }, {
+            "number": 0,
+            "type": 0
+        }],
+        "modifiers": []
+    },
+    "memory": {
+
+    },
+    "player": {
+        "baseDefense": 1,
+        "baseDexterity": 1,
+        "baseStrength": 1,
+        "hitpoints": 1,
+        "maxHitpoints": 1
+    },
+    "scene": 1
+}

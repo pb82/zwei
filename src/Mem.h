@@ -13,6 +13,8 @@ public:
 
     bool getBool(const char *key, bool defaultValue);
 
+    void serialize(JSON::Value &to);
+
 private:
     JSON::Value memory;
 };

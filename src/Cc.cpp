@@ -7,7 +7,7 @@
 #include "alg/Text.h"
 #include "Rt.h"
 
-ScreenTransition::ScreenTransition(std::shared_ptr<Scene> newScene) : newScene(newScene) {}
+ScreenTransition::ScreenTransition(SceneType newScene) : newScene(newScene) {}
 
 void ScreenTransition::update(float dt) {
     frames += 8;

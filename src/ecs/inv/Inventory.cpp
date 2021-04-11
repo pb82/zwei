@@ -6,16 +6,35 @@
 
 #include "../../Gfx.h"
 #include "../../Draw.h"
-#include "../../../config.h"
 #include "../../alg/Text.h"
-#include "../../Rt.h"
 #include "../Collectable.h"
 #include "../Collider.h"
-#include "../Manager.h"
 #include "../../snd/Player.h"
 
 Inventory::Inventory(Entity &parent) : parent(parent) {
     this->slots.resize(MAX_SLOTS);
+}
+
+void Inventory::serialize(JSON::Value &to) {
+    JSON::Array items;
+    for (int i = 0; i < this->slots.size(); i++) {
+        JSON::Object o;
+        o["type"] = this->slots.at(i).type;
+        o["number"] = this->slots.at(i).number;
+        if (this->slots.at(i).item) {
+            o["equipped"] = this->slots.at(i).item->equipped;
+        }
+        items.push_back(o);
+    }
+    to["inventory"]["items"] = items;
+    JSON::Array mods;
+    for (int i = 0; i < this->modifiers.size(); i++) {
+        JSON::Object m;
+        m["type"] = this->modifiers.at(i)->type;
+        m["lifetime"] = this->modifiers.at(i)->lifetime;
+        mods.push_back(m);
+    }
+    to["inventory"]["modifiers"] = mods;
 }
 
 bool Inventory::hasModifier(ModifierType type) {
@@ -149,6 +168,7 @@ void Inventory::use() {
             } else {
                 slot.item.reset();
                 slot.type = EMPTY_SLOT;
+                slot.number = 0;
             }
         }
     }

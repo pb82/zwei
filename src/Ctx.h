@@ -24,7 +24,9 @@ enum GameState {
 struct GameStateMachine {
     GameStateMachine();
 
-    void toggleMenu();
+    bool toggleMenu();
+
+    void popState();
 
     void pushState(GameState state);
 
@@ -38,16 +40,25 @@ private:
 // Shared between all entities
 class Ctx {
 public:
+    Ctx();
+
     void setPlayer(std::shared_ptr<Entity> player);
 
     void setMenu(std::shared_ptr<Entity> menu);
 
-    void setActiveScene(std::shared_ptr<Scene> s) {
+    void save();
+
+    void setActiveScene(SceneType s) {
+        if (scenes.find(s) == scenes.end()) return;
+        auto &scene = scenes.at(s);
+
         if (activeScene) {
+            if (activeScene->getSceneType() == s) return;
             activeScene->exit();
             activeScene.reset();
         }
-        activeScene = s;
+
+        activeScene = scene;
         activeScene->init();
     }
 
@@ -71,6 +82,8 @@ private:
     std::shared_ptr<Entity> menu = nullptr;
 
     std::shared_ptr<Scene> activeScene = nullptr;
+
+    std::unordered_map<SceneType, std::shared_ptr<Scene>> scenes;
 
     Topology topology;
 

@@ -7,6 +7,8 @@
 #include "Beach.h"
 #include "../ecs/Animation.h"
 
+Start::Start() : Scene(SceneDungeon) {}
+
 void Start::init() {
     Api::initPlayer();
     Api::setPlayerPosition(26, 15);
@@ -44,7 +46,7 @@ void Start::init() {
 
     // Show message only when player enters from the south
     Api::setTrigger(34, 0, [](float) {
-        Rt_Commands.push(std::make_shared<ScreenTransition>(std::make_shared<Beach>()));
+        Rt_Commands.push(std::make_shared<ScreenTransition>(SceneBeach));
     }, nullptr);
 }
 

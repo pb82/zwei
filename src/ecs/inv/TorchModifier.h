@@ -11,10 +11,6 @@ public:
 
     float modify(float in) override;
 
-private:
-
-    float duration = 0.0f;
-
 };
 
 
