@@ -82,3 +82,7 @@ void Ctx::save() {
         f.write(result);
     }
 }
+
+void Ctx::load() {
+
+}
