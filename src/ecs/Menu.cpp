@@ -61,6 +61,12 @@ Menu::Menu(Entity &parent) : Component(parent) {
         }
     }));
 
+    allItems.emplace(ItemLoad, std::make_shared<MenuItem>("Continue", [](GameKeyEvent &key) {
+        if (key.key == GK_A) {
+            RT_State.pushState(StateLoading);
+        }
+    }));
+
     allItems.emplace(ItemSettings, std::make_shared<MenuItem>("Settings", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.push(Settings);
@@ -228,6 +234,9 @@ void Menu::buildStartMenu(bool started) {
                 this->items.push_back(allItems.at(ItemNewGame));
             } else {
                 this->items.push_back(allItems.at(ItemSave));
+            }
+            if (RT_Context.savegameExists()) {
+                this->items.push_back(allItems.at(ItemLoad));
             }
             this->items.push_back(allItems.at(ItemSettings));
             this->items.push_back(allItems.at(ItemQuit));

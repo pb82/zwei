@@ -42,11 +42,17 @@ class Ctx {
 public:
     Ctx();
 
+    ~Ctx() {
+        if (saved) delete saved;
+    }
+
     void setPlayer(std::shared_ptr<Entity> player);
 
     void setMenu(std::shared_ptr<Entity> menu);
 
     void save();
+
+    bool savegameExists();
 
     void load();
 
@@ -91,6 +97,7 @@ private:
 
     Mem memory;
 
+    bool *saved = nullptr;
 };
 
 

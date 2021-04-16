@@ -83,6 +83,15 @@ void Ctx::save() {
     }
 }
 
+bool Ctx::savegameExists() {
+    if (!saved) {
+        File f("savegame.json");
+        saved = new bool;
+        *saved = f.open();
+    }
+    return saved;
+}
+
 void Ctx::load() {
 
 }

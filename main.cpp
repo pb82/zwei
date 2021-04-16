@@ -175,7 +175,7 @@ void renderLoad(tp frameStart) {
         if (globalFrameCounter == 0) {
             RT_Context.load();
         }
-        message = saving_game;
+        message = loading_game;
     } else {
         RT_State.popState();
         RT_State.pushState(StateGame);
@@ -231,6 +231,8 @@ void renderLoad(tp frameStart) {
 void renderSave(tp frameStart) {
     auto texture = Assets::instance().getTexture(BITMAPFONT);
     SDL_SetRenderDrawColor(Gfx_Renderer, 0, 0, 255, 255);
+
+
 
     std::string message;
     if (globalFrameCounter < artificialDelay) {
@@ -445,6 +447,10 @@ void loop() {
                 break;
             case StateSaving:
                 renderSave(frameStart);
+                break;
+            case StateLoading:
+                renderLoad(frameStart);
+                break;
             default:
                 continue;
         }
