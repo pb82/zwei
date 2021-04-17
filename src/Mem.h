@@ -15,6 +15,8 @@ public:
 
     void serialize(JSON::Value &to);
 
+    void deserialize(JSON::Value &from);
+
 private:
     JSON::Value memory;
 };

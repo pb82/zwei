@@ -50,7 +50,7 @@ public:
 
     void setMenu(std::shared_ptr<Entity> menu);
 
-    void save();
+    void save(float x, float y);
 
     bool savegameExists();
 

@@ -67,10 +67,13 @@ std::shared_ptr<Entity> Ctx::getMenu() {
     return this->menu;
 }
 
-void Ctx::save() {
+void Ctx::save(float x, float y) {
     auto stats = getPlayer()->getComponent<Stats>();
     JSON::Value to;
+    to["x"] = x;
+    to["y"] = y;
     to["scene"] = activeScene->getSceneType();
+    to["renderHints"] = Manager::instance().getRenderHints();
     stats->inventory.serialize(to);
     stats->character.serialize(to);
     this->memory.serialize(to);
@@ -80,6 +83,11 @@ void Ctx::save() {
         JSON::PrettyPrinter p;
         std::string result = p.print(to);
         f.write(result);
+
+        if (!saved) {
+            saved = new bool;
+        }
+        *saved = true;
     }
 }
 
@@ -93,5 +101,16 @@ bool Ctx::savegameExists() {
 }
 
 void Ctx::load() {
+    File f("savegame.json");
+    if (f.open()) {
+        std::string buffer;
+        buffer.resize(f.size);
+        f.read(buffer, 0, f.size);
 
+        JSON::Value v;
+        JSON::Parser p;
+        p.parse(v, buffer);
+
+        this->memory.deserialize(v);
+    }
 }

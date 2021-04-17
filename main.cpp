@@ -171,8 +171,13 @@ void renderLoad(tp frameStart) {
     SDL_SetRenderDrawColor(Gfx_Renderer, 0, 0, 255, 255);
 
     std::string message;
+
+    // Loading a saved game
     if (globalFrameCounter < artificialDelay) {
-        if (globalFrameCounter == 0) {
+        if (globalFrameCounter <= 0) {
+            // First flush all entities
+            Manager::instance().resetAll();
+        } else if (globalFrameCounter <= 1) {
             RT_Context.load();
         }
         message = loading_game;
@@ -232,12 +237,12 @@ void renderSave(tp frameStart) {
     auto texture = Assets::instance().getTexture(BITMAPFONT);
     SDL_SetRenderDrawColor(Gfx_Renderer, 0, 0, 255, 255);
 
-
-
     std::string message;
     if (globalFrameCounter < artificialDelay) {
         if (globalFrameCounter == 0) {
-            RT_Context.save();
+            float x, y;
+            Api::getPlayerPosition(x, y);
+            RT_Context.save(x, y);
         }
         message = saving_game;
     } else {

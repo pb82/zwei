@@ -14,6 +14,8 @@ namespace Api {
 
     void setPlayerPosition(float x, float y);
 
+    void getPlayerPosition(float &x, float &y);
+
     void setPlayerStats(int hp, int str, int dex, int def);
 
     // State

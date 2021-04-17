@@ -83,6 +83,15 @@ namespace Api {
         }
     }
 
+    void getPlayerPosition(float &x, float &y) {
+        if (!RT_Player) return;
+        if (RT_Player->hasComponent<Transform>()) {
+            auto transform = RT_Player->getComponent<Transform>();
+            x = transform->p.x;
+            y = transform->p.y;
+        }
+    }
+
     void setPlayerSpeed(float maxSpeed) {
         if (!RT_Player) return;
         if (!RT_Player->hasComponent<Acceleration>()) {

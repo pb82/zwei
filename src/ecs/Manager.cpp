@@ -6,6 +6,10 @@
 #include "Timer.h"
 
 Manager::Manager() {
+    init();
+}
+
+void Manager::init() {
     entities.emplace(LayerType::FOREGROUND, std::vector<std::shared_ptr<Entity>>());
     entities.emplace(LayerType::ITEMS, std::vector<std::shared_ptr<Entity>>());
     entities.emplace(LayerType::OBJECTS, std::vector<std::shared_ptr<Entity>>());
@@ -20,6 +24,14 @@ Manager::Manager() {
     timers = std::make_shared<Entity>();
     timers->addComponent<Timer>();
     enqueue(timers, FOREGROUND);
+}
+
+void Manager::resetAll() {
+    entities.clear();
+    while (!pendingEntities.empty()) pendingEntities.pop();
+    timers.reset();
+    renderHints = 0;
+    init();
 }
 
 void Manager::addTimer(int tile, float duration) {

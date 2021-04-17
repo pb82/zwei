@@ -8,6 +8,10 @@ void Mem::serialize(JSON::Value &to) {
     to["memory"] = this->memory;
 }
 
+void Mem::deserialize(JSON::Value &from) {
+    this->memory = from["memory"];
+}
+
 void Mem::del(const char *key) {
     memory[key] = JSON::null;
 }

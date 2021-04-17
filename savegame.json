@@ -34,7 +34,7 @@
         "modifiers": []
     },
     "memory": {
-
+        "scene.dungeon.button": true
     },
     "player": {
         "baseDefense": 1,
@@ -43,5 +43,8 @@
         "hitpoints": 1,
         "maxHitpoints": 1
     },
-    "scene": 2
+    "renderHints": 0,
+    "scene": 1,
+    "x": 28.9837,
+    "y": 13.9113
 }

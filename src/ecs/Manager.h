@@ -61,8 +61,14 @@ public:
 
     void addTimer(int tile, float duration);
 
+    void resetAll();
+
+    uint8_t getRenderHints() { return this->renderHints; }
+
 private:
     Manager();
+
+    void init();
 
     std::unordered_map<LayerType, std::vector<std::shared_ptr<Entity>>> entities;
 
