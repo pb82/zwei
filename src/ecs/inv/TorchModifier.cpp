@@ -1,6 +1,6 @@
 #include "TorchModifier.h"
 
-TorchModifier::TorchModifier(float lifetime) : Modifier(CIRCLE_OF_LIGHT, lifetime) {}
+TorchModifier::TorchModifier(float lifetime, int tile) : Modifier(CIRCLE_OF_LIGHT, lifetime, tile) {}
 
 void TorchModifier::update(float dt) {
     Modifier::update(dt);

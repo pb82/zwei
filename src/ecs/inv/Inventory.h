@@ -43,6 +43,10 @@ public:
 
     void serialize(JSON::Value &to);
 
+    void deserialize(JSON::Value &from);
+
+    void resetAll();
+
     // Why is this here?
     // To allow adding 'torches' to the game that can expire.
     // If the player uses a torch, which is inside the inventory, then
@@ -52,8 +56,8 @@ public:
     std::shared_ptr<Weapon> weapon = nullptr;
 
     template<typename T>
-    void addModifier(float lifetime) {
-        auto m = std::make_shared<T>(lifetime);
+    void addModifier(float lifetime, int tile) {
+        auto m = std::make_shared<T>(lifetime, tile);
         modifiers.push_back(m);
     }
 
@@ -66,6 +70,8 @@ private:
     bool addStackableItem(std::shared_ptr<Item> item);
 
     bool addSingleSlotItem(std::shared_ptr<Item> item);
+
+    void addItems(ItemType type, int number);
 
     std::vector<InventoryItem> slots;
 

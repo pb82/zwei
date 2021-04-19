@@ -45,6 +45,8 @@ public:
 
     std::shared_ptr<Interactible> getInteractible(int x, int y);
 
+    std::shared_ptr<Entity> getInteractibles();
+
     void update(float dt);
 
     void render(LayerType layer);
@@ -60,6 +62,8 @@ public:
     void clearRenderHint(uint8_t hint);
 
     void addTimer(int tile, float duration);
+
+    void addTimer(int tile, float duration, float max);
 
     void resetAll();
 

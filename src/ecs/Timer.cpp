@@ -32,6 +32,10 @@ void Timer::addTimer(int tile, float max) {
     timers.emplace_back(tile, max);
 }
 
+void Timer::addTimer(int tile, float cur, float max) {
+    timers.emplace_back(tile, cur, max);
+}
+
 void Timer::render(uint8_t) {
     SDL_Rect target;
     SDL_Rect bar;

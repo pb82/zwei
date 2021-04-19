@@ -111,6 +111,13 @@ void Ctx::load() {
         JSON::Parser p;
         p.parse(v, buffer);
 
+        SceneType sceneType = static_cast<SceneType>(v["scene"].as<int>());
+        setActiveScene(sceneType);
+
         this->memory.deserialize(v);
+        auto stats = this->getPlayer()->getComponent<Stats>();
+        stats->character.deserialize(v);
+        stats->inventory.deserialize(v);
+
     }
 }

@@ -44,6 +44,7 @@ enum MenuItemType {
     ItemBack,
     ItemSave,
     ItemLoad,
+    ItemContinue,
 };
 
 typedef std::function<void(GameKeyEvent &key)> menu_Callback;

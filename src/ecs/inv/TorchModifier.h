@@ -5,7 +5,7 @@
 
 class TorchModifier : public Modifier {
 public:
-    TorchModifier(float lifetime);
+    TorchModifier(float lifetime, int tile);
 
     void update(float dt) override;
 

@@ -174,10 +174,12 @@ void renderLoad(tp frameStart) {
 
     // Loading a saved game
     if (globalFrameCounter < artificialDelay) {
-        if (globalFrameCounter <= 0) {
+        if (globalFrameCounter < 1) {
             // First flush all entities
             Manager::instance().resetAll();
-        } else if (globalFrameCounter <= 1) {
+        } else if (globalFrameCounter < 2) {
+            Api::init();
+        } else if (globalFrameCounter < 3) {
             RT_Context.load();
         }
         message = loading_game;

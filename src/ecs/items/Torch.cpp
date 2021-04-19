@@ -18,7 +18,7 @@ bool Torch::use(std::shared_ptr<Entity> on) {
     auto stats = on->getComponent<Stats>();
     if (!stats->inventory.hasModifier(CIRCLE_OF_LIGHT)) {
         Manager::instance().addTimer(tile(), lifetime);
-        stats->inventory.addModifier<TorchModifier>(this->lifetime);
+        stats->inventory.addModifier<TorchModifier>(this->lifetime, tile());
         return true;
     }
     return false;

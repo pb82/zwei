@@ -35,6 +35,8 @@ public:
 
     bool equipped = false;
 
+    static std::shared_ptr<Item> make(ItemType type);
+
     static std::shared_ptr<Entity> make(Position p, ItemType type);
 
     static std::shared_ptr<Entity> make(Position p, std::shared_ptr<Item> item);

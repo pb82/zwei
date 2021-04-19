@@ -12,6 +12,12 @@ struct TimerValue {
         this->cur = 0.0f;
     }
 
+    TimerValue(int tile, float cur, float max) {
+        this->tile = tile;
+        this->max = max;
+        this->cur = cur;
+    }
+
     int tile = 0;
     float max = 0.0f;
     float cur = 0.0f;
@@ -34,6 +40,8 @@ public:
     void update(float dt) override;
 
     void addTimer(int tile, float max);
+
+    void addTimer(int tile, float cur, float max);
 
 private:
 

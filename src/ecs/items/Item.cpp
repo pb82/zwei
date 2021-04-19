@@ -8,27 +8,25 @@
 #include "../Analytics.h"
 #include "Torch.h"
 
-std::shared_ptr<Entity> Item::make(Position p, ItemType type) {
-    std::shared_ptr<Item> item = nullptr;
+std::shared_ptr<Item> Item::make(ItemType type) {
     switch (type) {
         case EMPTY_SLOT:
             return nullptr;
         case HEALTH_POTION:
-            item = std::make_shared<HealthPotion>();
-            break;
+            return std::make_shared<HealthPotion>();
         case STICK:
-            item = std::make_shared<StickItem>();
-            break;
+            return std::make_shared<StickItem>();
         case BOW:
-            item = std::make_shared<BowItem>();
-            break;
+            return std::make_shared<BowItem>();
         case TORCH:
-            item = std::make_shared<Torch>();
-            break;
+            return std::make_shared<Torch>();
         default:
             return nullptr;
     }
+}
 
+std::shared_ptr<Entity> Item::make(Position p, ItemType type) {
+    std::shared_ptr<Item> item = make(type);
     return make(p, item);
 }
 

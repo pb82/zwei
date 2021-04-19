@@ -10,7 +10,7 @@ enum ModifierType {
 class Modifier {
 public:
 
-    Modifier(ModifierType type, float lifetime) : lifetime(lifetime), type(type) {}
+    Modifier(ModifierType type, float lifetime, int tile) : lifetime(lifetime), max(lifetime), type(type), tile(tile) {}
 
     bool running() {
         return lifetime > 0;
@@ -27,6 +27,10 @@ public:
     ModifierType type;
 
     float lifetime = 0.0f;
+
+    float max = 0.0f;
+
+    int tile = 0;
 
 };
 

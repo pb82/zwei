@@ -10,6 +10,8 @@
 #include "../Collectable.h"
 #include "../Collider.h"
 #include "../../snd/Player.h"
+#include "../items/HealthPotion.h"
+#include "TorchModifier.h"
 
 Inventory::Inventory(Entity &parent) : parent(parent) {
     this->slots.resize(MAX_SLOTS);
@@ -32,9 +34,39 @@ void Inventory::serialize(JSON::Value &to) {
         JSON::Object m;
         m["type"] = this->modifiers.at(i)->type;
         m["lifetime"] = this->modifiers.at(i)->lifetime;
+        m["max"] = this->modifiers.at(i)->max;
+        m["tile"] = this->modifiers.at(i)->tile;
         mods.push_back(m);
     }
     to["inventory"]["modifiers"] = mods;
+}
+
+void Inventory::deserialize(JSON::Value &from) {
+    auto loadedItems = from["inventory"]["items"].as<JSON::Array>();
+    for (auto &item : loadedItems) {
+        ItemType t = static_cast<ItemType>(item["type"].as<int>());
+        int number = item["number"].as<int>();
+        addItems(t, number);
+    }
+    auto loadedModifiers = from["inventory"]["modifiers"].as<JSON::Array>();
+    for (auto &mod : loadedModifiers) {
+        ModifierType t = static_cast<ModifierType>(mod["type"].as<int>());
+        switch (t) {
+            case CIRCLE_OF_LIGHT:
+                float lifetime = mod["lifetime"].as<float>();
+                float max = mod["max"].as<float>();
+                int tile = mod["tile"].as<int>();
+                addModifier<TorchModifier>(tile, lifetime);
+                Manager::instance().addTimer(tile, lifetime, max);
+                break;
+        }
+    }
+}
+
+void Inventory::resetAll() {
+    this->slots.clear();
+    this->modifiers.clear();
+    this->slots.resize(MAX_SLOTS);
 }
 
 bool Inventory::hasModifier(ModifierType type) {
@@ -111,6 +143,18 @@ bool Inventory::addSingleSlotItem(std::shared_ptr<Item> item) {
         }
     }
     return false;
+}
+
+void Inventory::addItems(ItemType type, int number) {
+    if (type == EMPTY_SLOT) return;
+    for (auto &slot : slots) {
+        if (slot.type == EMPTY_SLOT) {
+            slot.type = type;
+            slot.number = number;
+            slot.item = Item::make(type);
+            return;
+        }
+    }
 }
 
 void Inventory::drop() {
