@@ -8,6 +8,7 @@
 #include "scn/Beach.h"
 #include "ecs/Stats.h"
 #include "io/Out.h"
+#include "ecs/Acceleration.h"
 
 GameStateMachine::GameStateMachine() {
     this->current.push(StateStart);
@@ -69,9 +70,11 @@ std::shared_ptr<Entity> Ctx::getMenu() {
 
 void Ctx::save(float x, float y) {
     auto stats = getPlayer()->getComponent<Stats>();
+    auto acc = getPlayer()->getComponent<Acceleration>();
     JSON::Value to;
     to["x"] = x;
     to["y"] = y;
+    to["direction"] = acc->getDirection();
     to["scene"] = activeScene->getSceneType();
     to["renderHints"] = Manager::instance().getRenderHints();
     stats->inventory.serialize(to);
@@ -100,7 +103,7 @@ bool Ctx::savegameExists() {
     return saved;
 }
 
-void Ctx::load() {
+void Ctx::load(float *x, float *y) {
     File f("savegame.json");
     if (f.open()) {
         std::string buffer;
@@ -119,5 +122,10 @@ void Ctx::load() {
         stats->character.deserialize(v);
         stats->inventory.deserialize(v);
 
+        *x = v["x"].as<float>();
+        *y = v["y"].as<float>();
+
+        uint8_t renderHints = static_cast<uint8_t>(v["renderHints"].as<int>());
+        Manager::instance().setRenderHints(renderHints);
     }
 }

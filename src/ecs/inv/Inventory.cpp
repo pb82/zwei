@@ -56,8 +56,8 @@ void Inventory::deserialize(JSON::Value &from) {
                 float lifetime = mod["lifetime"].as<float>();
                 float max = mod["max"].as<float>();
                 int tile = mod["tile"].as<int>();
-                addModifier<TorchModifier>(tile, lifetime);
-                Manager::instance().addTimer(tile, lifetime, max);
+                addModifier<TorchModifier>(lifetime, tile);
+                Manager::instance().addTimer(tile, (max - lifetime), max);
                 break;
         }
     }

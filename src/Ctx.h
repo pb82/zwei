@@ -54,7 +54,7 @@ public:
 
     bool savegameExists();
 
-    void load();
+    void load(float *x, float *y);
 
     void setActiveScene(SceneType s) {
         if (scenes.find(s) == scenes.end()) return;

@@ -59,6 +59,8 @@ public:
 
     void setRenderHint(uint8_t hint);
 
+    void setRenderHints(uint8_t hints);
+
     void clearRenderHint(uint8_t hint);
 
     void addTimer(int tile, float duration);

@@ -48,6 +48,10 @@ void Manager::setRenderHint(uint8_t hint) {
     renderHints |= hint;
 }
 
+void Manager::setRenderHints(uint8_t hints) {
+    renderHints = hints;
+}
+
 void Manager::clearRenderHint(uint8_t hint) {
     renderHints &= ~(hint);
 }

@@ -170,8 +170,6 @@ void renderLoad(tp frameStart) {
     auto texture = Assets::instance().getTexture(BITMAPFONT);
     SDL_SetRenderDrawColor(Gfx_Renderer, 0, 0, 255, 255);
 
-    std::string message;
-
     // Loading a saved game
     if (globalFrameCounter < artificialDelay) {
         if (globalFrameCounter < 1) {
@@ -180,21 +178,24 @@ void renderLoad(tp frameStart) {
         } else if (globalFrameCounter < 2) {
             Api::init();
         } else if (globalFrameCounter < 3) {
-            RT_Context.load();
+            auto s = RT_State.currentState();
+            float x = 0, y = 0;
+            RT_Context.load(&x, &y);
+            Api::setPlayerPosition(x, y);
+            RT_State.pushState(s);
         }
-        message = loading_game;
     } else {
         RT_State.popState();
         RT_State.pushState(StateGame);
     }
 
     SDL_Rect target;
-    target.x = (configWindowWidth / 2) - ((message.length() * 24) / 2);
+    target.x = (configWindowWidth / 2) - ((loading_game.length() * 24) / 2);
     target.y = (configWindowHeight / 2) - 12;
     target.w = 32;
     target.h = 32;
 
-    for (const char c : message) {
+    for (const char c : loading_game) {
         SDL_Rect source;
         Gfx::pickText(source, Text::fromChar(c), texture->w);
         Draw::instance().draw(texture->mem, source, target);
