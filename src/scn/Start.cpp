@@ -14,7 +14,7 @@ void Start::init() {
     Api::setPlayerPosition(26, 15);
     Api::loadMap("dungeon2.json");
 
-    // Turn lights off initialls
+    // Turn lights off initially
     bool lights = false;
     Api::setEnableLights(lights);
 

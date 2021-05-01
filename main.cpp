@@ -175,6 +175,7 @@ void renderLoad(tp frameStart) {
         if (globalFrameCounter < 1) {
             // First flush all entities
             Manager::instance().resetAll();
+            RT_Context.setPlayer(nullptr);
         } else if (globalFrameCounter < 2) {
             Api::init();
         } else if (globalFrameCounter < 3) {

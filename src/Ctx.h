@@ -61,7 +61,6 @@ public:
         auto &scene = scenes.at(s);
 
         if (activeScene) {
-            if (activeScene->getSceneType() == s) return;
             activeScene->exit();
             activeScene.reset();
         }
