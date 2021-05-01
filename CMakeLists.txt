@@ -39,9 +39,9 @@ if(APPLE)
             PRIVATE ${zwei_SOURCE_DIR}/imgui
             PRIVATE ${zwei_SOURCE_DIR}/base64
             PRIVATE ${zwei_SOURCE_DIR}/assets
-            PRIVATE ${zwei_SOURCE_DIR}/sdl/SDL
-            PRIVATE ${zwei_SOURCE_DIR}/sdl/IMAGE
-            PRIVATE ${zwei_SOURCE_DIR}/sdl/MIXER
+            PRIVATE ${zwei_SOURCE_DIR}/sdl/darwin/SDL
+            PRIVATE ${zwei_SOURCE_DIR}/sdl/darwin/IMAGE
+            PRIVATE ${zwei_SOURCE_DIR}/sdl/darwin/MIXER
     )
 
     target_link_libraries(
@@ -56,7 +56,6 @@ if(UNIX AND NOT APPLE)
     find_package(SDL2 REQUIRED)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_mixer REQUIRED)
-    find_package(SDL2_ttf REQUIRED)
 
     target_include_directories(
             zwei
@@ -64,9 +63,9 @@ if(UNIX AND NOT APPLE)
             PRIVATE ${zwei_SOURCE_DIR}/imgui
             PRIVATE ${zwei_SOURCE_DIR}/base64
             PRIVATE ${zwei_SOURCE_DIR}/assets
-            PRIVATE ${SDL2_INCLUDE_DIRS}
-            PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS}
-            PRIVATE ${SDL2_MIXER_INCLUDE_DIRS}
+            PRIVATE ${zwei_SOURCE_DIR}/sdl/linux/SDL
+            PRIVATE ${zwei_SOURCE_DIR}/sdl/linux/IMAGE
+            PRIVATE ${zwei_SOURCE_DIR}/sdl/linux/MIXER
     )
 
     target_link_libraries(
