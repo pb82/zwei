@@ -53,9 +53,13 @@ if(APPLE)
 endif()
 
 if(UNIX AND NOT APPLE)
+    find_package(Threads REQUIRED)
     find_package(SDL2 REQUIRED)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_mixer REQUIRED)
+
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    target_link_libraries(zwei PRIVATE Threads::Threads)
 
     target_include_directories(
             zwei
@@ -70,8 +74,9 @@ if(UNIX AND NOT APPLE)
 
     target_link_libraries(
         zwei
-        PRIVATE ${SDL2_LIBRARY}
-        PRIVATE ${SDL2_IMAGE_LIBRARIES}
-        PRIVATE ${SDL2_MIXER_LIBRARIES}
+        PRIVATE ${zwei_SOURCE_DIR}/sdl/linux/libSDL2-2.0.so.0
+        PRIVATE ${zwei_SOURCE_DIR}/sdl/linux/libSDL2_image-2.0.so.0
+        PRIVATE ${zwei_SOURCE_DIR}/sdl/linux/libSDL2_mixer-2.0.so.0
+        PRIVATE ${zwei_SOURCE_DIR}/sdl/linux/libopusfile.so.0
     )
 endif()
