@@ -9,6 +9,10 @@
 
 Start::Start() : Scene(SceneDungeon) {}
 
+const uint8_t ID_Door_1 = 0;
+const uint8_t ID_Door_2 = 1;
+const uint8_t ID_Button = 2;
+
 void Start::init() {
     Api::initPlayer();
     Api::setPlayerPosition(26, 15);
@@ -22,11 +26,11 @@ void Start::init() {
     Api::setGameState();
 
     // Doors
-    Api::setDoor(29, 9);
-    Api::setDoor(34, 1);
+    Api::setDoor(29, 9, ID_Door_1);
+    Api::setDoor(34, 1, ID_Door_2);
 
     // Button to switch lights
-    Api::setInteractible(31, 12, [lights](Entity &p) {
+    Api::setInteractible(31, 12, ID_Button, [lights](Entity &p) {
         bool pushed = RT_Memory.getBool("scene.dungeon.button", false);
         auto animation = p.getComponent<Animation>();
         if (!pushed) animation->queueStateFramesForward();

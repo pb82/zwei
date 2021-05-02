@@ -155,6 +155,19 @@ void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
     }
 }
 
+void Manager::getInteractibles(std::vector<std::shared_ptr<Entity>> &target) {
+    for (auto &entity : entities.at(WALLS)) {
+        if (entity->hasComponent<Interactible>()) {
+            target.push_back(entity);
+        }
+    }
+    for (auto &entity : entities.at(OBJECTS)) {
+        if (entity->hasComponent<Interactible>()) {
+            target.push_back(entity);
+        }
+    }
+}
+
 std::shared_ptr<Interactible> Manager::getInteractible(int x, int y) {
     for (auto &entity : entities.at(WALLS)) {
         if (entity->hasComponent<Interactible>() && entity->hasComponent<Transform>()) {
@@ -178,6 +191,23 @@ std::shared_ptr<Interactible> Manager::getInteractible(int x, int y) {
     }
     return nullptr;
 }
+
+std::shared_ptr<Entity> Manager::getInteractible(uint8_t id) {
+    for (auto &entity : entities.at(WALLS)) {
+        if (entity->hasComponent<Interactible>()) {
+            auto i = entity->getComponent<Interactible>();
+            if (i->id == id) return entity;
+        }
+    }
+    for (auto &entity : entities.at(OBJECTS)) {
+        if (entity->hasComponent<Interactible>()) {
+            auto i = entity->getComponent<Interactible>();
+            if (i->id == id) return entity;
+        }
+    }
+    return nullptr;
+}
+
 
 bool Manager::hasEntities(Position p, LayerType layer) {
     for (auto &entity : entities.at(layer)) {

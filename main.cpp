@@ -252,6 +252,7 @@ void renderSave(tp frameStart) {
     } else {
         RT_State.popState();
         RT_State.pushState(StateGame);
+        Player::instance().resume();
     }
 
     SDL_Rect target;

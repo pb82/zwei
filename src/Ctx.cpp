@@ -9,6 +9,8 @@
 #include "ecs/Stats.h"
 #include "io/Out.h"
 #include "ecs/Acceleration.h"
+#include "ecs/Animation.h"
+#include "ecs/Interactible.h"
 
 GameStateMachine::GameStateMachine() {
     this->current.push(StateStart);
@@ -81,6 +83,20 @@ void Ctx::save(float x, float y) {
     stats->character.serialize(to);
     this->memory.serialize(to);
 
+    std::vector<std::shared_ptr<Entity>> dynamicObjs;
+    Manager::instance().getInteractibles(dynamicObjs);
+
+    JSON::Array objStates;
+    for (auto &obj : dynamicObjs) {
+        auto anim = obj->getComponent<Animation>();
+        auto interactible = obj->getComponent<Interactible>();
+        JSON::Object o;
+        o["animation_state"] = anim->stateFramesEnd;
+        o["id"] = interactible->id;
+        objStates.push_back(o);
+    }
+    to["object_states"] = objStates;
+
     Out f("savegame.json");
     if (f.open()) {
         JSON::PrettyPrinter p;
@@ -125,7 +141,26 @@ void Ctx::load(float *x, float *y) {
         *x = v["x"].as<float>();
         *y = v["y"].as<float>();
 
+        Direction d = static_cast<Direction>(v["direction"].as<int>());
+        auto acc = RT_Context.getPlayer()->getComponent<Acceleration>();
+        acc->setDirection(d);
+
         uint8_t renderHints = static_cast<uint8_t>(v["renderHints"].as<int>());
         Manager::instance().setRenderHints(renderHints);
+
+        auto states = v["object_states"].as<JSON::Array>();
+        for (JSON::Value &state : states) {
+            bool animationState = state["animation_state"].as<bool>();
+            uint8_t id = static_cast<uint8_t>(state["id"].as<int>());
+            auto interactible = Manager::instance().getInteractible(id);
+            if (interactible) {
+                auto anim = interactible->getComponent<Animation>();
+                if (animationState) {
+                    anim->setLastStateFrame();
+                } else {
+                    anim->setFirstStateFrame();
+                }
+            }
+        }
     }
 }

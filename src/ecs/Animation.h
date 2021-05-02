@@ -69,6 +69,10 @@ public:
 
     void queueStateFramesBackward();
 
+    void setLastStateFrame();
+
+    void setFirstStateFrame();
+
     int getCurrentFrame(Direction d = N);
 
     void start();
@@ -80,6 +84,8 @@ public:
     bool repeat;
 
     float rotate = 0.0f;
+
+    bool stateFramesEnd = false;
 
 private:
 

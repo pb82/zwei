@@ -45,7 +45,9 @@ public:
 
     std::shared_ptr<Interactible> getInteractible(int x, int y);
 
-    std::shared_ptr<Entity> getInteractibles();
+    std::shared_ptr<Entity> getInteractible(uint8_t id);
+
+    void getInteractibles(std::vector<std::shared_ptr<Entity>>& target);
 
     void update(float dt);
 

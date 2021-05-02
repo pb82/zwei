@@ -79,6 +79,10 @@ Direction Acceleration::getDirection() {
     return this->trajectory.getDirection();
 }
 
+void Acceleration::setDirection(Direction d) {
+    this->trajectory.setDirection(d);
+}
+
 bool Acceleration::sameAngle(float other) {
     auto epsilon = std::numeric_limits<float>::epsilon();
     return std::abs(this->trajectory.angle - other) < epsilon;

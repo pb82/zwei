@@ -55,6 +55,7 @@ void Animation::queueProjectileFrames() {
 }
 
 void Animation::queueStateFramesForward() {
+    stateFramesEnd = true;
     int lastN = 0;
     int lastS = 0;
     int lastW = 0;
@@ -77,6 +78,7 @@ void Animation::queueStateFramesForward() {
 }
 
 void Animation::queueStateFramesBackward() {
+    stateFramesEnd = false;
     int lastN = 0;
     int lastS = 0;
     int lastW = 0;
@@ -96,6 +98,26 @@ void Animation::queueStateFramesBackward() {
     this->frames.at(S).at(size) = lastS;
     this->frames.at(E).at(size) = lastE;
     this->frames.at(W).at(size) = lastW;
+}
+
+void Animation::setFirstStateFrame() {
+    stateFramesEnd = false;
+    auto f = this->stateFrames.at(0);
+    int size = this->frames.at(N).size() - 1;
+    this->frames.at(N).at(size) = f.frames[N];
+    this->frames.at(S).at(size) = f.frames[S];
+    this->frames.at(E).at(size) = f.frames[E];
+    this->frames.at(W).at(size) = f.frames[W];
+}
+
+void Animation::setLastStateFrame() {
+    stateFramesEnd = true;
+    auto f = this->stateFrames.at(this->stateFrames.size() - 1);
+    int size = this->frames.at(N).size() - 1;
+    this->frames.at(N).at(size) = f.frames[N];
+    this->frames.at(S).at(size) = f.frames[S];
+    this->frames.at(E).at(size) = f.frames[E];
+    this->frames.at(W).at(size) = f.frames[W];
 }
 
 int Animation::getCurrentFrame(Direction d) {

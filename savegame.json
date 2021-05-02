@@ -2,9 +2,8 @@
     "direction": 1,
     "inventory": {
         "items": [{
-            "equipped": false,
-            "number": 1,
-            "type": 4
+            "number": 0,
+            "type": 0
         }, {
             "number": 0,
             "type": 0
@@ -38,6 +37,16 @@
     "memory": {
         "scene.dungeon.button": true
     },
+    "object_states": [{
+        "animation_state": false,
+        "id": 1
+    }, {
+        "animation_state": true,
+        "id": 0
+    }, {
+        "animation_state": true,
+        "id": 2
+    }],
     "player": {
         "baseDefense": 1,
         "baseDexterity": 1,
@@ -47,6 +56,6 @@
     },
     "renderHints": 0,
     "scene": 1,
-    "x": 28.9512,
-    "y": 11.902
+    "x": 29.1349,
+    "y": 11.1059
 }

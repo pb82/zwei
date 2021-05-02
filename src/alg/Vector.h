@@ -40,6 +40,8 @@ public:
 
     Direction getDirection();
 
+    void setDirection(Direction d);
+
     float normalize();
 
     float radius;

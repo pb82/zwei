@@ -12,13 +12,15 @@ typedef std::function<void(Entity &)> interact_Fn;
 
 class Interactible : public Component {
 public:
-    Interactible(Entity &parent);
+    Interactible(Entity &parent, uint8_t id);
 
     void onInteract(interact_Fn cb);
 
     void update(float dt) override;
 
     void interact();
+
+    uint8_t id;
 
 private:
 

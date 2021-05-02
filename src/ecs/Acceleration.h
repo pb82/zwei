@@ -49,6 +49,8 @@ public:
 
     Direction getDirection();
 
+    void setDirection(Direction d);
+
 private:
 
     Direction face = NONE;

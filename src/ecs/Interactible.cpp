@@ -5,7 +5,7 @@
 #include "Collider.h"
 #include "Acceleration.h"
 
-Interactible::Interactible(Entity &parent) : Component(parent) {}
+Interactible::Interactible(Entity &parent, uint8_t id) : Component(parent), id(id) {}
 
 void Interactible::onInteract(interact_Fn cb) {
     this->fn = cb;

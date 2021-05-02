@@ -68,7 +68,7 @@ namespace Api {
         setPlayerStats(1, 1, 1, 1);
     }
 
-    void setPlayerPosition(float x, float y) {
+    void setPlayerPosition(float x, float y, Direction d) {
         if (!RT_Player) return;
         if (!RT_Player->hasComponent<Transform>()) {
             RT_Player->addComponent<Transform>(x, y);
@@ -77,9 +77,12 @@ namespace Api {
             RT_Camera.track(&transform->p);
             RT_Player->addComponent<Collider>(transform, CT_PLAYER,
                                               Padding{.5, .5, 1, 0});
-
         } else {
             RT_Player->getComponent<Transform>()->p = {x, y};
+        }
+
+        if (RT_Player->hasComponent<Acceleration>()) {
+            auto acc = RT_Player->getComponent<Acceleration>();
         }
     }
 
@@ -174,11 +177,11 @@ namespace Api {
         handler->onExit(nullptr);
     }
 
-    void setDoor(int x, int y) {
+    void setDoor(int x, int y, uint8_t id) {
         Position p(x, y);
         auto wall = Manager::instance().getWall(p);
         if (wall) {
-            wall->addComponent<Interactible>();
+            wall->addComponent<Interactible>(id);
             auto action = wall->getComponent<Interactible>();
             action->onInteract([x, y](Entity &parent) {
                 bool accessible = RT_Topology.flipBarrier(x, y);
@@ -207,13 +210,13 @@ namespace Api {
         Manager::instance().enqueue(e, OBJECTS);
     }
 
-    void setInteractible(int x, int y, interact_Fn onInteract) {
+    void setInteractible(int x, int y, uint8_t id, interact_Fn onInteract) {
         Position p(x, y);
         auto e = Manager::instance().getWall(p);
         if (!e) {
             return;
         }
-        e->addComponent<Interactible>();
+        e->addComponent<Interactible>(id);
         auto i = e->getComponent<Interactible>();
         i->onInteract(onInteract);
     }
