@@ -6,6 +6,8 @@
 #include <queue>
 #include <map>
 
+#include <JSON/value.h>
+
 #include "Position.h"
 
 class Topology {
@@ -40,6 +42,10 @@ public:
     bool flipBarrier(int x, int y);
 
     void clear();
+
+    void serialize(JSON::Value &to);
+
+    void deserialize(JSON::Value &from);
 
 private:
 

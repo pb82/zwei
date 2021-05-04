@@ -102,6 +102,21 @@ bool Topology::flipBarrier(int x, int y) {
     return accessible(x, y);
 }
 
+void Topology::serialize(JSON::Value &to) {
+    JSON::Array target;
+    for (bool cell : this->topology) {
+        target.push_back(cell);
+    }
+    to["topology"] = target;
+}
+
+void Topology::deserialize(JSON::Value &from) {
+    this->topology.clear();
+    for (auto& value : from["topology"].as<JSON::Array>()) {
+        this->topology.push_back(value.as<bool>());
+    }
+}
+
 Path::Path(const Topology &t) : topology(t) {}
 
 void Path::replay(std::vector<Position> &path, const Position &start, const Position &goal) {
