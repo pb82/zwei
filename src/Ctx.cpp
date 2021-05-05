@@ -102,6 +102,8 @@ void Ctx::save(float x, float y) {
     }
     to["object_states"] = objStates;
 
+    RT_Topology.serialize(to);
+
     Out f("savegame.json");
     if (f.open()) {
         JSON::PrettyPrinter p;
@@ -152,6 +154,8 @@ void Ctx::load(float *x, float *y) {
 
         uint8_t renderHints = static_cast<uint8_t>(v["renderHints"].as<int>());
         Manager::instance().setRenderHints(renderHints);
+
+        RT_Topology.deserialize(v);
 
         auto states = v["object_states"].as<JSON::Array>();
         for (JSON::Value &state : states) {
