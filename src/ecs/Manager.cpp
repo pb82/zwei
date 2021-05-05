@@ -4,6 +4,7 @@
 #include "Group.h"
 #include "Interactible.h"
 #include "Timer.h"
+#include "Id.h"
 
 Manager::Manager() {
     init();
@@ -194,15 +195,15 @@ std::shared_ptr<Interactible> Manager::getInteractible(int x, int y) {
 
 std::shared_ptr<Entity> Manager::getInteractible(uint8_t id) {
     for (auto &entity : entities.at(WALLS)) {
-        if (entity->hasComponent<Interactible>()) {
-            auto i = entity->getComponent<Interactible>();
-            if (i->id == id) return entity;
+        if (entity->hasComponent<Interactible>() && entity->hasComponent<Id>()) {
+            auto entityId = entity->getComponent<Id>();
+            if (entityId->id == id) return entity;
         }
     }
     for (auto &entity : entities.at(OBJECTS)) {
         if (entity->hasComponent<Interactible>()) {
-            auto i = entity->getComponent<Interactible>();
-            if (i->id == id) return entity;
+            auto entityId = entity->getComponent<Id>();
+            if (entityId->id == id) return entity;
         }
     }
     return nullptr;

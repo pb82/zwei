@@ -2,8 +2,9 @@
     "direction": 1,
     "inventory": {
         "items": [{
-            "number": 0,
-            "type": 0
+            "equipped": false,
+            "number": 1,
+            "type": 4
         }, {
             "number": 0,
             "type": 0
@@ -39,12 +40,15 @@
     },
     "object_states": [{
         "animation_state": false,
+        "collider_state": false,
         "id": 1
     }, {
         "animation_state": true,
+        "collider_state": true,
         "id": 0
     }, {
         "animation_state": true,
+        "collider_state": false,
         "id": 2
     }],
     "player": {
@@ -56,6 +60,6 @@
     },
     "renderHints": 0,
     "scene": 1,
-    "x": 29.1349,
-    "y": 11.1059
+    "x": 29.0432,
+    "y": 10.183
 }

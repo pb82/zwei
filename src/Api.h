@@ -35,11 +35,11 @@ namespace Api {
 
     void setRoofShowTrigger(int entryX, int entryY);
 
-    void setDoor(int x, int y, uint8_t id);
+    void setDoor(int x, int y, uint16_t id);
 
     void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit);
 
-    void setInteractible(int x, int y, uint8_t id, interact_Fn onInteract);
+    void setInteractible(int x, int y, uint16_t id, interact_Fn onInteract);
 
     void createSpeechBubble(const char *text);
 

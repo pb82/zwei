@@ -11,6 +11,8 @@
 #include "ecs/Acceleration.h"
 #include "ecs/Animation.h"
 #include "ecs/Interactible.h"
+#include "ecs/Id.h"
+#include "ecs/Collider.h"
 
 GameStateMachine::GameStateMachine() {
     this->current.push(StateStart);
@@ -90,9 +92,12 @@ void Ctx::save(float x, float y) {
     for (auto &obj : dynamicObjs) {
         auto anim = obj->getComponent<Animation>();
         auto interactible = obj->getComponent<Interactible>();
+        auto collider = obj->getComponent<Collider>();
+        auto id = obj->getComponent<Id>();
         JSON::Object o;
         o["animation_state"] = anim->stateFramesEnd;
-        o["id"] = interactible->id;
+        o["id"] = id->id;
+        o["collider_state"] = collider->suspended;
         objStates.push_back(o);
     }
     to["object_states"] = objStates;
@@ -155,6 +160,8 @@ void Ctx::load(float *x, float *y) {
             auto interactible = Manager::instance().getInteractible(id);
             if (interactible) {
                 auto anim = interactible->getComponent<Animation>();
+                auto coll = interactible->getComponent<Collider>();
+                coll->suspended = state["collider_state"].as<bool>();
                 if (animationState) {
                     anim->setLastStateFrame();
                 } else {

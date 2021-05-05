@@ -15,6 +15,7 @@
 #include "ecs/Analytics.h"
 #include "ecs/Timer.h"
 #include "Cc.h"
+#include "ecs/Id.h"
 
 namespace Api {
 
@@ -177,11 +178,12 @@ namespace Api {
         handler->onExit(nullptr);
     }
 
-    void setDoor(int x, int y, uint8_t id) {
+    void setDoor(int x, int y, uint16_t id) {
         Position p(x, y);
         auto wall = Manager::instance().getWall(p);
         if (wall) {
-            wall->addComponent<Interactible>(id);
+            wall->addComponent<Interactible>();
+            wall->addComponent<Id>(id);
             auto action = wall->getComponent<Interactible>();
             action->onInteract([x, y](Entity &parent) {
                 bool accessible = RT_Topology.flipBarrier(x, y);
@@ -210,13 +212,14 @@ namespace Api {
         Manager::instance().enqueue(e, OBJECTS);
     }
 
-    void setInteractible(int x, int y, uint8_t id, interact_Fn onInteract) {
+    void setInteractible(int x, int y, uint16_t id, interact_Fn onInteract) {
         Position p(x, y);
         auto e = Manager::instance().getWall(p);
         if (!e) {
             return;
         }
-        e->addComponent<Interactible>(id);
+        e->addComponent<Interactible>();
+        e->addComponent<Id>(id);
         auto i = e->getComponent<Interactible>();
         i->onInteract(onInteract);
     }
