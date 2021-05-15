@@ -49,6 +49,12 @@ public:
 
     void getInteractibles(std::vector<std::shared_ptr<Entity>>& target);
 
+    void getItems(std::vector<std::shared_ptr<Entity>>& target);
+
+    void getEnemies(std::vector<std::shared_ptr<Entity>>& target);
+
+    std::shared_ptr<Entity> getEnemy(uint8_t id);
+
     void update(float dt);
 
     void render(LayerType layer);

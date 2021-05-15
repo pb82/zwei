@@ -48,6 +48,7 @@
 
 #include "src/Api.h"
 #include "src/ecs/arms/Stick.h"
+#include "src/ecs/Controller.h"
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
 std::string game_over("game over");
@@ -68,41 +69,6 @@ void placeTrigger(int x, int y, trigger_Fn enter, trigger_Fn exit) {
     auto handler = trigger->getComponent<Trigger>();
     handler->onEnter(enter);
     handler->onExit(exit);
-}
-
-void placeKakta(int x, int y, bool stick) {
-    auto kakta = Manager::instance().addEntity(OBJECTS);
-    kakta->addComponent<Transform>(x, y);
-    kakta->addComponent<Sprite>(SPRITES);
-    kakta->addComponent<Animation>(200, true);
-    kakta->addComponent<Acceleration>(2.0f, 0);
-    kakta->addComponent<Ai>();
-    kakta->addComponent<Attack>();
-    kakta->addComponent<Bar>();
-
-    kakta->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
-    kakta->getComponent<Animation>()->addAnimationFrame(113, 65, 97, 81);
-    kakta->getComponent<Animation>()->addAnimationFrame(114, 66, 98, 82);
-
-    kakta->getComponent<Animation>()->addAttackFrame(115, 67, 99, 83, 300);
-
-    kakta->getComponent<Animation>()->stop();
-    kakta->addComponent<Analytics>();
-
-    kakta->addComponent<Attack>();
-
-    kakta->addComponent<Stats>(false);
-    auto stats = kakta->getComponent<Stats>();
-    if (stick) stats->inventory.equip(std::make_shared<Stick>());
-    else stats->inventory.equip(std::make_shared<Stone>());
-    stats->character.setBase(10, 5, 10, 1);
-
-    auto transform = kakta->getComponent<Transform>();
-    kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0});
-    RT_Topology.registerMobile(&transform->p);
-
-    auto ai = kakta->getComponent<Ai>();
-    ai->brainify<Kakta>();
 }
 
 void placeSpider(int x, int y) {
@@ -131,11 +97,6 @@ void placeSpider(int x, int y) {
 
     auto ai = skeleton->getComponent<Ai>();
     ai->brainify<Spider>();
-}
-
-void placeItem(float x, float y, ItemType type) {
-    auto entity = Item::make({x, y}, type);
-    Manager::instance().enqueue(entity, ITEMS);
 }
 
 typedef decltype(std::chrono::system_clock::now()) tp;
@@ -231,9 +192,6 @@ void renderLoad(tp frameStart) {
     if (delay > 0) {
         SDL_Delay(delay);
     }
-
-    float dt = std::max(millis, delay);
-    Manager::instance().update(dt);
     globalFrameCounter++;
 }
 
@@ -252,6 +210,9 @@ void renderSave(tp frameStart) {
     } else {
         RT_State.popState();
         RT_State.pushState(StateGame);
+        RT_Player->getComponent<Controller>()->resetKeys();
+        RT_Player->getComponent<Acceleration>()->decelerate();
+        RT_Player->getComponent<Animation>()->stop();
         Player::instance().resume();
     }
 
@@ -296,9 +257,6 @@ void renderSave(tp frameStart) {
     if (delay > 0) {
         SDL_Delay(delay);
     }
-
-    float dt = std::max(millis, delay);
-    Manager::instance().update(dt);
     globalFrameCounter++;
 }
 
@@ -400,8 +358,6 @@ void loop() {
     }
 
     RT_Context.setActiveScene(SceneStart);
-
-    placeItem(32, 13, TORCH);
 
     // Global alpha
     while (RT_Running) {

@@ -56,7 +56,7 @@ public:
 
     void load(float *x, float *y);
 
-    void setActiveScene(SceneType s) {
+    void setActiveScene(SceneType s, JSON::Value &resumedEnemies = JSON::null) {
         if (scenes.find(s) == scenes.end()) return;
         auto &scene = scenes.at(s);
 
@@ -67,6 +67,7 @@ public:
 
         activeScene = scene;
         activeScene->init();
+        activeScene->addEnemies(resumedEnemies);
     }
 
     std::shared_ptr<Entity> getPlayer();

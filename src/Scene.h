@@ -1,7 +1,7 @@
 #ifndef ZWEI_SCENE_H
 #define ZWEI_SCENE_H
 
-#include <string>
+#include <JSON/value.h>
 
 enum SceneType {
     SceneStart,
@@ -19,6 +19,8 @@ public:
     virtual void init() = 0;
 
     virtual void exit() = 0;
+
+    virtual void addEnemies(JSON::Value& resumed) {}
 
     virtual ~Scene() {}
 

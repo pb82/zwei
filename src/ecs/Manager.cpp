@@ -5,6 +5,8 @@
 #include "Interactible.h"
 #include "Timer.h"
 #include "Id.h"
+#include "Collectable.h"
+#include "Ai.h"
 
 Manager::Manager() {
     init();
@@ -167,6 +169,32 @@ void Manager::getInteractibles(std::vector<std::shared_ptr<Entity>> &target) {
             target.push_back(entity);
         }
     }
+}
+
+void Manager::getItems(std::vector<std::shared_ptr<Entity>> &target) {
+    for (auto &entity : entities.at(OBJECTS)) {
+        if (entity->hasComponent<Collectable>()) {
+            target.push_back(entity);
+        }
+    }
+}
+
+void Manager::getEnemies(std::vector<std::shared_ptr<Entity>> &target) {
+    for (auto &entity : entities.at(OBJECTS)) {
+        if (entity->hasComponent<Ai>() && entity->hasComponent<Id>()) {
+            target.push_back(entity);
+        }
+    }
+}
+
+std::shared_ptr<Entity> Manager::getEnemy(uint8_t id) {
+    for (auto &entity : entities.at(OBJECTS)) {
+        if (entity->hasComponent<Ai>() && entity->hasComponent<Id>()) {
+            auto enemyId = entity->getComponent<Id>();
+            if (enemyId->id == id) return entity;
+        }
+    }
+    return nullptr;
 }
 
 std::shared_ptr<Interactible> Manager::getInteractible(int x, int y) {

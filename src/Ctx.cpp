@@ -102,6 +102,24 @@ void Ctx::save(float x, float y) {
     }
     to["object_states"] = objStates;
 
+    dynamicObjs.clear();
+    Manager::instance().getEnemies(dynamicObjs);
+    JSON::Array enemies;
+    for (auto &obj : dynamicObjs) {
+        JSON::Object o;
+
+        auto id = obj->getComponent<Id>();
+        auto stats = obj->getComponent<Stats>();
+        auto transform = obj->getComponent<Transform>();
+
+        o["id"] = id->id;
+        auto hp = stats->character.getHitpoints();
+        o["hp"] = std::get<0>(hp);
+        o["x"] = transform->p.x;
+        o["y"] = transform->p.y;
+        enemies.push_back(o);
+    }
+    to["enemies"] = enemies;
     RT_Topology.serialize(to);
 
     Out f("savegame.json");
@@ -138,7 +156,8 @@ void Ctx::load(float *x, float *y) {
         p.parse(v, buffer);
 
         SceneType sceneType = static_cast<SceneType>(v["scene"].as<int>());
-        setActiveScene(sceneType);
+        JSON::Value enemyStates = v["enemies"];
+        setActiveScene(sceneType, enemyStates);
 
         this->memory.deserialize(v);
         auto stats = this->getPlayer()->getComponent<Stats>();

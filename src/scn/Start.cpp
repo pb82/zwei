@@ -13,6 +13,27 @@ const uint8_t ID_Door_1 = 0;
 const uint8_t ID_Door_2 = 1;
 const uint8_t ID_Button = 2;
 
+const uint8_t ID_enemy_1 = 3;
+
+void Start::addEnemies(JSON::Value &resumed) {
+    if (resumed.is(JSON::JSON_NULL)) {
+        Api::addKakta(31, 3, ID_enemy_1);
+        return;
+    }
+
+    if (!resumed.is(JSON::JSON_ARRAY)) return;
+    auto enemies = resumed.as<JSON::Array>();
+    for (auto &enemy : enemies) {
+        uint8_t resumedId = static_cast<uint8_t>(enemy["id"].as<int>());
+        if (resumedId == ID_enemy_1) {
+            float x = enemy["x"].as<float>();
+            float y = enemy["y"].as<float>();
+            int hp = enemy["hp"].as<int>();
+            Api::addKakta(x, y, resumedId, hp);
+        }
+    }
+}
+
 void Start::init() {
     Api::initPlayer();
     Api::setPlayerPosition(26, 15);
@@ -28,6 +49,7 @@ void Start::init() {
     // Doors
     Api::setDoor(29, 9, ID_Door_1);
     Api::setDoor(34, 1, ID_Door_2);
+    Api::addItem(32, 13, TORCH);
 
     // Button to switch lights
     Api::setInteractible(31, 12, ID_Button, [lights](Entity &p) {

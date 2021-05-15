@@ -7,9 +7,11 @@ class Start : public Scene {
 public:
     Start();
 
-    void init();
+    void init() override;
 
-    void exit();
+    void exit() override;
+
+    void addEnemies(JSON::Value& resumed) override;
 
 };
 

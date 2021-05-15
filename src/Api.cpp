@@ -16,6 +16,10 @@
 #include "ecs/Timer.h"
 #include "Cc.h"
 #include "ecs/Id.h"
+#include "ecs/Ai.h"
+#include "ecs/Bar.h"
+#include "ecs/arms/Stick.h"
+#include "ecs/minds/Kakta.h"
 
 namespace Api {
 
@@ -66,7 +70,7 @@ namespace Api {
         hud->addComponent<Hud>();
 
         setPlayerSpeed(3);
-        setPlayerStats(1, 1, 1, 1);
+        setPlayerStats(100, 1, 1, 1);
     }
 
     void setPlayerPosition(float x, float y, Direction d) {
@@ -243,5 +247,47 @@ namespace Api {
         } else {
             Manager::instance().setRenderHint(HINT_TURN_LIGHTS_OUT);
         }
+    }
+
+    void addItem(float x, float y, ItemType type) {
+        auto entity = Item::make({x, y}, type);
+        Manager::instance().enqueue(entity, ITEMS);
+    }
+
+    // Enemies
+
+    void addKakta(int x, int y, uint8_t id, int hp) {
+        auto kakta = Manager::instance().addEntity(OBJECTS);
+        kakta->addComponent<Transform>(x, y);
+        kakta->addComponent<Sprite>(SPRITES);
+        kakta->addComponent<Animation>(200, true);
+        kakta->addComponent<Acceleration>(2.0f, 0);
+        kakta->addComponent<Ai>();
+        kakta->addComponent<Attack>();
+        kakta->addComponent<Bar>();
+        kakta->addComponent<Id>(id);
+
+        kakta->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
+        kakta->getComponent<Animation>()->addAnimationFrame(113, 65, 97, 81);
+        kakta->getComponent<Animation>()->addAnimationFrame(114, 66, 98, 82);
+
+        kakta->getComponent<Animation>()->addAttackFrame(115, 67, 99, 83, 300);
+
+        kakta->getComponent<Animation>()->stop();
+        kakta->addComponent<Analytics>();
+
+        kakta->addComponent<Attack>();
+
+        kakta->addComponent<Stats>(false);
+        auto stats = kakta->getComponent<Stats>();
+        stats->inventory.equip(std::make_shared<Stick>());
+        stats->character.setBase(hp, 5, 10, 1);
+
+        auto transform = kakta->getComponent<Transform>();
+        kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0});
+        RT_Topology.registerMobile(&transform->p);
+
+        auto ai = kakta->getComponent<Ai>();
+        ai->brainify<Kakta>();
     }
 }

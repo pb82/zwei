@@ -4,6 +4,7 @@
 #include "ecs/Trigger.h"
 #include "ecs/Interactible.h"
 #include "alg/Direction.h"
+#include "ecs/items/Item.h"
 
 namespace Api {
     // Init
@@ -27,6 +28,7 @@ namespace Api {
     void setGameOverState();
 
     // Maps
+
     bool loadMap(const char *file);
 
     void unloadMap();
@@ -45,6 +47,13 @@ namespace Api {
 
     void createSingleSpeechBubble(const char *text, bool more);
 
+    // Enemies
+
+    void addKakta(int x, int y, uint8_t id, int hp = 20);
+
+    // Items
+
+    void addItem(float x, float y, ItemType type);
 
     // Effects
 
