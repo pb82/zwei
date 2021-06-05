@@ -249,8 +249,9 @@ namespace Api {
         }
     }
 
-    void addItem(float x, float y, ItemType type) {
+    void addItem(float x, float y, uint8_t id, ItemType type) {
         auto entity = Item::make({x, y}, type);
+        entity->addComponent<Id>(id);
         Manager::instance().enqueue(entity, ITEMS);
     }
 

@@ -54,9 +54,6 @@ endif()
 
 if(UNIX AND NOT APPLE)
     find_package(Threads REQUIRED)
-    find_package(SDL2 REQUIRED)
-    find_package(SDL2_image REQUIRED)
-    find_package(SDL2_mixer REQUIRED)
 
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     target_link_libraries(zwei PRIVATE Threads::Threads)

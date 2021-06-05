@@ -53,7 +53,7 @@ namespace Api {
 
     // Items
 
-    void addItem(float x, float y, ItemType type);
+    void addItem(float x, float y, uint8_t id, ItemType type);
 
     // Effects
 

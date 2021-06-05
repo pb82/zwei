@@ -219,6 +219,11 @@ namespace JSON {
     }
 
     template<>
+    inline uint8_t Value::as() const {
+        return static_cast<uint8_t>(as<double>());
+    }
+
+    template<>
     inline unsigned int Value::as() const {
         return static_cast<unsigned int>(std::abs(as<double>()));
     }

@@ -13,6 +13,10 @@ public:
 
     bool getBool(const char *key, bool defaultValue);
 
+    void addToArray(const char *key, uint8_t id);
+
+    bool arrayContains(const char *key, uint8_t id);
+
     void serialize(JSON::Value &to);
 
     void deserialize(JSON::Value &from);

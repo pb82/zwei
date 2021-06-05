@@ -13,6 +13,8 @@ public:
 
     void addEnemies(JSON::Value& resumed) override;
 
+    void addItems(JSON::Value& collected) override;
+
 };
 
 

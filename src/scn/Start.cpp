@@ -15,6 +15,14 @@ const uint8_t ID_Button = 2;
 
 const uint8_t ID_enemy_1 = 3;
 
+const uint8_t ID_item_torch_1 = 4;
+
+void Start::addItems(JSON::Value &collected) {
+    if (!RT_Memory.arrayContains("collectedItems", ID_item_torch_1)) {
+        Api::addItem(32, 13, ID_item_torch_1, TORCH);
+    }
+}
+
 void Start::addEnemies(JSON::Value &resumed) {
     if (resumed.is(JSON::JSON_NULL)) {
         Api::addKakta(31, 3, ID_enemy_1);
@@ -49,7 +57,6 @@ void Start::init() {
     // Doors
     Api::setDoor(29, 9, ID_Door_1);
     Api::setDoor(34, 1, ID_Door_2);
-    Api::addItem(32, 13, TORCH);
 
     // Button to switch lights
     Api::setInteractible(31, 12, ID_Button, [lights](Entity &p) {

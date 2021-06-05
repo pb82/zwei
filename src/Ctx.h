@@ -56,7 +56,8 @@ public:
 
     void load(float *x, float *y);
 
-    void setActiveScene(SceneType s, JSON::Value &resumedEnemies = JSON::null) {
+    void
+    setActiveScene(SceneType s, JSON::Value &resumedEnemies = JSON::null) {
         if (scenes.find(s) == scenes.end()) return;
         auto &scene = scenes.at(s);
 

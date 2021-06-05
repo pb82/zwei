@@ -7,6 +7,7 @@
 #include "Acceleration.h"
 #include "Bloat.h"
 #include "Stats.h"
+#include "Id.h"
 
 Collectable::Collectable(Entity &parent, std::shared_ptr<Item> item) : Component(parent), item(item) {}
 
@@ -54,5 +55,10 @@ void Collectable::collect() {
         this->parent.addComponent<Acceleration>(4.0f, VM_50_PI);
         this->parent.addComponent<Bloat>();
         this->parent.getComponent<Acceleration>()->accelerate();
+
+        if (this->parent.hasComponent<Id>()) {
+            auto id = this->parent.getComponent<Id>();
+            RT_Memory.addToArray("collectedItems", id->id);
+        }
     }
 }

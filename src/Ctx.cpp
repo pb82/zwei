@@ -157,9 +157,10 @@ void Ctx::load(float *x, float *y) {
 
         SceneType sceneType = static_cast<SceneType>(v["scene"].as<int>());
         JSON::Value enemyStates = v["enemies"];
+        this->memory.deserialize(v);
+
         setActiveScene(sceneType, enemyStates);
 
-        this->memory.deserialize(v);
         auto stats = this->getPlayer()->getComponent<Stats>();
         stats->character.deserialize(v);
         stats->inventory.deserialize(v);

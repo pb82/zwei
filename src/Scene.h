@@ -22,6 +22,8 @@ public:
 
     virtual void addEnemies(JSON::Value& resumed) {}
 
+    virtual void addItems(JSON::Value& collected) {}
+
     virtual ~Scene() {}
 
     SceneType getSceneType() { return this->type; }

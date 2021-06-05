@@ -27,3 +27,27 @@ bool Mem::getBool(const char *key, bool defaultValue) {
     }
     return value.as<bool>();
 }
+
+void Mem::addToArray(const char *key, uint8_t id) {
+    auto arr = memory[key];
+    if (arr.is(JSON::JSON_NULL)) {
+        JSON::Array targetArray;
+        memory[key] = targetArray;
+    }
+
+    memory[key].asMutable<JSON::Array>().push_back(id);
+}
+
+bool Mem::arrayContains(const char *key, uint8_t id) {
+    auto arr = memory[key];
+    if (arr.is(JSON::JSON_NULL)) {
+        return false;
+    }
+
+    for (auto item : arr.as<JSON::Array>()) {
+        if (item.as<uint8_t>() == id) {
+            return true;
+        }
+    }
+    return false;
+}
