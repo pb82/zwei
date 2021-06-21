@@ -2,7 +2,7 @@
 #define ZWEI_INPUT_H
 
 #include <unordered_map>
-
+#include <string>
 #include <SDL.h>
 
 enum GameKeyState {
