@@ -30,6 +30,9 @@ Player::Player() {
 }
 
 Player::~Player() {
+    // Make sure sounds and music is cleaned up before mixer is shut down
+    this->sounds.clear();
+    this->music.clear();
     Mix_Quit();
 }
 
