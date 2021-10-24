@@ -42,6 +42,13 @@ void Start::addEnemies(JSON::Value &resumed) {
     }
 }
 
+void Start::addItems(JSON::Value &resumed) {
+    if (resumed.is(JSON::JSON_NULL)) {
+        Api::addItem(32, 13, TORCH);
+        return;
+    }
+}
+
 void Start::init() {
     Api::initPlayer();
     Api::setPlayerPosition(26, 15);

@@ -20,7 +20,9 @@ public:
 
     virtual void exit() = 0;
 
-    virtual void addEnemies(JSON::Value& resumed) {}
+    virtual void addEnemies(JSON::Value &resumed) {}
+
+    virtual void addItems(JSON::Value &resumed) {}
 
     virtual void addItems(JSON::Value& collected) {}
 
