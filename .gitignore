@@ -2,3 +2,4 @@ cmake-build*
 .idea
 steam-runtime
 settings.json
+*.tar.xz
