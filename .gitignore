@@ -4,4 +4,5 @@ steam-runtime
 settings.json
 savegame.json
 *.tar.xz
+steam-build
 !bin/linux/zwei
