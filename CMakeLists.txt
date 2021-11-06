@@ -81,4 +81,9 @@ if (UNIX AND NOT APPLE)
             PRIVATE ${SDL2_MIXER_LIBRARIES}
             PRIVATE ${OpenGL_LIBRARIES}
     )
+
+    add_custom_command(TARGET zwei
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:zwei> ${zwei_SOURCE_DIR}/bin/linux)
 endif ()
+

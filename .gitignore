@@ -2,4 +2,6 @@ cmake-build*
 .idea
 steam-runtime
 settings.json
+savegame.json
 *.tar.xz
+!bin/linux/zwei

@@ -9,4 +9,4 @@ download-steam-runtime:
 run-steam: download-steam-runtime
 	@tar --skip-old-files -xf $(STEAMRT_FILE)
 	@./steam-runtime/setup.sh
-	@./steam-runtime/run.sh ./cmake-build-debug/zwei
+	@./steam-runtime/run.sh ./bin/linux/zwei
