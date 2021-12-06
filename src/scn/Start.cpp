@@ -24,22 +24,7 @@ void Start::addItems(JSON::Value &collected) {
 }
 
 void Start::addEnemies(JSON::Value &resumed) {
-    if (resumed.is(JSON::JSON_NULL)) {
-        Api::addKakta(31, 3, ID_enemy_1);
-        return;
-    }
 
-    if (!resumed.is(JSON::JSON_ARRAY)) return;
-    auto enemies = resumed.as<JSON::Array>();
-    for (auto &enemy : enemies) {
-        uint8_t resumedId = static_cast<uint8_t>(enemy["id"].as<int>());
-        if (resumedId == ID_enemy_1) {
-            float x = enemy["x"].as<float>();
-            float y = enemy["y"].as<float>();
-            int hp = enemy["hp"].as<int>();
-            Api::addKakta(x, y, resumedId, hp);
-        }
-    }
 }
 
 void Start::init() {
@@ -71,7 +56,7 @@ void Start::init() {
     Player::instance().playMusic(MUSIC_1);
 
     // Show message only when player enters from the south
-    Api::setTrigger(34, 0, [](float) {
+    Api::setTrigger(34, 0, [](float, Entity&) {
         Rt_Commands.push(std::make_shared<ScreenTransition>(SceneBeach));
     }, nullptr);
 }

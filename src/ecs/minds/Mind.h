@@ -22,6 +22,23 @@ protected:
 
     Entity &parent;
 
+    float getDistanceFromPlayer();
+
+    float getAngleToPlayer();
+
+    bool hasDirectPathToPlayer();
+
+    bool hasRouteToPlayer(std::vector<Position> &route);
+
+    void followRoute(std::vector<Position> &route);
+
+    void stop();
+
+    void walkTowardsPlayer();
+
+private:
+
+
 };
 
 #endif

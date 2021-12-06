@@ -5,6 +5,7 @@
 #include <typeindex>
 #include <typeinfo>
 #include <memory>
+#include <queue>
 
 #include "Component.h"
 
@@ -24,6 +25,12 @@ public:
     bool hasComponent() const {
         auto type = std::type_index(typeid(T));
         return components.find(type) != components.end();
+    }
+
+    template<typename T>
+    void removeComponent() {
+        auto type = std::type_index(typeid(T));
+        pendingRemoval.push(type);
     }
 
     template<typename T>
@@ -61,12 +68,21 @@ public:
         this->isActive = false;
     }
 
+    void collect() {
+        if (!pendingRemoval.empty()) {
+            components.erase(pendingRemoval.front());
+        }
+    }
+
     bool disabled() {
         return !this->isActive;
     }
 
 private:
     std::unordered_map<std::type_index, std::shared_ptr<Component>> components;
+
+    std::queue<std::type_index> pendingRemoval;
+
     bool isActive;
 };
 

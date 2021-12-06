@@ -7,6 +7,7 @@
 #include "Id.h"
 #include "Collectable.h"
 #include "Ai.h"
+#include "Hostile.h"
 
 Manager::Manager() {
     init();
@@ -78,7 +79,7 @@ void Manager::collect() {
         auto entity = pendingEntities.front();
         if (entity.entity->hasComponent<Group>()) {
             auto group = entity.entity->getComponent<Group>();
-            for (auto member : group->all()) {
+            for (auto member: group->all()) {
                 entities.at(entity.layer).push_back(member);
             }
             pendingEntities.pop();
@@ -89,17 +90,23 @@ void Manager::collect() {
     }
 
     // Garbage collect
-    for (auto &layer : entities) {
+    for (auto &layer: entities) {
         auto &v = layer.second;
+
         v.erase(std::remove_if(v.begin(), v.end(), [](std::shared_ptr<Entity> e) {
             return e->disabled();
         }), v.end());
+
+        // Garbage collect entity components
+        for (auto &e: v) {
+            e->collect();
+        }
     }
 }
 
 void Manager::update(float dt) {
-    for (auto &layer : entities) {
-        for (auto &entity : layer.second) {
+    for (auto &layer: entities) {
+        for (auto &entity: layer.second) {
             entity->update(dt);
         }
     }
@@ -114,25 +121,66 @@ void Manager::render(LayerType layer) {
         return;
     }
 
-    for (auto &entity : entities.at(layer)) {
-        entity->render(renderHints);
+    if (layer != OBJECTS) {
+        for (auto &entity: entities.at(layer)) {
+            entity->render(renderHints);
+        }
+    } else {
+        auto player = RT_Context.getPlayer();
+        auto playerTransform = player->getComponent<Transform>();
+
+        // 'Perspective' correct rendering order:
+        // 1. objects to the north of the player
+        for (auto &entity: entities.at(OBJECTS)) {
+            if (entity.get() == player.get()) {
+                continue;
+            }
+
+            if (entity->hasComponent<Transform>()) {
+                auto entityTransform = entity->getComponent<Transform>();
+                if (entityTransform->p.y <= playerTransform->p.y) {
+                    entity->render(renderHints);
+                }
+            } else {
+                entity->render(renderHints);
+            }
+        }
+
+        // 2. the player
+        player->render(renderHints);
+
+        // 3. objects south of the player
+        for (auto &entity: entities.at(OBJECTS)) {
+            if (entity.get() == player.get()) {
+                continue;
+            }
+
+            if (entity->hasComponent<Transform>()) {
+                auto entityTransform = entity->getComponent<Transform>();
+                if (entityTransform->p.y >= playerTransform->p.y) {
+                    entity->render(renderHints);
+                }
+            } else {
+                entity->render(renderHints);
+            }
+        }
     }
 }
 
 void Manager::key(GameKeyEvent &key) {
-    for (auto &entity : entities.at(OBJECTS)) {
+    for (auto &entity: entities.at(OBJECTS)) {
         entity->key(key);
     }
 }
 
 void Manager::uiInput(GameKeyEvent &key) {
-    for (auto &entity : entities.at(UI)) {
+    for (auto &entity: entities.at(UI)) {
         entity->key(key);
     }
 }
 
 void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
-    for (auto &entity : entities.at(WALLS)) {
+    for (auto &entity: entities.at(WALLS)) {
         if (entity->hasComponent<Collider>()) {
             auto collider = entity->getComponent<Collider>();
             if (collider->suspended) continue;
@@ -140,7 +188,7 @@ void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
             target.push_back(collider);
         }
     }
-    for (auto &entity : entities.at(OBJECTS)) {
+    for (auto &entity: entities.at(OBJECTS)) {
         if (entity->hasComponent<Collider>()) {
             auto collider = entity->getComponent<Collider>();
             if (collider->suspended) continue;
@@ -148,7 +196,7 @@ void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
             target.push_back(collider);
         }
     }
-    for (auto &entity : entities.at(ITEMS)) {
+    for (auto &entity: entities.at(ITEMS)) {
         if (entity->hasComponent<Collider>()) {
             auto collider = entity->getComponent<Collider>();
             if (collider->suspended) continue;
@@ -159,12 +207,12 @@ void Manager::getColliders(std::vector<std::shared_ptr<Collider> > &target) {
 }
 
 void Manager::getInteractibles(std::vector<std::shared_ptr<Entity>> &target) {
-    for (auto &entity : entities.at(WALLS)) {
+    for (auto &entity: entities.at(WALLS)) {
         if (entity->hasComponent<Interactible>()) {
             target.push_back(entity);
         }
     }
-    for (auto &entity : entities.at(OBJECTS)) {
+    for (auto &entity: entities.at(OBJECTS)) {
         if (entity->hasComponent<Interactible>()) {
             target.push_back(entity);
         }
@@ -172,7 +220,7 @@ void Manager::getInteractibles(std::vector<std::shared_ptr<Entity>> &target) {
 }
 
 void Manager::getItems(std::vector<std::shared_ptr<Entity>> &target) {
-    for (auto &entity : entities.at(OBJECTS)) {
+    for (auto &entity: entities.at(OBJECTS)) {
         if (entity->hasComponent<Collectable>()) {
             target.push_back(entity);
         }
@@ -180,15 +228,15 @@ void Manager::getItems(std::vector<std::shared_ptr<Entity>> &target) {
 }
 
 void Manager::getEnemies(std::vector<std::shared_ptr<Entity>> &target) {
-    for (auto &entity : entities.at(OBJECTS)) {
-        if (entity->hasComponent<Ai>() && entity->hasComponent<Id>()) {
+    for (auto &entity: entities.at(OBJECTS)) {
+        if (entity->hasComponent<Hostile>()) {
             target.push_back(entity);
         }
     }
 }
 
 std::shared_ptr<Entity> Manager::getEnemy(uint8_t id) {
-    for (auto &entity : entities.at(OBJECTS)) {
+    for (auto &entity: entities.at(OBJECTS)) {
         if (entity->hasComponent<Ai>() && entity->hasComponent<Id>()) {
             auto enemyId = entity->getComponent<Id>();
             if (enemyId->id == id) return entity;
@@ -198,7 +246,7 @@ std::shared_ptr<Entity> Manager::getEnemy(uint8_t id) {
 }
 
 std::shared_ptr<Interactible> Manager::getInteractible(int x, int y) {
-    for (auto &entity : entities.at(WALLS)) {
+    for (auto &entity: entities.at(WALLS)) {
         if (entity->hasComponent<Interactible>() && entity->hasComponent<Transform>()) {
             auto transform = entity->getComponent<Transform>();
             Position p;
@@ -208,7 +256,7 @@ std::shared_ptr<Interactible> Manager::getInteractible(int x, int y) {
             }
         }
     }
-    for (auto &entity : entities.at(OBJECTS)) {
+    for (auto &entity: entities.at(OBJECTS)) {
         if (entity->hasComponent<Interactible>() && entity->hasComponent<Transform>()) {
             auto transform = entity->getComponent<Transform>();
             Position p;
@@ -222,13 +270,13 @@ std::shared_ptr<Interactible> Manager::getInteractible(int x, int y) {
 }
 
 std::shared_ptr<Entity> Manager::getInteractible(uint8_t id) {
-    for (auto &entity : entities.at(WALLS)) {
+    for (auto &entity: entities.at(WALLS)) {
         if (entity->hasComponent<Interactible>() && entity->hasComponent<Id>()) {
             auto entityId = entity->getComponent<Id>();
             if (entityId->id == id) return entity;
         }
     }
-    for (auto &entity : entities.at(OBJECTS)) {
+    for (auto &entity: entities.at(OBJECTS)) {
         if (entity->hasComponent<Interactible>()) {
             auto entityId = entity->getComponent<Id>();
             if (entityId->id == id) return entity;
@@ -239,7 +287,7 @@ std::shared_ptr<Entity> Manager::getInteractible(uint8_t id) {
 
 
 bool Manager::hasEntities(Position p, LayerType layer) {
-    for (auto &entity : entities.at(layer)) {
+    for (auto &entity: entities.at(layer)) {
         if (entity->hasComponent<Transform>()) {
             auto t = entity->getComponent<Transform>();
             if (p == t->p) {
@@ -251,7 +299,7 @@ bool Manager::hasEntities(Position p, LayerType layer) {
 }
 
 std::shared_ptr<Entity> Manager::getWall(Position &p) {
-    for (auto &entity : entities.at(WALLS)) {
+    for (auto &entity: entities.at(WALLS)) {
         if (entity->hasComponent<Transform>()) {
             auto t = entity->getComponent<Transform>();
             if (t->p == p) {

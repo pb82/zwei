@@ -20,6 +20,8 @@
 #include "ecs/Bar.h"
 #include "ecs/arms/Stick.h"
 #include "ecs/minds/Kakta.h"
+#include "ecs/minds/Ally.h"
+#include "ecs/Hostile.h"
 
 namespace Api {
 
@@ -161,7 +163,7 @@ namespace Api {
         trigger->addComponent<Trigger>();
 
         auto handler = trigger->getComponent<Trigger>();
-        handler->onEnter([](float) {
+        handler->onEnter([](float, Entity&) {
             Manager::instance().setRenderHint(HINT_HIDE_ROOF_LAYER);
         });
         handler->onExit(nullptr);
@@ -176,7 +178,7 @@ namespace Api {
         trigger->addComponent<Trigger>();
 
         auto handler = trigger->getComponent<Trigger>();
-        handler->onEnter([](float) {
+        handler->onEnter([](float, Entity&) {
             Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
         });
         handler->onExit(nullptr);
@@ -201,13 +203,13 @@ namespace Api {
         }
     }
 
-    void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit) {
+    void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit, float proximity) {
         auto e = std::make_shared<Entity>();
         e->addComponent<Transform>(x, y);
         e->addComponent<Trigger>();
 
         auto transform = e->getComponent<Transform>();
-        e->addComponent<Collider>(transform, CT_TRIGGER);
+        e->addComponent<Collider>(transform, CT_TRIGGER, Padding{-proximity, -proximity, -proximity, -proximity});
 
         auto t = e->getComponent<Trigger>();
         t->onEnter(onEnter);
@@ -231,7 +233,7 @@ namespace Api {
     void createSpeechBubble(const char *text) {
         std::vector<std::shared_ptr<SpeechBubble>> bubbles;
         SpeechBubble::split(text, bubbles);
-        for (auto &bubble : bubbles) {
+        for (auto &bubble: bubbles) {
             Rt_Commands.push(bubble);
         }
     }
@@ -257,6 +259,41 @@ namespace Api {
 
     // Enemies
 
+    void addAlly(int x, int y, uint8_t id, int hp) {
+        auto kakta = Manager::instance().addEntity(OBJECTS);
+        kakta->addComponent<Transform>(x, y);
+        kakta->addComponent<Sprite>(SPRITES);
+        kakta->addComponent<Animation>(200, true);
+        kakta->addComponent<Acceleration>(2.0f, 0);
+        kakta->addComponent<Ai>();
+        kakta->addComponent<Attack>();
+        kakta->addComponent<Bar>();
+        kakta->addComponent<Id>(id);
+
+        kakta->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
+        kakta->getComponent<Animation>()->addAnimationFrame(113, 65, 97, 81);
+        kakta->getComponent<Animation>()->addAnimationFrame(114, 66, 98, 82);
+
+        kakta->getComponent<Animation>()->addAttackFrame(115, 67, 99, 83, 300);
+
+        kakta->getComponent<Animation>()->stop();
+        kakta->addComponent<Analytics>();
+
+        kakta->addComponent<Attack>();
+
+        kakta->addComponent<Stats>(false);
+        auto stats = kakta->getComponent<Stats>();
+        stats->inventory.equip(std::make_shared<Stick>());
+        stats->character.setBase(hp, 5, 10, 1);
+
+        auto transform = kakta->getComponent<Transform>();
+        kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0});
+        RT_Topology.registerMobile(&transform->p);
+
+        auto ai = kakta->getComponent<Ai>();
+        ai->brainify<Ally>();
+    }
+
     void addKakta(int x, int y, uint8_t id, int hp) {
         auto kakta = Manager::instance().addEntity(OBJECTS);
         kakta->addComponent<Transform>(x, y);
@@ -267,6 +304,7 @@ namespace Api {
         kakta->addComponent<Attack>();
         kakta->addComponent<Bar>();
         kakta->addComponent<Id>(id);
+        kakta->addComponent<Hostile>();
 
         kakta->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
         kakta->getComponent<Animation>()->addAnimationFrame(113, 65, 97, 81);

@@ -39,7 +39,7 @@ namespace Api {
 
     void setDoor(int x, int y, uint16_t id);
 
-    void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit);
+    void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit, float proximity = 0);
 
     void setInteractible(int x, int y, uint16_t id, interact_Fn onInteract);
 
@@ -50,6 +50,8 @@ namespace Api {
     // Enemies
 
     void addKakta(int x, int y, uint8_t id, int hp = 20);
+
+    void addAlly(int x, int y, uint8_t id, int hp = 20);
 
     // Items
 

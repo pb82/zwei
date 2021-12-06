@@ -6,7 +6,8 @@
 enum SceneType {
     SceneStart,
     SceneDungeon,
-    SceneBeach
+    SceneBeach,
+    SceneTesting
 };
 
 class Scene {

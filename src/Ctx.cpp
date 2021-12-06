@@ -13,6 +13,7 @@
 #include "ecs/Interactible.h"
 #include "ecs/Id.h"
 #include "ecs/Collider.h"
+#include "scn/Test.h"
 
 GameStateMachine::GameStateMachine() {
     this->current.push(StateStart);
@@ -54,6 +55,7 @@ Ctx::Ctx() {
     scenes.emplace(SceneStart, std::make_shared<Entry>());
     scenes.emplace(SceneDungeon, std::make_shared<Start>());
     scenes.emplace(SceneBeach, std::make_shared<Beach>());
+    scenes.emplace(SceneTesting, std::make_shared<Test>());
 }
 
 void Ctx::setPlayer(std::shared_ptr<Entity> player) {

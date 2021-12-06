@@ -2,14 +2,19 @@
 #define ZWEI_TRIGGER_H
 
 #include <functional>
+#include <memory>
 
 #include "Component.h"
 
-typedef std::function<void(float angle)> trigger_Fn;
+class Trigger;
+
+typedef std::function<void(float angle, Entity &parent)> trigger_Fn;
 
 class Trigger : public Component {
 public:
     Trigger(Entity &parent);
+
+    ~Trigger();
 
     void onEnter(trigger_Fn cb);
 

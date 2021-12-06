@@ -8,6 +8,11 @@
 
 Trigger::Trigger(Entity &parent) : Component(parent) {}
 
+Trigger::~Trigger() noexcept {
+    this->enter = nullptr;
+    this->exit = nullptr;
+}
+
 void Trigger::onEnter(trigger_Fn cb) {
     this->enter = cb;
 }
@@ -25,9 +30,9 @@ void Trigger::update(float dt) {
 
     if (!active && collides) {
         active = true;
-        if (enter) enter(c->getAngle());
+        if (enter) enter(c->getAngle(), parent);
     } else if (active && !collides) {
         active = false;
-        if (exit) exit(c->getAngle());
+        if (exit) exit(c->getAngle(), parent);
     }
 }
