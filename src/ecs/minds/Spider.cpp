@@ -32,23 +32,20 @@ bool Spider::activate() {
 void Spider::plan(float dt) {
     auto player = RT_Context.getPlayer();
 
-    auto transform = parent.getComponent<Transform>();
-    auto acceleration = parent.getComponent<Acceleration>();
-    auto animation = parent.getComponent<Animation>();
-
-    auto playerTransform = player->getComponent<Transform>();
-
-    route.clear();
-    transform->p.bresenham(playerTransform->p, route);
-
-    if (RT_Context.getTopology().allAccessible(route, transform->p)) {
-        float angle = transform->p.angle(playerTransform->p);
-        acceleration->turn(angle);
-        acceleration->accelerate();
-        animation->start();
+    if (isInRangeForAttack(player)) {
+        turn(getAngleTo(player));
+        attack();
         return;
     }
 
-    acceleration->decelerate();
-    animation->stop();
+    if (hasDirectPathToPlayer()) {
+        walkTowardsPlayer();
+        return;
+    }
+
+    if (hasRouteToPlayer(route)) {
+        followRoute(route);
+    } else {
+        stop();
+    }
 }

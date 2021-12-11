@@ -22,6 +22,11 @@
 #include "ecs/minds/Kakta.h"
 #include "ecs/minds/Ally.h"
 #include "ecs/Hostile.h"
+#include "ecs/arms/Bow.h"
+#include "ecs/arms/Stone.h"
+#include "ecs/minds/Spider.h"
+#include "ecs/filters/Tan.h"
+#include "ecs/Friend.h"
 
 namespace Api {
 
@@ -163,7 +168,7 @@ namespace Api {
         trigger->addComponent<Trigger>();
 
         auto handler = trigger->getComponent<Trigger>();
-        handler->onEnter([](float, Entity&) {
+        handler->onEnter([](float, Entity &) {
             Manager::instance().setRenderHint(HINT_HIDE_ROOF_LAYER);
         });
         handler->onExit(nullptr);
@@ -178,7 +183,7 @@ namespace Api {
         trigger->addComponent<Trigger>();
 
         auto handler = trigger->getComponent<Trigger>();
-        handler->onEnter([](float, Entity&) {
+        handler->onEnter([](float, Entity &) {
             Manager::instance().clearRenderHint(HINT_HIDE_ROOF_LAYER);
         });
         handler->onExit(nullptr);
@@ -269,6 +274,7 @@ namespace Api {
         kakta->addComponent<Attack>();
         kakta->addComponent<Bar>();
         kakta->addComponent<Id>(id);
+        kakta->addComponent<Friend>();
 
         kakta->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
         kakta->getComponent<Animation>()->addAnimationFrame(113, 65, 97, 81);
@@ -281,10 +287,12 @@ namespace Api {
 
         kakta->addComponent<Attack>();
 
+        kakta->getComponent<Sprite>()->addFilter(std::make_shared<Tan>());
+
         kakta->addComponent<Stats>(false);
         auto stats = kakta->getComponent<Stats>();
-        stats->inventory.equip(std::make_shared<Stick>());
-        stats->character.setBase(hp, 5, 10, 1);
+        stats->inventory.equip(std::make_shared<Stone>());
+        stats->character.setBase(hp, 2, 10, 5);
 
         auto transform = kakta->getComponent<Transform>();
         kakta->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0});
@@ -292,6 +300,39 @@ namespace Api {
 
         auto ai = kakta->getComponent<Ai>();
         ai->brainify<Ally>();
+    }
+
+    void addSpider(int x, int y, uint8_t id, int hp) {
+        auto skeleton = Manager::instance().addEntity(OBJECTS);
+        skeleton->addComponent<Transform>(x, y);
+        skeleton->addComponent<Sprite>(SPRITES);
+        skeleton->addComponent<Animation>(200, true);
+        skeleton->addComponent<Acceleration>(4.0f, 0);
+
+        skeleton->addComponent<Ai>();
+        skeleton->addComponent<Attack>();
+
+        skeleton->addComponent<Bar>();
+        skeleton->addComponent<Id>(id);
+        skeleton->addComponent<Hostile>();
+
+        skeleton->getComponent<Animation>()->addAnimationFrame(144);
+        skeleton->getComponent<Animation>()->addAnimationFrame(145);
+        skeleton->getComponent<Animation>()->addAnimationFrame(146);
+        skeleton->getComponent<Animation>()->stop();
+        skeleton->addComponent<Analytics>();
+
+        skeleton->addComponent<Stats>(false);
+        auto stats = skeleton->getComponent<Stats>();
+        stats->inventory.equip(std::make_shared<Stone>());
+        stats->character.setBase(hp, 1, 1, 1);
+
+        auto transform = skeleton->getComponent<Transform>();
+        skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0.7});
+        RT_Topology.registerMobile(&transform->p);
+
+        auto ai = skeleton->getComponent<Ai>();
+        ai->brainify<Spider>();
     }
 
     void addKakta(int x, int y, uint8_t id, int hp) {

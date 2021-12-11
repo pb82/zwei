@@ -53,6 +53,8 @@ public:
 
     void getEnemies(std::vector<std::shared_ptr<Entity>>& target);
 
+    void getAllies(std::vector<std::shared_ptr<Entity>>& target);
+
     std::shared_ptr<Entity> getEnemy(uint8_t id);
 
     void update(float dt);
@@ -91,6 +93,7 @@ private:
     std::shared_ptr<Entity> timers;
 
     uint8_t renderHints;
+
 };
 
 #endif

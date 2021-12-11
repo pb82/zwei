@@ -8,6 +8,7 @@
 #include "Collectable.h"
 #include "Ai.h"
 #include "Hostile.h"
+#include "Friend.h"
 
 Manager::Manager() {
     init();
@@ -126,43 +127,16 @@ void Manager::render(LayerType layer) {
             entity->render(renderHints);
         }
     } else {
-        auto player = RT_Context.getPlayer();
-        auto playerTransform = player->getComponent<Transform>();
+        // Perspective correction: sort entities to draw them from south to north
+        std::sort(entities.at(OBJECTS).begin(), entities.at(OBJECTS).end(),
+                  [](const std::shared_ptr<Entity> &a, const std::shared_ptr<Entity> &b) -> bool {
+                      auto at = a->getComponent<Transform>();
+                      auto bt = b->getComponent<Transform>();
+                      return at->p.y <= bt->p.y;
+                  });
 
-        // 'Perspective' correct rendering order:
-        // 1. objects to the north of the player
         for (auto &entity: entities.at(OBJECTS)) {
-            if (entity.get() == player.get()) {
-                continue;
-            }
-
-            if (entity->hasComponent<Transform>()) {
-                auto entityTransform = entity->getComponent<Transform>();
-                if (entityTransform->p.y <= playerTransform->p.y) {
-                    entity->render(renderHints);
-                }
-            } else {
-                entity->render(renderHints);
-            }
-        }
-
-        // 2. the player
-        player->render(renderHints);
-
-        // 3. objects south of the player
-        for (auto &entity: entities.at(OBJECTS)) {
-            if (entity.get() == player.get()) {
-                continue;
-            }
-
-            if (entity->hasComponent<Transform>()) {
-                auto entityTransform = entity->getComponent<Transform>();
-                if (entityTransform->p.y >= playerTransform->p.y) {
-                    entity->render(renderHints);
-                }
-            } else {
-                entity->render(renderHints);
-            }
+            entity->render(renderHints);
         }
     }
 }
@@ -230,6 +204,14 @@ void Manager::getItems(std::vector<std::shared_ptr<Entity>> &target) {
 void Manager::getEnemies(std::vector<std::shared_ptr<Entity>> &target) {
     for (auto &entity: entities.at(OBJECTS)) {
         if (entity->hasComponent<Hostile>()) {
+            target.push_back(entity);
+        }
+    }
+}
+
+void Manager::getAllies(std::vector<std::shared_ptr<Entity>> &target) {
+    for (auto &entity: entities.at(OBJECTS)) {
+        if (entity->hasComponent<Friend>()) {
             target.push_back(entity);
         }
     }

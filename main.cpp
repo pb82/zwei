@@ -58,47 +58,6 @@ Color blackbox{0, 0, 0, 0};
 int globalFrameCounter = 0;
 int artificialDelay = St::instance().getFps();
 
-void placeTrigger(int x, int y, trigger_Fn enter, trigger_Fn exit) {
-    auto trigger = Manager::instance().addEntity(FLOOR);
-    trigger->addComponent<Transform>(x, y);
-
-    auto transform = trigger->getComponent<Transform>();
-    trigger->addComponent<Collider>(transform, CT_TRIGGER);
-    trigger->addComponent<Trigger>();
-
-    auto handler = trigger->getComponent<Trigger>();
-    handler->onEnter(enter);
-    handler->onExit(exit);
-}
-
-void placeSpider(int x, int y) {
-    auto skeleton = Manager::instance().addEntity(OBJECTS);
-    skeleton->addComponent<Transform>(x, y);
-    skeleton->addComponent<Sprite>(SPRITES);
-    skeleton->addComponent<Animation>(200, true);
-    skeleton->addComponent<Acceleration>(4.0f, 0);
-
-    skeleton->addComponent<Ai>();
-    skeleton->addComponent<Attack>();
-
-    skeleton->getComponent<Animation>()->addAnimationFrame(144);
-    skeleton->getComponent<Animation>()->addAnimationFrame(145);
-    skeleton->getComponent<Animation>()->addAnimationFrame(146);
-    skeleton->getComponent<Animation>()->stop();
-    skeleton->addComponent<Analytics>();
-
-    skeleton->addComponent<Stats>(false);
-    auto stats = skeleton->getComponent<Stats>();
-    stats->character.setBase(10, 1, 1, 10);
-
-    auto transform = skeleton->getComponent<Transform>();
-    skeleton->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.3, 0.7});
-    RT_Topology.registerMobile(&transform->p);
-
-    auto ai = skeleton->getComponent<Ai>();
-    ai->brainify<Spider>();
-}
-
 typedef decltype(std::chrono::system_clock::now()) tp;
 
 void renderMenu(tp frameStart) {

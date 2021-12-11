@@ -1,7 +1,4 @@
 #include "Ally.h"
-#include "../Acceleration.h"
-#include "../Animation.h"
-#include "../Attack.h"
 
 Ally::Ally(Entity &parent) : Mind(parent) {}
 
@@ -31,17 +28,38 @@ bool Ally::activate() {
 }
 
 void Ally::plan(float dt) {
-    if (getDistanceFromPlayer() < 1) {
+    if (enemiesInRange(5, trackedEnemies)) {
+        for (auto enemy: trackedEnemies) {
+            if (isInRangeForAttack(enemy)) {
+                turn(getAngleTo(enemy));
+                attack();
+                return;
+            }
+
+            if (hasDirectPathTo(enemy)) {
+                walkTowards(enemy);
+                return;
+            }
+
+            if (hasRouteTo(route, enemy)) {
+                followRoute(route);
+            }
+        }
+    }
+
+    if (getDistanceFromPlayer() <= 1.3) {
         stop();
+        return;
     }
 
     if (hasDirectPathToPlayer()) {
         walkTowardsPlayer();
+        return;
+    }
+
+    if (hasRouteToPlayer(route)) {
+        followRoute(route);
     } else {
-        if (hasRouteToPlayer(route)) {
-            followRoute(route);
-        } else {
-            stop();
-        }
+        stop();
     }
 }

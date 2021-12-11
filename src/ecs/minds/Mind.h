@@ -24,17 +24,38 @@ protected:
 
     float getDistanceFromPlayer();
 
-    float getAngleToPlayer();
+    float getDistanceFrom(std::shared_ptr<Entity> entity);
+
+    float getAngleTo(std::shared_ptr<Entity> entity);
 
     bool hasDirectPathToPlayer();
 
+    bool hasDirectPathTo(std::shared_ptr<Entity> entity);
+
+    bool isInRangeForAttack(std::shared_ptr<Entity> entity);
+
+    bool isInRangeForAttack(std::shared_ptr<Entity> entity, float range);
+
     bool hasRouteToPlayer(std::vector<Position> &route);
+
+    bool hasRouteTo(std::vector<Position> &route, std::shared_ptr<Entity> entity);
+
+    bool enemiesInRange(float distance, std::vector<std::shared_ptr<Entity>> &enemies);
+
+    bool alliesInRange(float distance, std::vector<std::shared_ptr<Entity>> &enemies);
 
     void followRoute(std::vector<Position> &route);
 
     void stop();
 
+    void attack();
+
+    void turn(float angle);
+
     void walkTowardsPlayer();
+
+    void walkTowards(std::shared_ptr<Entity> entity);
+
 
 private:
 

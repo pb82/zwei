@@ -4,7 +4,7 @@
 Bow::Bow() {}
 
 float Bow::range() {
-    return 2.5;
+    return 2;
 }
 
 int Bow::recharge() {
@@ -18,7 +18,7 @@ int Bow::damage(const Character &c) {
 }
 
 float Bow::speed() {
-    return 5;
+    return 6;
 }
 
 bool Bow::isProjectile() {
@@ -34,7 +34,7 @@ int Bow::getProjectileTile() {
 }
 
 void Bow::getParams(float *power, float *weight, float *decay) {
-    *power = 10;
+    *power = 12;
     *weight = 80;
     *decay = 15;
 }

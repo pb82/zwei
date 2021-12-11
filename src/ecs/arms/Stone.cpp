@@ -4,7 +4,7 @@
 Stone::Stone() {}
 
 float Stone::range() {
-    return 1.7;
+    return 1;
 }
 
 int Stone::recharge() {
@@ -18,7 +18,7 @@ int Stone::damage(const Character &c) {
 }
 
 float Stone::speed() {
-    return 5;
+    return 8;
 }
 
 bool Stone::isProjectile() {
@@ -34,7 +34,7 @@ int Stone::getProjectileTile() {
 }
 
 void Stone::getParams(float *power, float *weight, float *decay) {
-    *power = 10;
+    *power = 15;
     *weight = 70;
     *decay = 25;
 }

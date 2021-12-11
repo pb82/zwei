@@ -51,6 +51,8 @@ namespace Api {
 
     void addKakta(int x, int y, uint8_t id, int hp = 20);
 
+    void addSpider(int x, int y, uint8_t id, int hp = 10);
+
     void addAlly(int x, int y, uint8_t id, int hp = 20);
 
     // Items

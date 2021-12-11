@@ -1,4 +1,4 @@
-#ifndef ZWEI_ALLY_H
+#ifndef ZWEI_FRIEND_H
 #define ZWEI_ALLY_H
 
 #include "Mind.h"
@@ -19,9 +19,11 @@ private:
 
     std::vector<Position> route;
 
+    std::vector<std::shared_ptr<Entity>> trackedEnemies;
+
     float activationRange = 10.0f;
 
 };
 
 
-#endif //ZWEI_ALLY_H
+#endif //ZWEI_FRIEND_H
