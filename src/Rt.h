@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    Rt() : running(true), map("./assets/RAW") {}
+    Rt() : running(true), map("./assets/NEW/MAPS") {}
 };
 
 #endif

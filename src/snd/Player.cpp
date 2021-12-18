@@ -30,6 +30,8 @@ Player::Player() {
 }
 
 Player::~Player() {
+    this->sounds.clear();
+    this->music.clear();
     Mix_Quit();
 }
 

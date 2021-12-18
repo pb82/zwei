@@ -415,8 +415,7 @@ void initAssets() {
 
     Assets::instance().addFont(FONT, assets_Font);
     // Assets::instance().addTexture(TILES, assets_Tiles);
-    Assets::instance().addTexture(TILES_DUNGEON, "assets/RAW/dungeon_sheet.png");
-    Assets::instance().addTexture(TILES_BEACH, "assets/RAW/beach.png");
+    Assets::instance().addTexture(TILES_BEACH, "assets/NEW/TILESETS/Tiles.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
     Assets::instance().addTexture(BITMAPFONT, "assets/RAW/bitmapfont.png");
 }
