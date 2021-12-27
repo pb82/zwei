@@ -27,7 +27,7 @@ JSON::Value Tileset::getProperty(int tileId, const char *name) {
         return JSON::null;
     }
 
-    for (auto &prop : props.as<JSON::Array>()) {
+    for (auto &prop: props.as<JSON::Array>()) {
         auto propName = prop["name"];
         if (!propName.is(JSON::JSON_STRING)) {
             continue;
@@ -48,7 +48,7 @@ bool Tileset::getFrames(int tileId, const char *key, std::vector<int> &frames) {
 
     JSON::Value f;
     p.parse(f, prop.as<std::string>());
-    for (auto &frame : f.as<JSON::Array>()) {
+    for (auto &frame: f.as<JSON::Array>()) {
         frames.push_back(frame.as<int>());
     }
 
@@ -91,7 +91,7 @@ JSON::Value Tileset::getPropsForTile(int tileId) {
         return JSON::null;
     }
 
-    for (auto &tile : tiles.as<JSON::Array>()) {
+    for (auto &tile: tiles.as<JSON::Array>()) {
         auto id = tile["id"].as<int>();
         if (id == tileId) {
             return tile["properties"];
@@ -104,7 +104,8 @@ bool Tileset::hasProps(int tileId) {
     return getPropsForTile(tileId).is(JSON::JSON_NULL) == false;
 }
 
-Layer::Layer(const char *baseDir) : w(0), h(0), baseDir(baseDir) {}
+Layer::Layer(const char *baseDirTilesets) : w(0), h(0),
+                                            baseDirTilesets(baseDirTilesets) {}
 
 std::shared_ptr<Entity> Layer::getTile(int x, int y) {
     int pos = (y * w) + x;
@@ -122,7 +123,7 @@ void Layer::load(JSON::Value &layer) {
     if (!metadata.is(JSON::JSON_NULL)) {
         tileset = std::make_shared<Tileset>();
         std::stringstream ss;
-        ss << baseDir << "/" << metadata.as<std::string>();
+        ss << baseDirTilesets << "/" << metadata.as<std::string>();
         tileset->load(ss.str().c_str());
     }
 
@@ -167,14 +168,14 @@ void Layer::load(JSON::Value &layer) {
             }
 
             if (tileset->getFrames(tileId, "animation", frames)) {
-                for (int frame : frames) {
+                for (int frame: frames) {
                     entity->getComponent<Animation>()->addAnimationFrame(frame);
                 }
             }
             frames.clear();
             if (tileset->getFrames(tileId, "interactAnimation", frames)) {
                 tileset->getInt(tileId, "interactSpeed", &interactSpeed);
-                for (int frame : frames) {
+                for (int frame: frames) {
                     entity->getComponent<Animation>()->addStateFrame(frame, interactSpeed);
                 }
             }
@@ -193,7 +194,7 @@ void Layer::load(JSON::Value &layer) {
 
 JSON::Value Layer::getProperty(JSON::Value &layer, const char *prop) {
     auto properties = layer["properties"].as<JSON::Array>();
-    for (auto &property : properties) {
+    for (auto &property: properties) {
         auto name = property["name"].as<std::string>();
         if (name.compare(prop) == 0) {
             return property["value"];
@@ -207,7 +208,7 @@ void Layer::toPos(int w, int n, int *x, int *y) {
     *y = floor(n / w);
 }
 
-Map::Map(const char *baseDir) : baseDir(baseDir) {}
+Map::Map(const char *baseDir, const char *baseDirTilesets) : baseDir(baseDir), baseDirTilesets(baseDirTilesets) {}
 
 std::shared_ptr<Entity> Map::getTile(LayerType layer, int x, int y) {
     return layers[layer]->getTile(x, y);
@@ -242,8 +243,8 @@ bool Map::load(const char *file) {
     p.parse(v, json);
 
     auto ll = v["layers"].as<Array>();
-    for (auto &layer : ll) {
-        auto l = std::make_shared<Layer>(this->baseDir.c_str());
+    for (auto &layer: ll) {
+        auto l = std::make_shared<Layer>(this->baseDirTilesets.c_str());
         l->load(layer);
         layers.emplace(l->type, l);
     }

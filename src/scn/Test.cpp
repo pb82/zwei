@@ -3,16 +3,7 @@
 #include "../Api.h"
 #include "../Rt.h"
 
-const uint8_t ID_Ally_1 = 28;
-
-const uint8_t ID_Enemy_1 = 55;
-const uint8_t ID_Enemy_2 = 56;
-const uint8_t ID_Enemy_3 = 57;
-const uint8_t ID_Enemy_4 = 58;
-const uint8_t ID_Enemy_5 = 59;
-const uint8_t ID_Enemy_6 = 60;
-
-const uint8_t ID_Bow_1 = 30;
+uint16_t ID_Door_1 = 1;
 
 Test::Test() : Scene(SceneTesting) {}
 
@@ -25,9 +16,12 @@ void Test::addEnemies(JSON::Value &resumed) {
 
 void Test::init() {
     Api::initPlayer();
-    Api::setPlayerPosition(2, 14);
+    Api::setPlayerPosition(14, 30);
     Api::loadMap("Beach.json");
     Api::setGameState();
+    Api::setDoor(14, 17, ID_Door_1);
+    Api::setRoofHideTrigger(14, 16);
+    Api::setRoofShowTrigger(14, 18);
 }
 
 void Test::exit() {

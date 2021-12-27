@@ -30,6 +30,8 @@ private:
     // Hitpoints
     int hitpoints = 0;
     int maxHitpoints = 0;
+    int hearts = 0;
+    int maxHearts = 0;
 
     // Stats
     int baseStrength = 0;

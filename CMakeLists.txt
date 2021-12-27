@@ -53,15 +53,9 @@ if (APPLE)
 endif ()
 
 if (UNIX AND NOT APPLE)
-    find_package(Threads REQUIRED)
-
     find_package(SDL2 REQUIRED)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_mixer REQUIRED)
-    PKG_SEARCH_MODULE(OpenGL gl)
-
-    set(THREADS_PREFER_PTHREAD_FLAG ON)
-    target_link_libraries(zwei PRIVATE Threads::Threads)
 
     target_include_directories(
             zwei
@@ -79,7 +73,6 @@ if (UNIX AND NOT APPLE)
             PRIVATE ${SDL2_LIBRARY}
             PRIVATE ${SDL2_IMAGE_LIBRARIES}
             PRIVATE ${SDL2_MIXER_LIBRARIES}
-            PRIVATE ${OpenGL_LIBRARIES}
     )
 
     add_custom_command(TARGET zwei

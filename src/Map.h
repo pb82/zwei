@@ -35,7 +35,7 @@ private:
 
 class Layer {
 public:
-    Layer(const char *baseDir);
+    Layer(const char *baseDirTilesets);
 
     void load(JSON::Value &layer);
 
@@ -52,7 +52,7 @@ private:
 
     void toPos(int w, int n, int *x, int *y);
 
-    std::string baseDir;
+    std::string baseDirTilesets;
 
     JSON::Value getProperty(JSON::Value &layer, const char *prop);
 
@@ -64,7 +64,7 @@ private:
 class Map {
 public:
 
-    Map(const char *baseDir);
+    Map(const char *baseDir, const char *baseDirTilesets);
 
     bool load(const char *file);
 
@@ -78,6 +78,8 @@ public:
 
 private:
     std::string baseDir;
+
+    std::string baseDirTilesets;
 
     std::unordered_map<LayerType, std::shared_ptr<Layer>> layers;
 };
