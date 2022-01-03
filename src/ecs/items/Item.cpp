@@ -7,6 +7,7 @@
 #include "BowItem.h"
 #include "../Analytics.h"
 #include "Torch.h"
+#include "Heart.h"
 
 std::shared_ptr<Item> Item::make(ItemType type) {
     switch (type) {
@@ -20,6 +21,8 @@ std::shared_ptr<Item> Item::make(ItemType type) {
             return std::make_shared<BowItem>();
         case TORCH:
             return std::make_shared<Torch>();
+        case HEART:
+            return std::make_shared<Heart>();
         default:
             return nullptr;
     }

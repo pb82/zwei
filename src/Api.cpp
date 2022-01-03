@@ -77,7 +77,7 @@ namespace Api {
         hud->addComponent<Hud>();
 
         setPlayerSpeed(3);
-        setPlayerStats(100, 1, 1, 1);
+        setPlayerStats(20, 1, 1, 1);
     }
 
     void setPlayerPosition(float x, float y, Direction d) {

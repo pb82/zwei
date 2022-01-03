@@ -10,6 +10,10 @@ bool Torch::stackable() {
     return true;
 }
 
+bool Torch::notification(std::string &s) {
+    s = "Torch collected";
+}
+
 int Torch::tile() {
     return 108;
 }

@@ -7,13 +7,21 @@
 #include "../../config.h"
 #include "../Draw.h"
 #include "../Gfx.h"
+#include "../alg/Text.h"
 
 Timer::Timer(Entity &parent) : Component(parent) {}
+
+TimerValue::TimerValue(float cur, float max, std::string &&text) {
+    this->tile = tile;
+    this->max = max;
+    this->cur = cur;
+    Text::toSequence(text.c_str(), letters);
+}
 
 void Timer::update(float dt) {
     if (timers.empty()) return;
 
-    for (auto &t : timers) {
+    for (auto &t: timers) {
         t.update(dt);
     }
 
@@ -36,6 +44,10 @@ void Timer::addTimer(int tile, float cur, float max) {
     timers.emplace_back(tile, cur, max);
 }
 
+void Timer::addTimer(float cur, float max, const char *text) {
+    timers.emplace_back(cur, max, text);
+}
+
 void Timer::render(uint8_t) {
     SDL_Rect target;
     SDL_Rect bar;
@@ -43,7 +55,7 @@ void Timer::render(uint8_t) {
     auto texture = Assets::instance().getTexture(SPRITES);
 
     int y = 16;
-    for (auto &t : timers) {
+    for (auto &t: timers) {
         target.w = (configWindowWidth / 5) + 2;
         target.h = 20;
         target.x = 10 + configWindowWidth - target.w - 32;
@@ -57,9 +69,24 @@ void Timer::render(uint8_t) {
         icon.y -= 6;
 
         SDL_Rect source;
-        // Hp symbol
-        Gfx::pick(source, t.tile, texture->w);
-        Draw::instance().draw(texture->mem, source, icon);
+        // Tile
+        if (t.letters.empty()) {
+            Gfx::pick(source, t.tile, texture->w);
+            Draw::instance().draw(texture->mem, source, icon);
+        } else {
+            auto font = Assets::instance().getTexture(BITMAPFONT);
+            SDL_Rect letter = target;
+            letter.x = (configWindowWidth - (t.letters.size() * 14) - 10);
+            letter.w = 14;
+            letter.h = 18;
+            for (auto c: t.letters) {
+                Gfx::pickText(source, c, font->w);
+                Draw::instance().draw(font->mem, source, letter);
+                letter.x += 14;
+            }
+            y += 32;
+            continue;
+        }
 
         float percent = 1.0f;
         if (t.cur > 0.0f) {

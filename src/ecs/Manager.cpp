@@ -49,6 +49,11 @@ void Manager::addTimer(int tile, float duration, float max) {
     t->addTimer(tile, duration, max);
 }
 
+void Manager::addTimer(float duration, float max, const char *text) {
+    auto t = timers->getComponent<Timer>();
+    t->addTimer(duration, max, text);
+}
+
 void Manager::setRenderHint(uint8_t hint) {
     renderHints |= hint;
 }

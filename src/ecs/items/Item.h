@@ -11,6 +11,7 @@ enum ItemType {
     STICK,
     BOW,
     TORCH,
+    HEART,
 };
 
 class Item {
@@ -30,6 +31,10 @@ public:
     virtual void unequip(std::shared_ptr<Entity> on) {}
 
     virtual int tile() = 0;
+
+    virtual bool useOnPickup() { return false; }
+
+    virtual bool notification(std::string &s) { return false; }
 
     ItemType type;
 

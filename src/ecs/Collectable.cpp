@@ -2,12 +2,10 @@
 #include "Collectable.h"
 #include "Transform.h"
 #include "../Gfx.h"
-#include "../Draw.h"
 #include "SelfDestruct.h"
-#include "Acceleration.h"
-#include "Bloat.h"
 #include "Stats.h"
 #include "Id.h"
+#include "../Draw.h"
 
 Collectable::Collectable(Entity &parent, std::shared_ptr<Item> item) : Component(parent), item(item) {}
 
@@ -46,19 +44,27 @@ void Collectable::render(uint8_t hints) {
 void Collectable::collect() {
     if (this->collected) return;
 
+    if (this->item->useOnPickup()) {
+        this->item->use(RT_Context.getPlayer());
+        this->collected = true;
+        this->parent.disable();
+        return;
+    }
+
     auto stats = RT_Context.getPlayer()->getComponent<Stats>();
 
     // try to pick up the item
     if (stats->inventory.add(this->item)) {
         this->collected = true;
-        this->parent.addComponent<SelfDestruct>(TIMER, 500);
-        this->parent.addComponent<Acceleration>(4.0f, VM_50_PI);
-        this->parent.addComponent<Bloat>();
-        this->parent.getComponent<Acceleration>()->accelerate();
-
+        this->parent.disable();
         if (this->parent.hasComponent<Id>()) {
             auto id = this->parent.getComponent<Id>();
             RT_Memory.addToArray("collectedItems", id->id);
+        }
+
+        std::string s;
+        if (this->item->notification(s)) {
+            Manager::instance().addTimer(0, 5000, s.c_str());
         }
     }
 }

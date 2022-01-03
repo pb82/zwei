@@ -17,7 +17,13 @@ public:
 
     int getDexterity() const;
 
+    void bumpHitpoints();
+
     std::tuple<int, int> getHitpoints();
+
+    std::tuple<int, int> getHitpointsPerHeart();
+
+    std::tuple<int, int> getHearts();
 
     bool dead() const;
 
@@ -30,13 +36,13 @@ private:
     // Hitpoints
     int hitpoints = 0;
     int maxHitpoints = 0;
-    int hearts = 0;
-    int maxHearts = 0;
 
     // Stats
     int baseStrength = 0;
     int baseDexterity = 0;
     int baseDefense = 0;
+
+    const int BAR_HITPOINTS = 20;
 };
 
 #endif //ZWEI_CHARACTER_H

@@ -18,9 +18,12 @@ struct TimerValue {
         this->cur = cur;
     }
 
+    TimerValue(float cur, float max, std::string &&text);
+
     int tile = 0;
     float max = 0.0f;
     float cur = 0.0f;
+    std::vector<int> letters;
 
     bool running() {
         return cur < max;
@@ -42,6 +45,8 @@ public:
     void addTimer(int tile, float max);
 
     void addTimer(int tile, float cur, float max);
+
+    void addTimer(float cur, float max, const char *text);
 
 private:
 

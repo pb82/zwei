@@ -47,13 +47,13 @@ public:
 
     std::shared_ptr<Entity> getInteractible(uint8_t id);
 
-    void getInteractibles(std::vector<std::shared_ptr<Entity>>& target);
+    void getInteractibles(std::vector<std::shared_ptr<Entity>> &target);
 
-    void getItems(std::vector<std::shared_ptr<Entity>>& target);
+    void getItems(std::vector<std::shared_ptr<Entity>> &target);
 
-    void getEnemies(std::vector<std::shared_ptr<Entity>>& target);
+    void getEnemies(std::vector<std::shared_ptr<Entity>> &target);
 
-    void getAllies(std::vector<std::shared_ptr<Entity>>& target);
+    void getAllies(std::vector<std::shared_ptr<Entity>> &target);
 
     std::shared_ptr<Entity> getEnemy(uint8_t id);
 
@@ -76,6 +76,8 @@ public:
     void addTimer(int tile, float duration);
 
     void addTimer(int tile, float duration, float max);
+
+    void addTimer(float duration, float max, const char *text);
 
     void resetAll();
 

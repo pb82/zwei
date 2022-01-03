@@ -11,6 +11,8 @@ public:
 
     int tile() override;
 
+    bool notification(std::string &s) override;
+
     bool use(std::shared_ptr<Entity> on) override;
 
 private:

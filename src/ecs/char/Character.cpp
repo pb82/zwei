@@ -45,6 +45,11 @@ int Character::damage(int d, bool isProjectile) {
     return d;
 }
 
+void Character::bumpHitpoints() {
+    this->maxHitpoints = this->maxHitpoints += BAR_HITPOINTS;
+    this->hitpoints = this->maxHitpoints;
+}
+
 int Character::getStrength() const {
     return baseStrength;
 }
@@ -55,6 +60,20 @@ int Character::getDexterity() const {
 
 std::tuple<int, int> Character::getHitpoints() {
     return {this->hitpoints, this->maxHitpoints};
+}
+
+std::tuple<int, int> Character::getHitpointsPerHeart() {
+    int hp = this->hitpoints % BAR_HITPOINTS;
+    if (hp == 0 && this->hitpoints > 0) {
+        hp = BAR_HITPOINTS;
+    }
+    return {hp, BAR_HITPOINTS};
+}
+
+std::tuple<int, int> Character::getHearts() {
+    int total = this->maxHitpoints / BAR_HITPOINTS;
+    int full = this->hitpoints / BAR_HITPOINTS;
+    return {full, total - full};
 }
 
 bool Character::dead() const {
