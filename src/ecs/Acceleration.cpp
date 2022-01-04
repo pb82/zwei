@@ -19,6 +19,19 @@ void Acceleration::update(float dt) {
     trajectory.radius = speed * (dt / 1000);
     trajectory.translate(&transform->p.x, &transform->p.y);
 
+    // Map bounds check
+    int mapW, mapH;
+    Rt_Map.getSize(FLOOR, &mapW, &mapH);
+    if (transform->p.x <= 0 || transform->p.x >= mapW) {
+        reset(transform->p);
+        return;
+    }
+
+    if (transform->p.y <= 0 || transform->p.y >= mapH) {
+        reset(transform->p);
+        return;
+    }
+
     forces.erase(
             std::remove_if(
                     forces.begin(),
