@@ -271,6 +271,7 @@ void renderGameOver(tp frameStart) {
 }
 
 void renderGame(tp frameStart) {
+    Manager::instance().render(PARALLAX);
     Manager::instance().render(BACKGROUND);
     Manager::instance().render(FLOOR);
     Manager::instance().render(WALLS);

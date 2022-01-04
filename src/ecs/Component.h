@@ -13,6 +13,7 @@ enum LayerType {
     OBJECTS = 6,
     FOREGROUND = 7,
     UI = 8,
+    PARALLAX = 9,
 };
 
 class Entity;

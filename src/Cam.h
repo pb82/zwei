@@ -50,6 +50,10 @@ public:
         project(target, x, y, z, p);
     }
 
+    void projectParallax(SDL_Rect &target, float x, float y) {
+        project(target, x, y, z * 0.9);
+    }
+
     // adjust the position and size of a rectangle according to the camera position
     // and zoom
     void project(SDL_Rect &target, float x, float y, float zm, Padding p = {0, 0, 0, 0}) const {

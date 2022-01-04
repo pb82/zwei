@@ -11,6 +11,7 @@
 
 const uint8_t HINT_HIDE_ROOF_LAYER = 1 << 0;
 const uint8_t HINT_TURN_LIGHTS_OUT = 1 << 1;
+const uint8_t HINT_PARALLAX_LAYER = 1 << 2;
 
 class Collider;
 

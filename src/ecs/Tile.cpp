@@ -35,7 +35,12 @@ void Tile::render(uint8_t hints) {
     SDL_Rect target;
     auto transform = parent.getComponent<Transform>();
 
-    RT_Camera.project(target, transform->p.x, transform->p.y);
+    if ((hints & HINT_PARALLAX_LAYER) == HINT_PARALLAX_LAYER) {
+        RT_Camera.projectParallax(target, transform->p.x, transform->p.y);
+    } else {
+        RT_Camera.project(target, transform->p.x, transform->p.y);
+    }
+
     if (!RT_Camera.visible(target)) {
         return;
     }
