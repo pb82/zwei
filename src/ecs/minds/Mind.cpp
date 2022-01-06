@@ -108,6 +108,12 @@ void Mind::turn(float angle) {
     acceleration->decelerate();
 }
 
+void Mind::backtrack(float angle) {
+    turn(angle);
+    auto acceleration = parent.getComponent<Acceleration>();
+    acceleration->accelerate();
+}
+
 void Mind::attack() {
     auto attack = parent.getComponent<Attack>();
     attack->attack();

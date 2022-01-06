@@ -16,6 +16,8 @@ public:
 
     bool activate() override;
 
+    void render() override;
+
 private:
 
     std::vector<Position> route;

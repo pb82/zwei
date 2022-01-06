@@ -4,7 +4,7 @@
 Stick::Stick() {}
 
 float Stick::range() {
-    return 0.2;
+    return 0.5;
 }
 
 int Stick::recharge() {

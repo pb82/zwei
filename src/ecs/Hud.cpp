@@ -58,8 +58,8 @@ void Hud::render(uint8_t) {
 
     // Heart symbols
     Gfx::pick(source, 90, texture->w);
-    target.x = 10;
-    target.y += 16;
+    target.x = target.w + 10;
+    target.y = 10;
     target.w = 32;
     target.h = 32;
 
@@ -81,7 +81,7 @@ void Hud::render(uint8_t) {
 
     auto attack = player->getComponent<Attack>();
 
-    target.x = 10;
+    target.x = (configWindowWidth / BAR_SCREEN_RATIO) + 10;
     target.y = 42;
     target.w = 32;
     target.h = 32;
@@ -89,7 +89,7 @@ void Hud::render(uint8_t) {
     Gfx::pick(source, 107, texture->w);
     Draw::instance().draw(texture->mem, source, target);
 
-    target.x = 28;
+    target.x = 10;
     target.h = 20;
     target.w = (configWindowWidth / BAR_SCREEN_RATIO) + 2;
     target.y = 48;

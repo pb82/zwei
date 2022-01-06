@@ -81,7 +81,6 @@ namespace Api {
         setPlayerStats(20, 1, 1, 1);
 
         player->getComponent<Acceleration>()->setDirection(N);
-
     }
 
     void setPlayerPosition(float x, float y, Direction d) {

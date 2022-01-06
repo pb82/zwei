@@ -52,10 +52,11 @@ protected:
 
     void turn(float angle);
 
+    void backtrack(float angle);
+
     void walkTowardsPlayer();
 
     void walkTowards(std::shared_ptr<Entity> entity);
-
 
 private:
 
