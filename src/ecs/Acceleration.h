@@ -51,6 +51,8 @@ public:
 
     void setDirection(Direction d);
 
+    void setSpeed(float maxSpeed);
+
 private:
 
     Direction face = NONE;

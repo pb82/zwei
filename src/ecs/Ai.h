@@ -24,6 +24,14 @@ public:
         this->mind = std::make_shared<T>(this->parent);
     }
 
+    void brainify(std::shared_ptr<Mind> mind) {
+        this->mind = mind;
+    }
+
+    std::shared_ptr<Mind> getMind() {
+        return this->mind;
+    }
+
 private:
 
     float _pause = 0.0f;

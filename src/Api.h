@@ -5,6 +5,7 @@
 #include "ecs/Interactible.h"
 #include "alg/Direction.h"
 #include "ecs/items/Item.h"
+#include "ecs/minds/Npc.h"
 
 namespace Api {
     // Init
@@ -54,6 +55,8 @@ namespace Api {
     void addSpider(int x, int y, uint8_t id, int hp = 10);
 
     void addAlly(int x, int y, uint8_t id, int hp = 20);
+
+    std::shared_ptr<Npc> addNpc(int x, int y, uint8_t id);
 
     // Items
 

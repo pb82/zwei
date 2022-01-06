@@ -9,6 +9,7 @@
 #include "in/Input.h"
 #include "Scene.h"
 #include "alg/Color.h"
+#include "ecs/Entity.h"
 
 class Command {
 public:
@@ -21,6 +22,22 @@ public:
     virtual void key(GameKeyEvent &ev) {}
 
     virtual bool done() = 0;
+};
+
+class NpcCommand : public Command {
+public:
+    NpcCommand(std::shared_ptr<Entity> npm);
+
+    bool done();
+
+    void render() override;
+
+    void update(float dt) override;
+
+private:
+    std::shared_ptr<Entity> npc;
+
+    bool finished = false;
 };
 
 class ScreenTransition : public Command {
@@ -83,6 +100,7 @@ private:
     int index = 0;
 
     std::vector<int> sequence;
+
 };
 
 #endif

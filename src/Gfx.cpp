@@ -42,6 +42,6 @@ Gfx::~Gfx() {
         window = nullptr;
     }
 
-    SDL_Quit();
     IMG_Quit();
+    SDL_Quit();
 }

@@ -27,6 +27,7 @@
 #include "ecs/minds/Spider.h"
 #include "ecs/filters/Tan.h"
 #include "ecs/Friend.h"
+#include "ecs/minds/Npc.h"
 
 namespace Api {
 
@@ -78,6 +79,9 @@ namespace Api {
 
         setPlayerSpeed(3);
         setPlayerStats(20, 1, 1, 1);
+
+        player->getComponent<Acceleration>()->setDirection(N);
+
     }
 
     void setPlayerPosition(float x, float y, Direction d) {
@@ -263,6 +267,32 @@ namespace Api {
     }
 
     // Enemies
+
+    std::shared_ptr<Npc> addNpc(int x, int y, uint8_t id) {
+        auto npc = Manager::instance().addEntity(OBJECTS);
+        npc->addComponent<Transform>(x, y);
+        npc->addComponent<Sprite>(GIRL);
+        npc->addComponent<Animation>(200, true);
+        npc->addComponent<Acceleration>(2.0f, 0);
+        npc->getComponent<Acceleration>()->setDirection(S);
+        npc->addComponent<Ai>();
+        npc->addComponent<Friend>();
+        npc->addComponent<Id>(id);
+
+        npc->getComponent<Animation>()->addAnimationFrame(12, 0, 8, 4);
+        npc->getComponent<Animation>()->addAnimationFrame(13, 1, 9, 5);
+        npc->getComponent<Animation>()->addAnimationFrame(14, 2, 10, 6);
+        npc->getComponent<Animation>()->stop();
+        auto transform = npc->getComponent<Transform>();
+        npc->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0});
+        RT_Topology.registerMobile(&transform->p);
+
+        auto ai = npc->getComponent<Ai>();
+        auto mind = std::make_shared<Npc>(*npc);
+        ai->brainify(mind);
+        Rt_Commands.push(std::make_shared<NpcCommand>(npc));
+        return mind;
+    }
 
     void addAlly(int x, int y, uint8_t id, int hp) {
         auto kakta = Manager::instance().addEntity(OBJECTS);

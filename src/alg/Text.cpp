@@ -132,6 +132,8 @@ int Text::fromChar(char c) {
             return 24;
         case '9':
             return 25;
+        case ':':
+            return 26;
         case 'a':
             return 65;
         case 'b':

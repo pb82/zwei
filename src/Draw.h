@@ -26,6 +26,9 @@ public:
     void draw(SDL_Texture *texture, SDL_Rect &source, SDL_Rect &target, float angle = 0.0f,
               SDL_RendererFlip flip = SDL_FLIP_NONE);
 
+    void draw(SDL_Texture *texture, SDL_Rect &source, SDL_Rect &target, SDL_Color color, float angle = 0.0f,
+              SDL_RendererFlip flip = SDL_FLIP_NONE);
+
     void line(Color &c, int x1, int y1, int x2, int y2);
 
     void rect(Color &c, SDL_Rect &rect);

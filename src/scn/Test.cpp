@@ -1,5 +1,7 @@
 #include "Test.h"
 
+#include "SceneConstants.h"
+
 #include "../Api.h"
 #include "../Rt.h"
 
@@ -19,13 +21,22 @@ void Test::init() {
     Api::setPlayerPosition(14, 30);
     Api::loadMap("Beach.json");
     Api::setGameState();
-    // Api::setEnableLights(false);
     Api::setDoor(14, 17, ID_Door_1);
     Api::setRoofHideTrigger(14, 16);
     Api::setRoofShowTrigger(14, 18);
-    Api::addItem(10, 24, 0, HEART);
-    Api::addItem(12, 25, 0, TORCH);
 
+    if (!RT_Memory.getBool(SceneConstants::key_IntroductionDialog, false)) {
+        Api::createSingleSpeechBubble("(Sailors) Wait here for us and don't move!", true);
+        Api::createSingleSpeechBubble("(Arnold) Ok.", false);
+        RT_Memory.setBool(SceneConstants::key_IntroductionDialog, true);
+    }
+
+    auto npc = Api::addNpc(14, 26, 3);
+    npc->addTurn(VM_50_PI, 4000, 2.0f);
+    npc->go();
+
+    Api::createSingleSpeechBubble("(Arnold) I'm getting bored.", true);
+    Api::createSingleSpeechBubble("(Arnold) A quick look around can't hurt.", true);
 
 }
 

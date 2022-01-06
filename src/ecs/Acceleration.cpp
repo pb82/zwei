@@ -92,6 +92,10 @@ Direction Acceleration::getDirection() {
     return this->trajectory.getDirection();
 }
 
+void Acceleration::setSpeed(float maxSpeed) {
+    this->maxSpeed = maxSpeed;
+}
+
 void Acceleration::setDirection(Direction d) {
     this->trajectory.setDirection(d);
 }

@@ -6,6 +6,15 @@ void Draw::draw(SDL_Texture *texture, SDL_Rect &source, SDL_Rect &target, float 
     SDL_RenderCopyEx(Gfx_Renderer, texture, &source, &target, angle, nullptr, flip);
 }
 
+void Draw::draw(SDL_Texture *texture, SDL_Rect &source, SDL_Rect &target, SDL_Color color, float angle,
+                SDL_RendererFlip flip) {
+    uint8_t r, g, b;
+    SDL_GetTextureColorMod(texture, &r, &g, &b);
+    SDL_SetTextureColorMod(texture, color.r, color.g, color.b);
+    SDL_RenderCopyEx(Gfx_Renderer, texture, &source, &target, angle, nullptr, flip);
+    SDL_SetTextureColorMod(texture, r, g, b);
+}
+
 void Draw::line(Color &c, int x1, int y1, int x2, int y2) {
     pushColor();
     SDL_SetRenderDrawColor(Gfx_Renderer, c.r, c.g, c.b, c.a);

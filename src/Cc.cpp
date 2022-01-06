@@ -6,6 +6,8 @@
 #include "../config.h"
 #include "alg/Text.h"
 #include "Rt.h"
+#include "ecs/minds/Npc.h"
+#include "ecs/Ai.h"
 
 ScreenTransition::ScreenTransition(SceneType newScene) : newScene(newScene) {}
 
@@ -121,6 +123,7 @@ void SpeechBubble::render() {
     SDL_Rect source;
     auto font = Assets::instance().getTexture(BITMAPFONT);
 
+    bool speaker = false;
     for (int i = 0; i < index; i++) {
         // Newline
         char c = sequence.at(i);
@@ -129,8 +132,17 @@ void SpeechBubble::render() {
             letter.x = background.x + 4;
             continue;
         }
+
+        if (c == 8) speaker = true;
+
         Gfx::pickText(source, c, font->w);
-        Draw::instance().draw(font->mem, source, letter);
+        if (speaker) {
+            Draw::instance().draw(font->mem, source, letter, color_Blue.toSdlColor());
+        } else {
+            Draw::instance().draw(font->mem, source, letter);
+        }
+
+        if (c == 9) speaker = false;
         letter.x += 14;
     }
 
@@ -149,3 +161,25 @@ void SpeechBubble::render() {
         }
     }
 }
+
+NpcCommand::NpcCommand(std::shared_ptr<Entity> npc) : npc(npc) {
+    auto ref = npc->getComponent<Ai>();
+    auto ptr = ref->getMind().get();
+
+    Npc *mind = static_cast<Npc *>(ptr);
+    if (mind) {
+        mind->onFinish([this]() {
+            this->finished = true;
+        });
+    }
+}
+
+bool NpcCommand::done() {
+    return finished;
+}
+
+void NpcCommand::update(float dt) {
+    if (npc) npc->update(dt);
+}
+
+void NpcCommand::render() {}
