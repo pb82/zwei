@@ -25,7 +25,6 @@ void Test::init() {
     Api::setRoofHideTrigger(14, 16);
     Api::setRoofShowTrigger(14, 18);
 
-    /*
     if (!RT_Memory.getBool(SceneConstants::KEY_IntroductionDialog, false)) {
         Api::createSingleSpeechBubble("(Sailors) Wait here for us and don't move!", true);
         Api::createSingleSpeechBubble("(Arnold) Ok.", false);
@@ -47,14 +46,10 @@ void Test::init() {
 
         Api::addKakta(4, 12, SceneConstants::ID_Kakta_1);
         Api::addKakta(5, 11, SceneConstants::ID_Kakta_2);
+        Api::addKakta(4, 7, SceneConstants::ID_Kakta_2);
+        Api::addKakta(4, 6, SceneConstants::ID_Kakta_2);
+
     });
-    */
-
-    // Api::addKakta(4, 12, SceneConstants::ID_Kakta_1);
-    // Api::addKakta(5, 11, SceneConstants::ID_Kakta_2);
-    Api::addItem(14, 26, 4, STICK);
-    Api::addItem(15, 25, 4, HEART);
-
 }
 
 void Test::exit() {

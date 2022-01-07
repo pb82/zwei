@@ -58,7 +58,7 @@ void Hud::render(uint8_t) {
 
     // Heart symbols
     Gfx::pick(source, 90, texture->w);
-    target.x = target.w + 10;
+    target.x = (configWindowWidth / BAR_SCREEN_RATIO) + 12;
     target.y = 10;
     target.w = 32;
     target.h = 32;

@@ -22,12 +22,12 @@ void Acceleration::update(float dt) {
     // Map bounds check
     int mapW, mapH;
     Rt_Map.getSize(FLOOR, &mapW, &mapH);
-    if (transform->p.x <= 0 || transform->p.x >= mapW) {
+    if (transform->p.x <= 0 || transform->p.x >= mapW - 1) {
         reset(transform->p);
         return;
     }
 
-    if (transform->p.y <= 0 || transform->p.y >= mapH) {
+    if (transform->p.y <= 0 || transform->p.y >= mapH - 1) {
         reset(transform->p);
         return;
     }

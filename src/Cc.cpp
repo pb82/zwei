@@ -163,8 +163,10 @@ void SpeechBubble::render() {
 }
 
 NpcCommand::NpcCommand(std::shared_ptr<Entity> npc) : npc(npc) {
+    if (!npc->hasComponent<Ai>()) return;
     auto ref = npc->getComponent<Ai>();
     auto ptr = ref->getMind().get();
+    if (!ptr) return;
 
     Npc *mind = static_cast<Npc *>(ptr);
     if (mind) {
