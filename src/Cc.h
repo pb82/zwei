@@ -26,7 +26,11 @@ public:
 
 class NpcCommand : public Command {
 public:
-    NpcCommand(std::shared_ptr<Entity> npm);
+    NpcCommand();
+
+    ~NpcCommand();
+
+    void addNpc(std::shared_ptr<Entity> npc);
 
     bool done();
 
@@ -35,7 +39,7 @@ public:
     void update(float dt) override;
 
 private:
-    std::shared_ptr<Entity> npc;
+    std::vector<std::shared_ptr<Entity>> npcs;
 
     bool finished = false;
 };

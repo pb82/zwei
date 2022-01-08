@@ -5,7 +5,6 @@
 #include "ecs/Interactible.h"
 #include "alg/Direction.h"
 #include "ecs/items/Item.h"
-#include "ecs/minds/Npc.h"
 
 namespace Api {
     // Init
@@ -56,7 +55,9 @@ namespace Api {
 
     void addAlly(int x, int y, uint8_t id, int hp = 20);
 
-    std::shared_ptr<Npc> addNpc(int x, int y, uint8_t id);
+    std::shared_ptr<Entity> addNpc(int x, int y, uint8_t id);
+
+    void addTurnToNpc(std::shared_ptr<Entity> npc, float angle, float duration, float speed = 2.0f);
 
     // Items
 

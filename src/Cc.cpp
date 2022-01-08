@@ -6,8 +6,8 @@
 #include "../config.h"
 #include "alg/Text.h"
 #include "Rt.h"
-#include "ecs/minds/Npc.h"
 #include "ecs/Ai.h"
+#include "ecs/Npc.h"
 
 ScreenTransition::ScreenTransition(SceneType newScene) : newScene(newScene) {}
 
@@ -77,7 +77,7 @@ void SpeechBubble::split(const char *text, std::vector<std::shared_ptr<SpeechBub
 void SpeechBubble::key(GameKeyEvent &ev) {
     if (!ev.valid) return;
     if (ev.state != GK_PUSHED) return;
-    if (ev.key == GK_A) {
+    if (ev.key == GK_A || ev.key == GK_B) {
         if (this->index < this->sequence.size()) {
             this->index = this->sequence.size();
         } else {
@@ -162,26 +162,31 @@ void SpeechBubble::render() {
     }
 }
 
-NpcCommand::NpcCommand(std::shared_ptr<Entity> npc) : npc(npc) {
-    if (!npc->hasComponent<Ai>()) return;
-    auto ref = npc->getComponent<Ai>();
-    auto ptr = ref->getMind().get();
-    if (!ptr) return;
+void NpcCommand::addNpc(std::shared_ptr<Entity> npc) {
+    this->npcs.push_back(npc);
+}
 
-    Npc *mind = static_cast<Npc *>(ptr);
-    if (mind) {
-        mind->onFinish([this]() {
-            this->finished = true;
-        });
+NpcCommand::NpcCommand() {}
+
+NpcCommand::~NpcCommand() {
+    for (auto npc: this->npcs) {
+        npc->disable();
     }
 }
 
 bool NpcCommand::done() {
-    return finished;
+    bool done = true;
+    for (auto npc: npcs) {
+        auto n = npc->getComponent<Npc>();
+        done = done && n->done();
+    }
+    return done;
 }
 
 void NpcCommand::update(float dt) {
-    if (npc) npc->update(dt);
+    for (auto &npc: this->npcs) {
+        npc->update(dt);
+    }
 }
 
 void NpcCommand::render() {}

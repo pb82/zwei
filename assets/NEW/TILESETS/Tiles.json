@@ -1,4 +1,12 @@
 { "columns":30,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"Tiles.png",
  "imageheight":480,
  "imagewidth":480,
@@ -6,7 +14,7 @@
  "name":"Tiles",
  "spacing":0,
  "tilecount":900,
- "tiledversion":"1.7.2",
+ "tiledversion":"1.4.2",
  "tileheight":16,
  "tiles":[
         {
@@ -138,6 +146,34 @@
                  "name":"padding",
                  "type":"string",
                  "value":"[0,1,0,0]"
+                }]
+        }, 
+        {
+         "id":51,
+         "properties":[
+                {
+                 "name":"animation",
+                 "type":"string",
+                 "value":"[51,52]"
+                }, 
+                {
+                 "name":"padding",
+                 "type":"string",
+                 "value":"[0.5,0.5,0.5,0.5]"
+                }, 
+                {
+                 "name":"speed",
+                 "type":"int",
+                 "value":500
+                }]
+        }, 
+        {
+         "id":52,
+         "properties":[
+                {
+                 "name":"padding",
+                 "type":"string",
+                 "value":"[0.5,0.5,0.5,0.5]"
                 }]
         }, 
         {
@@ -515,5 +551,5 @@
         }],
  "tilewidth":16,
  "type":"tileset",
- "version":"1.6"
+ "version":1.4
 }
