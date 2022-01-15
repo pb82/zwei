@@ -12,7 +12,16 @@ void Test::addItems(JSON::Value &collected) {
 }
 
 void Test::addEnemies(JSON::Value &resumed) {
-
+    if (resumed.is(JSON::JSON_ARRAY)) {
+        auto enemies = resumed.as<JSON::Array>();
+        for (auto &enemy: enemies) {
+            uint16_t id = enemy["id"].as<uint16_t>();
+            float x = enemy["x"].as<float>();
+            float y = enemy["y"].as<float>();
+            int hp = enemy["hp"].as<int>();
+            Api::addKakta(x, y, id, hp);
+        }
+    }
 }
 
 void Test::init() {

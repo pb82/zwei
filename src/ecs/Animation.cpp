@@ -43,13 +43,13 @@ void Animation::addStateFrame(int n, int speed) {
 }
 
 void Animation::queueAttackFrames() {
-    for (auto &frame : attackFrames) {
+    for (auto &frame: attackFrames) {
         mixinFrames.push(frame);
     }
 }
 
 void Animation::queueProjectileFrames() {
-    for (auto &frame : projectileAttackFrames) {
+    for (auto &frame: projectileAttackFrames) {
         mixinFrames.push(frame);
     }
 }
@@ -101,6 +101,7 @@ void Animation::queueStateFramesBackward() {
 }
 
 void Animation::setFirstStateFrame() {
+    if (stateFrames.empty()) return;
     stateFramesEnd = false;
     auto f = this->stateFrames.at(0);
     int size = this->frames.at(N).size() - 1;
@@ -111,6 +112,7 @@ void Animation::setFirstStateFrame() {
 }
 
 void Animation::setLastStateFrame() {
+    if (stateFrames.empty()) return;
     stateFramesEnd = true;
     auto f = this->stateFrames.at(this->stateFrames.size() - 1);
     int size = this->frames.at(N).size() - 1;
