@@ -226,13 +226,13 @@ namespace Api {
         Manager::instance().enqueue(e, OBJECTS);
     }
 
-    void setInteractible(int x, int y, uint16_t id, interact_Fn onInteract) {
+    void setInteractible(int x, int y, uint16_t id, interact_Fn onInteract, bool reveal) {
         Position p(x, y);
         auto e = Manager::instance().getWall(p);
         if (!e) {
             return;
         }
-        e->addComponent<Interactible>();
+        e->addComponent<Interactible>(reveal);
         e->addComponent<Id>(id);
         auto i = e->getComponent<Interactible>();
         i->onInteract(onInteract);

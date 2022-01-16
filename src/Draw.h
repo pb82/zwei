@@ -35,6 +35,8 @@ public:
 
     void box(Color &c, SDL_Rect &rect);
 
+    void box(Color &c, SDL_Rect &rect, uint8_t a);
+
     void pushColor();
 
     void popColor();

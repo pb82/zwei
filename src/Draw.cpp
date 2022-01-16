@@ -37,6 +37,15 @@ void Draw::box(Color &c, SDL_Rect &rect) {
     popColor();
 }
 
+void Draw::box(Color &c, SDL_Rect &rect, uint8_t a) {
+    pushColor();
+    SDL_SetRenderDrawBlendMode(Gfx_Renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(Gfx_Renderer, c.r, c.g, c.b, a);
+    SDL_RenderFillRect(Gfx_Renderer, &rect);
+    popColor();
+}
+
+
 void Draw::pushColor() {
     SDL_Color c;
     SDL_GetRenderDrawColor(Gfx_Renderer, &c.r, &c.g, &c.b, &c.a);

@@ -4,14 +4,30 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "Acceleration.h"
+#include "Sprite.h"
+#include "filters/Halo.h"
+#include "../Draw.h"
 
-Interactible::Interactible(Entity &parent) : Component(parent) {}
+Interactible::Interactible(Entity &parent, bool reveal) : Component(parent), reveal(reveal) {}
 
 void Interactible::onInteract(interact_Fn cb) {
     this->fn = cb;
 }
 
-void Interactible::update(float dt) {}
+void Interactible::render(uint8_t) {
+    if (!reveal) return;
+    auto t = this->parent.getComponent<Transform>();
+    auto p = RT_Player->getComponent<Transform>();
+    float distance = t->p.distance(p->p);
+    if (distance >= 0.3 && distance <= 1.1) {
+        SDL_Rect r;
+        RT_Camera.project(r, t->p.x, t->p.y);
+        Draw::instance().box(color_Blue, r);
+    }
+}
+
+void Interactible::update(float dt) {
+}
 
 void Interactible::interact() {
     auto t = this->parent.getComponent<Transform>();
