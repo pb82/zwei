@@ -15,6 +15,10 @@ public:
 
     void addItems(JSON::Value &collected) override;
 
+private:
+
+    void tryExit();
+
 };
 
 

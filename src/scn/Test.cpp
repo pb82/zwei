@@ -74,6 +74,20 @@ void Test::init() {
         Api::addKakta(4, 6, SceneConstants::ID_Enemy_Kakta_4);
         */
     }, true);
+
+    Api::setTrigger(25, 0, [this](float angle, Entity &) {
+        this->tryExit();
+    }, nullptr);
+    Api::setTrigger(26, 0, [this](float angle, Entity &) {
+        this->tryExit();
+    }, nullptr);
+}
+
+void Test::tryExit() {
+    if (!RT_Memory.getBool(SceneConstants::KEY_OnTheRun, false)) {
+        Api::createSingleSpeechBubble("(Arnold) The road leads into the jungle", true);
+        Api::createSingleSpeechBubble("(Arnold) Better not go away too far", false);
+    }
 }
 
 void Test::exit() {

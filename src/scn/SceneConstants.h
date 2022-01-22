@@ -3,6 +3,7 @@
 
 namespace SceneConstants {
     const char *KEY_IntroductionDialog = "key.beach.intro";
+    const char *KEY_OnTheRun = "key.beach.ontherun";
 
     // Misc
     const uint16_t ID_InteractibleNotes = 0;
