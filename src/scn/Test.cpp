@@ -76,11 +76,8 @@ void Test::init() {
     }, true);
 
     Api::setTrigger(25, 0, [this](float angle, Entity &) {
-        this->tryExit();
-    }, nullptr);
-    Api::setTrigger(26, 0, [this](float angle, Entity &) {
-        this->tryExit();
-    }, nullptr);
+        // this->tryExit();
+    }, nullptr, 2, 0);
 }
 
 void Test::tryExit() {

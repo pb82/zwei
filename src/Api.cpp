@@ -226,6 +226,22 @@ namespace Api {
         Manager::instance().enqueue(e, OBJECTS);
     }
 
+    void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit, float extendX, float extendY) {
+        auto e = std::make_shared<Entity>();
+        e->addComponent<Transform>(x, y);
+        e->addComponent<Trigger>();
+
+        auto transform = e->getComponent<Transform>();
+        e->addComponent<Collider>(transform, CT_TRIGGER, Padding{0, -extendX, 0, -extendY});
+
+        auto t = e->getComponent<Trigger>();
+        t->onEnter(onEnter);
+        t->onExit(onExit);
+
+        Manager::instance().enqueue(e, OBJECTS);
+    }
+
+
     void setInteractible(int x, int y, uint16_t id, interact_Fn onInteract, bool reveal) {
         Position p(x, y);
         auto e = Manager::instance().getWall(p);

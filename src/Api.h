@@ -41,6 +41,8 @@ namespace Api {
 
     void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit, float proximity = 0);
 
+    void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit, float extendX, float extendY);
+
     void setInteractible(int x, int y, uint16_t id, interact_Fn onInteract, bool reveal = false);
 
     void createSpeechBubble(const char *text);
