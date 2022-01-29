@@ -100,14 +100,14 @@ void Manager::collect() {
     for (auto &layer: entities) {
         auto &v = layer.second;
 
-        v.erase(std::remove_if(v.begin(), v.end(), [](std::shared_ptr<Entity> e) {
-            return e->disabled();
-        }), v.end());
-
         // Garbage collect entity components
         for (auto &e: v) {
             e->collect();
         }
+
+        v.erase(std::remove_if(v.begin(), v.end(), [](std::shared_ptr<Entity> e) {
+            return e->disabled();
+        }), v.end());
     }
 }
 
@@ -142,6 +142,9 @@ void Manager::render(LayerType layer) {
         // Perspective correction: sort entities to draw them from south to north
         std::sort(entities.at(OBJECTS).begin(), entities.at(OBJECTS).end(),
                   [](const std::shared_ptr<Entity> &a, const std::shared_ptr<Entity> &b) -> bool {
+                      if (!a || !b) {
+                          return false;
+                      }
                       auto at = a->getComponent<Transform>();
                       auto bt = b->getComponent<Transform>();
                       return at->p.y <= bt->p.y;

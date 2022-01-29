@@ -33,7 +33,6 @@ void Test::init() {
     Api::setRoofHideTrigger(14, 16);
     Api::setRoofShowTrigger(14, 18);
 
-    /*
     if (!RT_Memory.getBool(SceneConstants::KEY_IntroductionDialog, false)) {
         Api::createSingleSpeechBubble("(Sailors) Wait here for us and don't move!", true);
         Api::createSingleSpeechBubble("(Sailors) We are going to investigate.", true);
@@ -58,11 +57,8 @@ void Test::init() {
         Api::createSingleSpeechBubble("(Arnold) I'm getting bored.", true);
         Api::createSingleSpeechBubble("(Arnold) A quick look around can't hurt.", false);
     }
-    */
 
     Api::setInteractible(15, 14, SceneConstants::ID_InteractibleNotes, [](Entity &on) {
-        Api::createSpeechBubble("test");
-        /*
         Api::createSingleSpeechBubble("(Arnold) Something is here.", true);
         Api::createSingleSpeechBubble("(Arnold) Looks like something is hidden under the floor.", true);
         Api::createSingleSpeechBubble("(Sailors) Ahhhhhh!", true);
@@ -72,11 +68,10 @@ void Test::init() {
         Api::addKakta(5, 11, SceneConstants::ID_Enemy_Kakta_2);
         Api::addKakta(4, 7, SceneConstants::ID_Enemy_Kakta_3);
         Api::addKakta(4, 6, SceneConstants::ID_Enemy_Kakta_4);
-        */
     }, true);
 
     Api::setTrigger(25, 0, [this](float angle, Entity &) {
-        // this->tryExit();
+        this->tryExit();
     }, nullptr, 2, 0);
 }
 

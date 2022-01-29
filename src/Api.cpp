@@ -378,6 +378,10 @@ namespace Api {
     }
 
     void addKakta(int x, int y, uint8_t id, int hp) {
+        if (!RT_Topology.accessible(x, y)) {
+            return;
+        }
+
         auto kakta = Manager::instance().addEntity(OBJECTS);
         kakta->addComponent<Transform>(x, y);
         kakta->addComponent<Sprite>(SPRITES);
