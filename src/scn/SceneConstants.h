@@ -1,6 +1,9 @@
 #ifndef ZWEI_SCENECONSTANTS_H
 #define ZWEI_SCENECONSTANTS_H
 
+#define GET_BOOL(c)     RT_Memory.getBool(c, false)
+#define SET_BOOL(c, b)  RT_Memory.setBool(c, b)
+
 namespace SceneConstants {
     const char *KEY_IntroductionDialog = "key.beach.intro";
     const char *KEY_OnTheRun = "key.beach.ontherun";

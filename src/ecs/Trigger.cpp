@@ -22,6 +22,8 @@ void Trigger::onExit(trigger_Fn cb) {
 }
 
 void Trigger::update(float dt) {
+    if (this->parent.disabled()) return;
+
     auto player = RT_Context.getPlayer();
     auto a = player->getComponent<Collider>();
     auto b = parent.getComponent<Collider>();

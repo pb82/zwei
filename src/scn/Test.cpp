@@ -33,12 +33,12 @@ void Test::init() {
     Api::setRoofHideTrigger(14, 16);
     Api::setRoofShowTrigger(14, 18);
 
-    if (!RT_Memory.getBool(SceneConstants::KEY_IntroductionDialog, false)) {
+    if (!GET_BOOL(SceneConstants::KEY_IntroductionDialog)) {
+        SET_BOOL(SceneConstants::KEY_IntroductionDialog, true);
         Api::createSingleSpeechBubble("(Sailors) Wait here for us and don't move!", true);
         Api::createSingleSpeechBubble("(Sailors) We are going to investigate.", true);
 
         Api::createSingleSpeechBubble("(Arnold) Ok.", false);
-        RT_Memory.setBool(SceneConstants::KEY_IntroductionDialog, true);
 
         auto npc = Api::addNpc(14, 26, SceneConstants::ID_Npc_1);
         Api::addTurnToNpc(npc, VM_50_PI, 8000, 1);
@@ -58,17 +58,22 @@ void Test::init() {
         Api::createSingleSpeechBubble("(Arnold) A quick look around can't hurt.", false);
     }
 
-    Api::setInteractible(15, 14, SceneConstants::ID_InteractibleNotes, [](Entity &on) {
-        Api::createSingleSpeechBubble("(Arnold) Something is here.", true);
-        Api::createSingleSpeechBubble("(Arnold) Looks like something is hidden under the floor.", true);
-        Api::createSingleSpeechBubble("(Sailors) Ahhhhhh!", true);
-        Api::createSingleSpeechBubble("(Arnold) What was that?", true);
+    if (!GET_BOOL(SceneConstants::KEY_OnTheRun)) {
+        Api::setTrigger(15, 14, [](float angle, Entity &trigger){
+            Api::createSingleSpeechBubble("(Arnold) Something is here.", true);
+            Api::createSingleSpeechBubble("(Arnold) Looks like something is hidden under the floor.", true);
+            Api::createSingleSpeechBubble("(Sailors) Ahhhhhh!", true);
+            Api::createSingleSpeechBubble("(Arnold) What was that?", true);
 
-        Api::addKakta(4, 12, SceneConstants::ID_Enemy_Kakta_1);
-        Api::addKakta(5, 11, SceneConstants::ID_Enemy_Kakta_2);
-        Api::addKakta(4, 7, SceneConstants::ID_Enemy_Kakta_3);
-        Api::addKakta(4, 6, SceneConstants::ID_Enemy_Kakta_4);
-    }, true);
+            Api::addKakta(4, 12, SceneConstants::ID_Enemy_Kakta_1);
+            Api::addKakta(5, 11, SceneConstants::ID_Enemy_Kakta_2);
+            Api::addKakta(4, 7, SceneConstants::ID_Enemy_Kakta_3);
+            Api::addKakta(4, 6, SceneConstants::ID_Enemy_Kakta_4);
+            trigger.disable();
+
+            SET_BOOL(SceneConstants::KEY_OnTheRun, true);
+        }, nullptr, 2);
+    }
 
     Api::setTrigger(25, 0, [this](float angle, Entity &) {
         this->tryExit();
@@ -76,7 +81,7 @@ void Test::init() {
 }
 
 void Test::tryExit() {
-    if (!RT_Memory.getBool(SceneConstants::KEY_OnTheRun, false)) {
+    if (!GET_BOOL(SceneConstants::KEY_OnTheRun)) {
         Api::createSingleSpeechBubble("(Arnold) The road leads into the jungle", true);
         Api::createSingleSpeechBubble("(Arnold) Better not go away too far", false);
     }
