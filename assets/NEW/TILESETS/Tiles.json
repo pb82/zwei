@@ -1,12 +1,4 @@
 { "columns":30,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"",
-         "target":"."
-        }
-    },
  "image":"Tiles.png",
  "imageheight":480,
  "imagewidth":480,
@@ -14,7 +6,7 @@
  "name":"Tiles",
  "spacing":0,
  "tilecount":900,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.7.2",
  "tileheight":16,
  "tiles":[
         {
@@ -573,10 +565,10 @@
                 {
                  "name":"padding",
                  "type":"string",
-                 "value":"[0,1.5,0,1]"
+                 "value":"[0,1.5,1,1]"
                 }]
         }],
  "tilewidth":16,
  "type":"tileset",
- "version":1.4
+ "version":"1.6"
 }

@@ -6,6 +6,7 @@
 Forest::Forest() : Scene(SceneForest) {}
 
 void Forest::init() {
+    Api::init();
     Api::initPlayer();
     Api::setPlayerPosition(2, 30);
     Api::loadMap("Forest.json");

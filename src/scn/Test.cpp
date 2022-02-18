@@ -24,8 +24,9 @@ void Test::addEnemies(JSON::Value &resumed) {
 }
 
 void Test::init() {
+    Api::init();
     Api::initPlayer();
-    Api::setPlayerPosition(14, 30);
+    Api::setPlayerPosition(25, 4);
     Api::loadMap("Beach.json");
     Api::setGameState();
     Api::setDoor(14, 17, SceneConstants::ID_Door_1);
