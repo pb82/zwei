@@ -317,7 +317,7 @@ void loop() {
         // return;
     }
 
-    RT_Context.setActiveScene(SceneStart);
+    RT_Context.setActiveScene(SceneEntry);
 
     // Global alpha
     while (RT_Running) {

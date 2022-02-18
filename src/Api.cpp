@@ -84,6 +84,12 @@ namespace Api {
     }
 
     void setPlayerPosition(float x, float y, Direction d) {
+        if (!RT_Spawn.empty()) {
+            x = RT_Spawn.top().x;
+            y = RT_Spawn.top().y;
+            RT_Spawn.pop();
+        }
+
         if (!RT_Player) return;
         if (!RT_Player->hasComponent<Transform>()) {
             RT_Player->addComponent<Transform>(x, y);
@@ -160,6 +166,7 @@ namespace Api {
         Rt_Map.clear();
         RT_Topology.clear();
         RT_Camera.setMapSize(0, 0);
+        Manager::instance().clearAll();
     }
 
     void setRoofHideTrigger(int entryX, int entryY) {

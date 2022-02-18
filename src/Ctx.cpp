@@ -3,9 +3,6 @@
 #include <JSON/printer.h>
 
 #include "snd/Player.h"
-#include "scn/Start.h"
-#include "scn/Entry.h"
-#include "scn/Beach.h"
 #include "ecs/Stats.h"
 #include "io/Out.h"
 #include "ecs/Acceleration.h"
@@ -14,6 +11,8 @@
 #include "ecs/Id.h"
 #include "ecs/Collider.h"
 #include "scn/Test.h"
+#include "scn/Forest.h"
+#include "scn/Entry.h"
 
 GameStateMachine::GameStateMachine() {
     this->current.push(StateStart);
@@ -52,10 +51,9 @@ void GameStateMachine::pushState(GameState state) {
 }
 
 Ctx::Ctx() {
-    scenes.emplace(SceneStart, std::make_shared<Entry>());
-    scenes.emplace(SceneDungeon, std::make_shared<Start>());
-    scenes.emplace(SceneBeach, std::make_shared<Beach>());
+    scenes.emplace(SceneEntry, std::make_shared<Entry>());
     scenes.emplace(SceneTesting, std::make_shared<Test>());
+    scenes.emplace(SceneForest, std::make_shared<Forest>());
 }
 
 void Ctx::setPlayer(std::shared_ptr<Entity> player) {

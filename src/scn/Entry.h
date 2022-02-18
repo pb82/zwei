@@ -7,9 +7,9 @@ class Entry : public Scene {
 public:
     Entry();
 
-    void init();
+    void init() override;
 
-    void exit();
+    void exit() override;
 };
 
 

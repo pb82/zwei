@@ -80,6 +80,18 @@ void Manager::enqueue(std::shared_ptr<Entity> entity, LayerType layer) {
     pendingEntities.push(e);
 }
 
+void Manager::clearAll() {
+    auto player = RT_Context.getPlayer();
+    for (auto &l : this->entities) {
+        for (auto &e : l.second) {
+            if (e.get() == player.get()) {
+                continue;
+            }
+            e->disable();
+        }
+    }
+}
+
 void Manager::collect() {
     // New entities?
     if (!pendingEntities.empty()) {

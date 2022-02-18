@@ -2,7 +2,6 @@
 #include "Menu.h"
 
 #include "../Rt.h"
-#include "../scn/Start.h"
 
 #define WINDOW_MARGIN 0
 

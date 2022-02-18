@@ -1,8 +1,7 @@
 #include "Entry.h"
-
 #include "../Api.h"
 
-Entry::Entry() : Scene(SceneStart) {}
+Entry::Entry() : Scene(SceneEntry) {}
 
 void Entry::init() {
     Api::init();

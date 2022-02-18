@@ -4,7 +4,6 @@
 
 #include "../Api.h"
 #include "../Rt.h"
-#include "../alg/Vector.h"
 
 Test::Test() : Scene(SceneTesting) {}
 
@@ -33,6 +32,7 @@ void Test::init() {
     Api::setRoofHideTrigger(14, 16);
     Api::setRoofShowTrigger(14, 18);
 
+    /*
     if (!GET_BOOL(SceneConstants::KEY_IntroductionDialog)) {
         SET_BOOL(SceneConstants::KEY_IntroductionDialog, true);
         Api::createSingleSpeechBubble("(Sailors) Wait here for us and don't move!", true);
@@ -57,9 +57,11 @@ void Test::init() {
         Api::createSingleSpeechBubble("(Arnold) I'm getting bored.", true);
         Api::createSingleSpeechBubble("(Arnold) A quick look around can't hurt.", false);
     }
+    */
 
     if (!GET_BOOL(SceneConstants::KEY_OnTheRun)) {
         Api::setTrigger(15, 14, [](float angle, Entity &trigger){
+            /*
             Api::createSingleSpeechBubble("(Arnold) Something is here.", true);
             Api::createSingleSpeechBubble("(Arnold) Looks like something is hidden under the floor.", true);
             Api::createSingleSpeechBubble("(Sailors) Ahhhhhh!", true);
@@ -70,9 +72,10 @@ void Test::init() {
             Api::addKakta(4, 7, SceneConstants::ID_Enemy_Kakta_3);
             Api::addKakta(4, 6, SceneConstants::ID_Enemy_Kakta_4);
             trigger.disable();
-
+            */
+            Api::createSpeechBubble("trigger activated");
             SET_BOOL(SceneConstants::KEY_OnTheRun, true);
-        }, nullptr, 2);
+        }, nullptr, 1);
     }
 
     Api::setTrigger(25, 0, [this](float angle, Entity &) {
@@ -82,8 +85,17 @@ void Test::init() {
 
 void Test::tryExit() {
     if (!GET_BOOL(SceneConstants::KEY_OnTheRun)) {
+        /*
         Api::createSingleSpeechBubble("(Arnold) The road leads into the jungle", true);
         Api::createSingleSpeechBubble("(Arnold) Better not go away too far", false);
+        */
+        // Api::createSpeechBubble("nope");
+        auto t = std::make_shared<ScreenTransition>(SceneForest);
+        Rt_Commands.push(t);
+
+    } else {
+        auto t = std::make_shared<ScreenTransition>(SceneForest);
+        Rt_Commands.push(t);
     }
 }
 

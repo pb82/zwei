@@ -42,6 +42,8 @@ public:
     // add new entities and garbage collect disabled ones
     void collect();
 
+    void clearAll();
+
     void getColliders(std::vector<std::shared_ptr<Collider>> &target);
 
     std::shared_ptr<Interactible> getInteractible(int x, int y);
