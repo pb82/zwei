@@ -8,7 +8,7 @@ Game engine for 2d action RPG style games. Work in progress, still very rough.
 - [x] Combat
 - [x] Menu
 - [x] Builds on Linux and MacOs
-- [ ] Save & Load
+- [x] Save & Load
 - [ ] Scripting
 - [ ] Building on Windows
 - [ ] Docs
