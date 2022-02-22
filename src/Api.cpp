@@ -22,7 +22,6 @@
 #include "ecs/minds/Kakta.h"
 #include "ecs/minds/Ally.h"
 #include "ecs/Hostile.h"
-#include "ecs/arms/Bow.h"
 #include "ecs/arms/Stone.h"
 #include "ecs/minds/Spider.h"
 #include "ecs/filters/Tan.h"
@@ -32,10 +31,11 @@
 namespace Api {
 
     void init() {
-        // Menu
-        auto menu = Manager::instance().addEntity(UI);
-        RT_Context.setMenu(menu);
-        menu->addComponent<Menu>();
+        if (!Manager::instance().hasMenu()) {
+            auto menu = Manager::instance().addEntity(UI);
+            RT_Context.setMenu(menu);
+            menu->addComponent<Menu>();
+        }
     }
 
     void initPlayer() {

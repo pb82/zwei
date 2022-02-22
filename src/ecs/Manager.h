@@ -84,6 +84,8 @@ public:
 
     void resetAll();
 
+    bool hasMenu();
+
     uint8_t getRenderHints() { return this->renderHints; }
 
 private:

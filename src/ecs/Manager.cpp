@@ -40,6 +40,10 @@ void Manager::resetAll() {
     init();
 }
 
+bool Manager::hasMenu() {
+    return entities.at(UI).size() > 0;
+}
+
 void Manager::addTimer(int tile, float duration) {
     auto t = timers->getComponent<Timer>();
     t->addTimer(tile, duration);
@@ -82,8 +86,11 @@ void Manager::enqueue(std::shared_ptr<Entity> entity, LayerType layer) {
 
 void Manager::clearAll() {
     auto player = RT_Context.getPlayer();
-    for (auto &l : this->entities) {
-        for (auto &e : l.second) {
+    for (auto &l: this->entities) {
+        // Don't clear the UI layer
+        if (l.first == UI) continue;
+
+        for (auto &e: l.second) {
             if (e.get() == player.get()) {
                 continue;
             }
