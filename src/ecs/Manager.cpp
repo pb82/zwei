@@ -91,6 +91,10 @@ void Manager::clearAll() {
         if (l.first == UI) continue;
 
         for (auto &e: l.second) {
+            if (e.get() == timers.get()) {
+                continue;
+            }
+
             if (e.get() == player.get()) {
                 continue;
             }

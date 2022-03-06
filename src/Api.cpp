@@ -40,6 +40,9 @@ namespace Api {
 
     void initPlayer() {
         if (RT_Context.getPlayer() != nullptr) {
+            // We still need to add the hud back in
+            auto hud = Manager::instance().addEntity(FOREGROUND);
+            hud->addComponent<Hud>();
             return;
         }
 
