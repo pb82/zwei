@@ -123,6 +123,20 @@
                 }]
         }, 
         {
+         "id":35,
+         "properties":[
+                {
+                 "name":"animation",
+                 "type":"string",
+                 "value":"[5]"
+                }, 
+                {
+                 "name":"speed",
+                 "type":"int",
+                 "value":500
+                }]
+        }, 
+        {
          "id":39,
          "properties":[
                 {
