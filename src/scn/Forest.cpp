@@ -23,6 +23,11 @@ void Forest::init() {
         Api::createSingleSpeechBubble("(Arnold) Who knows what creatures are running around here.", false);
     }
 
+    Api::setTrigger(13, 25, [](float angle, Entity &){
+        Api::createSingleSpeechBubble("(Arnold) I can hear something moving there.", true);
+        Api::createSingleSpeechBubble("(Arnold) Some sort of weapon would be useful.", false);
+    }, nullptr, 1,1);
+
     Api::setTrigger(2, 31, [](float angle, Entity &){
         if (GET_BOOL(SceneConstants::KEY_OnTheRun)) {
             Api::createSingleSpeechBubble("(Arnold) No way I'm going back there now.", false);

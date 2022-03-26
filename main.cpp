@@ -452,7 +452,7 @@ void initSdl() {
             SDL_WINDOWPOS_CENTERED,
             configWindowWidth,
             configWindowHeight,
-            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_INIT_GAMECONTROLLER
+            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI
     );
 
     // Deal with high dpi displays where the scaled resolution is not the same as

@@ -43,13 +43,13 @@ void Inventory::serialize(JSON::Value &to) {
 
 void Inventory::deserialize(JSON::Value &from) {
     auto loadedItems = from["inventory"]["items"].as<JSON::Array>();
-    for (auto &item : loadedItems) {
+    for (auto &item: loadedItems) {
         ItemType t = static_cast<ItemType>(item["type"].as<int>());
         int number = item["number"].as<int>();
         addItems(t, number);
     }
     auto loadedModifiers = from["inventory"]["modifiers"].as<JSON::Array>();
-    for (auto &mod : loadedModifiers) {
+    for (auto &mod: loadedModifiers) {
         ModifierType t = static_cast<ModifierType>(mod["type"].as<int>());
         switch (t) {
             case CIRCLE_OF_LIGHT:
@@ -70,7 +70,7 @@ void Inventory::resetAll() {
 }
 
 bool Inventory::hasModifier(ModifierType type) {
-    for (auto &m : modifiers) {
+    for (auto &m: modifiers) {
         if (m->type == type) return true;
     }
     return false;
@@ -81,7 +81,7 @@ void Inventory::update(float dt) {
         return !m->running();
     }), modifiers.end());
 
-    for (auto &m : modifiers) {
+    for (auto &m: modifiers) {
         m->update(dt);
     }
 }
@@ -124,7 +124,7 @@ void Inventory::dropWeapon() {
 }
 
 bool Inventory::addStackableItem(std::shared_ptr<Item> item) {
-    for (auto &slot : slots) {
+    for (auto &slot: slots) {
         if (slot.type == item->type && slot.number < MAX_PER_SLOT) {
             slot.number++;
             return true;
@@ -134,7 +134,7 @@ bool Inventory::addStackableItem(std::shared_ptr<Item> item) {
 }
 
 bool Inventory::addSingleSlotItem(std::shared_ptr<Item> item) {
-    for (auto &slot : slots) {
+    for (auto &slot: slots) {
         if (slot.type == EMPTY_SLOT) {
             slot.type = item->type;
             slot.number = 1;
@@ -147,7 +147,7 @@ bool Inventory::addSingleSlotItem(std::shared_ptr<Item> item) {
 
 void Inventory::addItems(ItemType type, int number) {
     if (type == EMPTY_SLOT) return;
-    for (auto &slot : slots) {
+    for (auto &slot: slots) {
         if (slot.type == EMPTY_SLOT) {
             slot.type = type;
             slot.number = number;
@@ -159,6 +159,12 @@ void Inventory::addItems(ItemType type, int number) {
 
 void Inventory::drop() {
     if (this->slots.at(selectedSlot).type == EMPTY_SLOT) return;
+
+    // Don't drop items when they're equipped
+    if (this->slots.at(selectedSlot).item && this->slots.at(selectedSlot).item->equipped) {
+        return;
+    }
+
 
     InventoryItem &slot = slots.at(selectedSlot);
 
@@ -221,7 +227,7 @@ void Inventory::use() {
 float Inventory::getCircleOfLight() {
     float base = 512.0f;
     if (!modifiers.empty()) {
-        for (auto &m : modifiers) {
+        for (auto &m: modifiers) {
             if (m->type == CIRCLE_OF_LIGHT) {
                 base = m->modify(base);
             }
@@ -250,7 +256,7 @@ void Inventory::render() {
     auto texture = Assets::instance().getTexture(SPRITES);
     auto font = Assets::instance().getTexture(BITMAPFONT);
 
-    for (auto &slot : slots) {
+    for (auto &slot: slots) {
         SDL_Rect source;
         Gfx::instance().pick(source, slotTile, texture->w);
 
