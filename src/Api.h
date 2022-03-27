@@ -55,6 +55,8 @@ namespace Api {
 
     void addSpider(int x, int y, uint8_t id, int hp = 10);
 
+    void addCaterpillar(int x, int y, uint8_t id, int hp = 10);
+
     void addAlly(int x, int y, uint8_t id, int hp = 20);
 
     std::shared_ptr<Entity> addNpc(int x, int y, uint8_t id);

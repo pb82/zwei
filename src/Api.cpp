@@ -27,6 +27,7 @@
 #include "ecs/filters/Tan.h"
 #include "ecs/Friend.h"
 #include "ecs/Npc.h"
+#include "ecs/minds/Caterpillar.h"
 
 namespace Api {
 
@@ -385,6 +386,40 @@ namespace Api {
 
         auto ai = skeleton->getComponent<Ai>();
         ai->brainify<Spider>();
+    }
+
+    void addCaterpillar(int x, int y, uint8_t id, int hp) {
+        auto c = Manager::instance().addEntity(OBJECTS);
+        c->addComponent<Transform>(x, y);
+        c->addComponent<Sprite>(CATERPILLAR);
+        c->addComponent<Animation>(200, true);
+        c->addComponent<Acceleration>(2.0f, 0);
+
+        c->addComponent<Ai>();
+        c->addComponent<Attack>();
+
+        c->addComponent<Bar>();
+        c->addComponent<Id>(id);
+        c->addComponent<Hostile>();
+
+        c->getComponent<Animation>()->addAnimationFrame(12, 0, 8, 4);
+        c->getComponent<Animation>()->addAnimationFrame(13, 1, 9, 5);
+        c->getComponent<Animation>()->addAnimationFrame(14, 2, 10, 6);
+        c->getComponent<Animation>()->addAttackFrame(15, 3, 11, 7, 300);
+        c->getComponent<Animation>()->stop();
+        c->addComponent<Analytics>();
+
+        c->addComponent<Stats>(false);
+        auto stats = c->getComponent<Stats>();
+        stats->inventory.equip(std::make_shared<Stick>());
+        stats->character.setBase(hp, 1, 1, 1);
+
+        auto transform = c->getComponent<Transform>();
+        c->addComponent<Collider>(transform, CT_ENEMY, Padding{.5, .5, 0.5, 0.7});
+        RT_Topology.registerMobile(&transform->p);
+
+        auto ai = c->getComponent<Ai>();
+        ai->brainify<Caterpillar>();
     }
 
     void addKakta(int x, int y, uint8_t id, int hp) {

@@ -20,6 +20,7 @@ enum Asset {
     MUSIC_GAMEOVER,
     BITMAPFONT,
     GIRL,
+    CATERPILLAR,
     UNDEFINED,
 };
 

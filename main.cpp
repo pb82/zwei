@@ -116,7 +116,7 @@ void renderLoad(tp frameStart) {
     target.w = 32;
     target.h = 32;
 
-    for (const char c : loading_game) {
+    for (const char c: loading_game) {
         SDL_Rect source;
         Gfx::pickText(source, Text::fromChar(c), texture->w);
         Draw::instance().draw(texture->mem, source, target);
@@ -181,7 +181,7 @@ void renderSave(tp frameStart) {
     target.w = 32;
     target.h = 32;
 
-    for (const char c : message) {
+    for (const char c: message) {
         SDL_Rect source;
         Gfx::pickText(source, Text::fromChar(c), texture->w);
         Draw::instance().draw(texture->mem, source, target);
@@ -246,7 +246,7 @@ void renderGameOver(tp frameStart) {
     target.w = 32;
     target.h = 32;
 
-    for (const char c : game_over) {
+    for (const char c: game_over) {
         SDL_Rect source;
         Gfx::pickText(source, Text::fromChar(c), texture->w);
         Draw::instance().draw(texture->mem, source, target);
@@ -418,6 +418,7 @@ void initAssets() {
     // Assets::instance().addTexture(TILES, assets_Tiles);
     Assets::instance().addTexture(TILES_BEACH, "assets/NEW/TILESETS/Tiles.png");
     Assets::instance().addTexture(GIRL, "assets/NEW/TILESETS/Girl.png");
+    Assets::instance().addTexture(CATERPILLAR, "assets/NEW/TILESETS/Caterpillar.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
     Assets::instance().addTexture(BITMAPFONT, "assets/RAW/bitmapfont.png");
 }

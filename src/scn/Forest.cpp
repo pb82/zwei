@@ -17,6 +17,7 @@ void Forest::init() {
     Api::addItem(2, 15, 0, ItemType::STICK);
     Api::addItem(2, 16, 0, ItemType::HEART);
 
+    Api::addCaterpillar(16, 23, 0, 30);
 
     if (GET_BOOL(SceneConstants::KEY_OnTheRun)) {
         Api::createSingleSpeechBubble("(Arnold) I better find something to defend myself.", true);
