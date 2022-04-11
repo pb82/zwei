@@ -44,6 +44,10 @@ void Collectable::render(uint8_t hints) {
 void Collectable::collect() {
     if (this->collected) return;
 
+    if (this->_onCollect) {
+        _onCollect();
+    }
+
     if (this->item->useOnPickup()) {
         this->item->use(RT_Context.getPlayer());
         this->collected = true;

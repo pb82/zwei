@@ -20,10 +20,6 @@ public:
 
     virtual void exit() = 0;
 
-    virtual void addEnemies(JSON::Value &resumed) {}
-
-    virtual void addItems(JSON::Value& collected) {}
-
     virtual ~Scene() {}
 
     SceneType getSceneType() { return this->type; }

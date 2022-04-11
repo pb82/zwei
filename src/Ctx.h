@@ -17,7 +17,6 @@ enum GameState {
     StateGameOver,
     StateStart,
     StateMainMenu,
-    StateSaving,
     StateLoading
 };
 
@@ -50,13 +49,13 @@ public:
 
     void setMenu(std::shared_ptr<Entity> menu);
 
-    void save(float x, float y);
+    void autosave();
 
     bool savegameExists();
 
     void load(float *x, float *y);
 
-    void setActiveScene(SceneType s, JSON::Value &resumedEnemies = JSON::null, JSON::Value &resumedItems = JSON::null) {
+    void setActiveScene(SceneType s) {
         if (scenes.find(s) == scenes.end()) return;
         auto &scene = scenes.at(s);
 
@@ -67,8 +66,6 @@ public:
 
         activeScene = scene;
         activeScene->init();
-        activeScene->addEnemies(resumedEnemies);
-        activeScene->addItems(resumedItems);
     }
 
     std::shared_ptr<Entity> getPlayer();

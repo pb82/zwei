@@ -2,6 +2,7 @@
 #define ZWEI_COLLECTABLE_H
 
 #include <memory>
+#include <functional>
 
 #include "Component.h"
 #include "items/Item.h"
@@ -14,10 +15,16 @@ public:
 
     void collect();
 
+    void onCollect(std::function<void()> cb) {
+        this->_onCollect = cb;
+    }
+
     int alpha = 255;
 
 private:
     bool collected = false;
+
+    std::function<void()> _onCollect;
 
     std::shared_ptr<Item> item;
 };

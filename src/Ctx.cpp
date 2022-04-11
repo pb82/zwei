@@ -29,7 +29,6 @@ void GameStateMachine::popState() {
 bool GameStateMachine::toggleMenu() {
     // Can't get out of the initial start menu by pressing esc
     if (this->current.top() == StateStart) return false;
-    if (this->current.top() == StateSaving) return false;
     if (this->current.top() == StateLoading) return false;
 
     // In-game allow to toggle the menu
@@ -72,55 +71,20 @@ std::shared_ptr<Entity> Ctx::getMenu() {
     return this->menu;
 }
 
-void Ctx::save(float x, float y) {
+void Ctx::autosave() {
     auto stats = getPlayer()->getComponent<Stats>();
     auto acc = getPlayer()->getComponent<Acceleration>();
+    auto t = getPlayer()->getComponent<Transform>();
+
     JSON::Value to;
-    to["x"] = x;
-    to["y"] = y;
-    to["direction"] = acc->getDirection();
     to["scene"] = activeScene->getSceneType();
-    to["renderHints"] = Manager::instance().getRenderHints();
     stats->inventory.serialize(to);
     stats->character.serialize(to);
     this->memory.serialize(to);
 
-    std::vector<std::shared_ptr<Entity>> dynamicObjs;
-    Manager::instance().getInteractibles(dynamicObjs);
-
-    JSON::Array objStates;
-    for (auto &obj : dynamicObjs) {
-        auto anim = obj->getComponent<Animation>();
-        auto interactible = obj->getComponent<Interactible>();
-        auto collider = obj->getComponent<Collider>();
-        auto id = obj->getComponent<Id>();
-        JSON::Object o;
-        o["animation_state"] = anim->stateFramesEnd;
-        o["id"] = id->id;
-        o["collider_state"] = collider->suspended;
-        objStates.push_back(o);
-    }
-    to["object_states"] = objStates;
-
-    dynamicObjs.clear();
-    Manager::instance().getEnemies(dynamicObjs);
-    JSON::Array enemies;
-    for (auto &obj : dynamicObjs) {
-        JSON::Object o;
-
-        auto id = obj->getComponent<Id>();
-        auto stats = obj->getComponent<Stats>();
-        auto transform = obj->getComponent<Transform>();
-
-        o["id"] = id->id;
-        auto hp = stats->character.getHitpoints();
-        o["hp"] = std::get<0>(hp);
-        o["x"] = transform->p.x;
-        o["y"] = transform->p.y;
-        enemies.push_back(o);
-    }
-    to["enemies"] = enemies;
-    RT_Topology.serialize(to);
+    to["x"] = t->p.x;
+    to["y"] = t->p.y;
+    to["direction"] = acc->getDirection();
 
     Out f("savegame.json");
     if (f.open()) {
@@ -156,10 +120,9 @@ void Ctx::load(float *x, float *y) {
         p.parse(v, buffer);
 
         SceneType sceneType = static_cast<SceneType>(v["scene"].as<int>());
-        JSON::Value enemyStates = v["enemies"];
         this->memory.deserialize(v);
 
-        setActiveScene(sceneType, enemyStates);
+        setActiveScene(sceneType);
 
         auto stats = this->getPlayer()->getComponent<Stats>();
         stats->character.deserialize(v);
@@ -171,27 +134,5 @@ void Ctx::load(float *x, float *y) {
         Direction d = static_cast<Direction>(v["direction"].as<int>());
         auto acc = RT_Context.getPlayer()->getComponent<Acceleration>();
         acc->setDirection(d);
-
-        uint8_t renderHints = static_cast<uint8_t>(v["renderHints"].as<int>());
-        Manager::instance().setRenderHints(renderHints);
-
-        RT_Topology.deserialize(v);
-
-        auto states = v["object_states"].as<JSON::Array>();
-        for (JSON::Value &state : states) {
-            bool animationState = state["animation_state"].as<bool>();
-            uint8_t id = static_cast<uint8_t>(state["id"].as<int>());
-            auto interactible = Manager::instance().getInteractible(id);
-            if (interactible) {
-                auto anim = interactible->getComponent<Animation>();
-                auto coll = interactible->getComponent<Collider>();
-                coll->suspended = state["collider_state"].as<bool>();
-                if (animationState) {
-                    anim->setLastStateFrame();
-                } else {
-                    anim->setFirstStateFrame();
-                }
-            }
-        }
     }
 }

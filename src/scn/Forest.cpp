@@ -14,11 +14,23 @@ void Forest::init() {
     Api::loadMap("Forest.json");
     Api::setGameState();
 
-    Api::addItem(2, 15, 0, ItemType::STICK);
-    Api::addItem(2, 16, 0, ItemType::HEART);
+    if (!GET_BOOL(SceneConstants::KEY_Forest_StickTaken))
+        Api::addItem(2, 15, ItemType::STICK, []() {
+            RT_Memory.setBool(SceneConstants::KEY_Forest_StickTaken, true);
+        });
+
+    if (!GET_BOOL(SceneConstants::KEY_Forest_HeartTaken))
+        Api::addItem(2, 16, ItemType::HEART, []() {
+            RT_Memory.setBool(SceneConstants::KEY_Forest_HeartTaken, true);
+        });
 
     Api::addCaterpillar(16, 23, 0, 30);
-    Api::addAlly(5, 28, 0, 50);
+
+    Api::setTrigger(2, 31, [](float angle, Entity &) {
+        RT_Spawn.push({25, 1});
+        auto t = std::make_shared<ScreenTransition>(SceneTesting);
+        Rt_Commands.push(t);
+    }, nullptr);
 
     /*
     if (GET_BOOL(SceneConstants::KEY_OnTheRun)) {

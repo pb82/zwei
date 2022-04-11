@@ -7,6 +7,9 @@
 namespace SceneConstants {
     extern const char *KEY_IntroductionDialog;
     extern const char *KEY_OnTheRun;
+    extern const char *KEY_Forest_StickTaken;
+    extern const char *KEY_Forest_HeartTaken;
+
 
     // Misc
     extern const uint16_t ID_InteractibleNotes;

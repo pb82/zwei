@@ -28,6 +28,7 @@
 #include "ecs/Friend.h"
 #include "ecs/Npc.h"
 #include "ecs/minds/Caterpillar.h"
+#include "ecs/Collectable.h"
 
 namespace Api {
 
@@ -286,9 +287,9 @@ namespace Api {
         }
     }
 
-    void addItem(float x, float y, uint8_t id, ItemType type) {
+    void addItem(float x, float y, ItemType type, std::function<void()> cb) {
         auto entity = Item::make({x, y}, type);
-        entity->addComponent<Id>(id);
+        entity->getComponent<Collectable>()->onCollect(cb);
         Manager::instance().enqueue(entity, ITEMS);
     }
 

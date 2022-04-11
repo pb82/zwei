@@ -15,6 +15,7 @@ void ScreenTransition::update(float dt) {
     frames += 8;
     if (frames > 255 && switched == false) {
         RT_Context.setActiveScene(newScene);
+        RT_Context.autosave();
         switched = true;
         frames = 0;
     } else if (frames > 255 && switched == true) {
