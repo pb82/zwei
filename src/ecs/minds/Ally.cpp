@@ -13,11 +13,6 @@ bool Ally::activate() {
     auto playerTransform = player->getComponent<Transform>();
     auto t = this->parent.getComponent<Transform>();
 
-    bool joined = RT_Context.getMemory().getBool("ally.joined", false);
-    if (!joined) {
-        return false;
-    }
-
     float distance = getDistanceFromPlayer();
     if (distance < activationRange) {
         return true;

@@ -18,7 +18,9 @@ void Forest::init() {
     Api::addItem(2, 16, 0, ItemType::HEART);
 
     Api::addCaterpillar(16, 23, 0, 30);
+    Api::addAlly(5, 28, 0, 50);
 
+    /*
     if (GET_BOOL(SceneConstants::KEY_OnTheRun)) {
         Api::createSingleSpeechBubble("(Arnold) I better find something to defend myself.", true);
         Api::createSingleSpeechBubble("(Arnold) Who knows what creatures are running around here.", false);
@@ -39,6 +41,7 @@ void Forest::init() {
         auto t = std::make_shared<ScreenTransition>(SceneTesting);
         Rt_Commands.push(t);
     }, nullptr);
+    */
 }
 
 void Forest::exit() {

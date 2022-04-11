@@ -21,7 +21,7 @@ private:
 
     Position goal;
 
-    float activationRange = 4.0f;
+    float activationRange = 10.0f;
 
 };
 

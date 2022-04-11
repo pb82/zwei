@@ -31,12 +31,25 @@ bool Caterpillar::activate() {
 
 void Caterpillar::plan(float dt) {
     auto player = RT_Context.getPlayer();
+    auto acceleration = this->parent.getComponent<Acceleration>();
 
+    if (hasDirectPathToPlayer()) {
+        walkTowardsPlayer();
+    }
+
+    if (hasRouteToPlayer(route)) {
+        followRoute(route);
+        return;
+    }
+
+    /*
     if (isInRangeForAttack(player)) {
-        turn(getAngleTo(player));
+        float angle = getAngleTo(player);
+        turn(angle);
         attack();
         return;
     }
 
     walkTowardsPlayer();
+    */
 }

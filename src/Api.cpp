@@ -322,7 +322,7 @@ namespace Api {
         kakta->addComponent<Transform>(x, y);
         kakta->addComponent<Sprite>(SPRITES);
         kakta->addComponent<Animation>(200, true);
-        kakta->addComponent<Acceleration>(2.0f, 0);
+        kakta->addComponent<Acceleration>(3.0f, 0);
         kakta->addComponent<Ai>();
         kakta->addComponent<Attack>();
         kakta->addComponent<Bar>();
@@ -411,7 +411,7 @@ namespace Api {
 
         c->addComponent<Stats>(false);
         auto stats = c->getComponent<Stats>();
-        stats->inventory.equip(std::make_shared<Stick>());
+        stats->inventory.equip(std::make_shared<Stone>());
         stats->character.setBase(hp, 1, 1, 1);
 
         auto transform = c->getComponent<Transform>();
