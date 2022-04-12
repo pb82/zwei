@@ -43,10 +43,6 @@ public:
 
     void clear();
 
-    void serialize(JSON::Value &to);
-
-    void deserialize(JSON::Value &from);
-
 private:
 
     std::vector<bool> topology;
