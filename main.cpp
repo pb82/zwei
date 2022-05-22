@@ -224,8 +224,9 @@ void renderGame(tp frameStart) {
     }
 
     // Flush
-    SDL_GL_SwapWindow(Gfx_Window);
+    // SDL_GL_SwapWindow(Gfx_Window);
     SDL_RenderPresent(Gfx_Renderer);
+
     // glFinish();
 
     // Frametime
@@ -360,7 +361,7 @@ void initSdl() {
     auto sdlFlags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK |
                     SDL_INIT_GAMECONTROLLER;
 
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
