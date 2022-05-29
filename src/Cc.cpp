@@ -48,6 +48,8 @@ bool ScreenTransition::done() {
     return ready;
 }
 
+SpeechBubble::~SpeechBubble() noexcept {
+}
 
 SpeechBubble::SpeechBubble(std::vector<int> &sequence, bool last) : sequence(sequence), last(last) {}
 

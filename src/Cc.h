@@ -32,7 +32,7 @@ public:
 
     void addNpc(std::shared_ptr<Entity> npc);
 
-    bool done();
+    bool done() override;
 
     void render() override;
 
@@ -49,11 +49,11 @@ public:
 
     ScreenTransition(SceneType newScene);
 
-    void render();
+    void render() override;
 
-    void update(float dt);
+    void update(float dt) override;
 
-    bool done();
+    bool done() override;
 
 private:
 
@@ -77,7 +77,7 @@ public:
 
     SpeechBubble(const char *text, bool last = true);
 
-    ~SpeechBubble() {}
+    ~SpeechBubble();
 
     static void split(const char *text, std::vector<std::shared_ptr<SpeechBubble>> &target);
 
@@ -87,7 +87,7 @@ public:
 
     void key(GameKeyEvent &ev) override;
 
-    bool done();
+    bool done() override;
 
     bool last = true;
 

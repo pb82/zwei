@@ -4,9 +4,8 @@
 #include <JSON/value.h>
 
 enum SceneType {
-    SceneEntry,
-    SceneTesting,
-    SceneForest
+    Scene_EntryPoint,
+    Scene_Ship_LowerDeck,
 };
 
 class Scene {

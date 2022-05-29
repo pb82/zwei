@@ -253,7 +253,7 @@ void loop() {
         // return;
     }
 
-    RT_Context.setActiveScene(SceneEntry);
+    RT_Context.setActiveScene(Scene_EntryPoint);
 
     // Global alpha
     while (RT_Running) {
@@ -349,9 +349,9 @@ void initAssets() {
 
     Assets::instance().addFont(FONT, assets_Font);
     // Assets::instance().addTexture(TILES, assets_Tiles);
-    Assets::instance().addTexture(TILES_BEACH, "assets/NEW/TILESETS/Tiles.png");
-    Assets::instance().addTexture(GIRL, "assets/NEW/TILESETS/Girl.png");
-    Assets::instance().addTexture(CATERPILLAR, "assets/NEW/TILESETS/Caterpillar.png");
+    Assets::instance().addTexture(TILES_BEACH, "assets/SIMPLE/TILESETS/Tiles.png");
+    // Assets::instance().addTexture(GIRL, "assets/NEW/TILESETS/Girl.png");
+    // Assets::instance().addTexture(CATERPILLAR, "assets/NEW/TILESETS/Caterpillar.png");
     Assets::instance().addTexture(SPRITES, "assets/RAW/sprites.png");
     Assets::instance().addTexture(BITMAPFONT, "assets/RAW/bitmapfont.png");
 }

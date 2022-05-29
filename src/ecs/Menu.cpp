@@ -50,7 +50,7 @@ Menu::Menu(Entity &parent) : Component(parent) {
 
     allItems.emplace(ItemNewGame, std::make_shared<MenuItem>("New Game", [](GameKeyEvent &key) {
         if (key.key == GK_A) {
-            RT_Context.setActiveScene(SceneForest);
+            RT_Context.setActiveScene(Scene_Ship_LowerDeck);
         }
     }));
 
