@@ -22,6 +22,8 @@ private:
     std::shared_ptr<Texture> texture;
 
     std::vector<Position> path;
+
+    std::vector<std::shared_ptr<Entity>> lightSources;
 };
 
 #endif

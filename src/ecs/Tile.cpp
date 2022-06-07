@@ -5,16 +5,16 @@
 #include "Transform.h"
 #include "Animation.h"
 #include "Collider.h"
-#include "Acceleration.h"
-#include "Stats.h"
 
 #include "../Gfx.h"
 #include "../Draw.h"
+#include "LightSource.h"
 
 Tile::Tile(Entity &parent, Asset id)
         : Component(parent),
           id(id) {
     texture = Assets::instance().getTexture(id);
+    Manager::instance().getLightSources(lightSources);
 }
 
 
@@ -46,10 +46,15 @@ void Tile::render(uint8_t hints) {
     }
 
     if ((hints & HINT_TURN_LIGHTS_OUT) == HINT_TURN_LIGHTS_OUT) {
-        auto t = this->parent.getComponent<Transform>();
-        uint8_t alpha = RT_Player->getComponent<Stats>()->inventory.getAlphaForTileAt(t->p);
+        float alpha = 0;
+        for (auto &source: lightSources) {
+            auto l = source->getComponent<LightSource>();
+            auto lt = source->getComponent<Transform>();
+            float d = lt->p.distance(transform->p);
+            alpha += l->getAlpha(d);
+        }
         Draw::instance().pushAlpha(texture->mem);
-        SDL_SetTextureAlphaMod(texture->mem, alpha);
+        SDL_SetTextureAlphaMod(texture->mem, std::min<float>(255, alpha));
         Draw::instance().draw(texture->mem, source, target);
         Draw::instance().popAlpha();
     } else {

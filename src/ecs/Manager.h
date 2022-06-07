@@ -58,6 +58,10 @@ public:
 
     void getAllies(std::vector<std::shared_ptr<Entity>> &target);
 
+    std::vector<std::shared_ptr<Entity>> &getLightSources();
+
+    void addLightSource(std::shared_ptr<Entity> e);
+
     std::shared_ptr<Entity> getEnemy(uint8_t id);
 
     void update(float dt);
@@ -98,6 +102,8 @@ private:
     std::queue<QueueEntity> pendingEntities;
 
     std::shared_ptr<Entity> timers;
+
+    std::vector<std::shared_ptr<Entity>> lightSources;
 
     uint8_t renderHints;
 

@@ -9,6 +9,7 @@
 #include "Ai.h"
 #include "Hostile.h"
 #include "Friend.h"
+#include "LightSource.h"
 
 Manager::Manager() {
     init();
@@ -37,6 +38,7 @@ void Manager::resetAll() {
     while (!pendingEntities.empty()) pendingEntities.pop();
     timers.reset();
     renderHints = 0;
+    lightSources.clear();
     init();
 }
 
@@ -229,6 +231,14 @@ void Manager::getInteractibles(std::vector<std::shared_ptr<Entity>> &target) {
             target.push_back(entity);
         }
     }
+}
+
+std::vector<std::shared_ptr<Entity>> &Manager::getLightSources() {
+    return lightSources;
+}
+
+void Manager::addLightSource(std::shared_ptr<Entity> e) {
+    this->lightSources.push_back(e);
 }
 
 void Manager::getItems(std::vector<std::shared_ptr<Entity>> &target) {

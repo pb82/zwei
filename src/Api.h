@@ -71,6 +71,8 @@ namespace Api {
 
     void setEnableLights(bool enabled);
 
+    void addLightSource(std::shared_ptr<Entity> e);
+
 }
 
 #endif //ZWEI_API_H

@@ -76,7 +76,6 @@ void renderMenu(tp frameStart) {
 
     // Flush
     ImGuiSDL::Render(ImGui::GetDrawData());
-    SDL_GL_SwapWindow(Gfx_Window);
     SDL_RenderPresent(Gfx_Renderer);
     // glFinish();
 
@@ -261,7 +260,7 @@ void loop() {
 
         Manager::instance().collect();
 
-        SDL_SetRenderDrawColor(Gfx_Renderer, 47, 40, 58, 255);
+        SDL_SetRenderDrawColor(Gfx_Renderer, 0, 0, 0, 255);
         SDL_RenderClear(Gfx_Renderer);
 
         while (SDL_PollEvent(&event)) {

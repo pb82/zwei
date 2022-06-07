@@ -29,6 +29,7 @@
 #include "ecs/Npc.h"
 #include "ecs/minds/Caterpillar.h"
 #include "ecs/Collectable.h"
+#include "ecs/LightSource.h"
 
 namespace Api {
 
@@ -461,5 +462,13 @@ namespace Api {
 
         auto ai = kakta->getComponent<Ai>();
         ai->brainify<Kakta>();
+    }
+
+    void addLightSource(std::shared_ptr<Entity> e) {
+        if (e) {
+            if (!e->hasComponent<LightSource>()) {
+                e->addComponent<LightSource>();
+            }
+        }
     }
 }
