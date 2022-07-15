@@ -20,6 +20,8 @@ namespace Api {
 
     void setPlayerStats(int hp, int str, int dex, int def);
 
+    std::shared_ptr<Entity> getWallAt(float x, float y);
+
     // State
     void setMenuState();
 

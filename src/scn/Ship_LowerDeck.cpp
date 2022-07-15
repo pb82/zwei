@@ -13,6 +13,8 @@ void Ship_LowerDeck::init() {
     Api::setEnableLights(false);
     Api::setGameState();
     Api::addLightSource(RT_Player);
+    Api::addLightSource(Manager::instance().getWall(15, 2));
+
 }
 
 void Ship_LowerDeck::exit() {}

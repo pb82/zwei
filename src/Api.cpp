@@ -468,6 +468,7 @@ namespace Api {
         if (e) {
             if (!e->hasComponent<LightSource>()) {
                 e->addComponent<LightSource>();
+                Manager::instance().addLightSource(e);
             }
         }
     }

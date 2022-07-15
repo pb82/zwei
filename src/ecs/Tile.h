@@ -23,7 +23,6 @@ private:
 
     std::vector<Position> path;
 
-    std::vector<std::shared_ptr<Entity>> lightSources;
 };
 
 #endif

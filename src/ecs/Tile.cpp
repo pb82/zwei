@@ -14,7 +14,6 @@ Tile::Tile(Entity &parent, Asset id)
         : Component(parent),
           id(id) {
     texture = Assets::instance().getTexture(id);
-    Manager::instance().getLightSources(lightSources);
 }
 
 
@@ -47,7 +46,7 @@ void Tile::render(uint8_t hints) {
 
     if ((hints & HINT_TURN_LIGHTS_OUT) == HINT_TURN_LIGHTS_OUT) {
         float alpha = 0;
-        for (auto &source: lightSources) {
+        for (auto &source: Manager::instance().getLightSources()) {
             auto l = source->getComponent<LightSource>();
             auto lt = source->getComponent<Transform>();
             float d = lt->p.distance(transform->p);

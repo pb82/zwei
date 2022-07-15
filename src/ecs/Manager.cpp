@@ -339,3 +339,8 @@ std::shared_ptr<Entity> Manager::getWall(Position &p) {
     }
     return nullptr;
 }
+
+std::shared_ptr<Entity> Manager::getWall(float x, float y) {
+    Position p {x, y};
+    return getWall(p);
+}

@@ -39,6 +39,8 @@ public:
 
     std::shared_ptr<Entity> getWall(Position &p);
 
+    std::shared_ptr<Entity> getWall(float x, float y);
+
     // add new entities and garbage collect disabled ones
     void collect();
 
