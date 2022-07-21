@@ -8,7 +8,7 @@
 #include "../Transform.h"
 #include "Modifier.h"
 
-#define MAX_SLOTS 10
+#define MAX_SLOTS 5
 #define MAX_PER_SLOT 9
 
 struct InventoryItem {

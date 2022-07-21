@@ -88,7 +88,7 @@ void Inventory::update(float dt) {
 
 void Inventory::next() {
     selectedSlot++;
-    selectedSlot %= 10;
+    selectedSlot %= MAX_SLOTS;
 }
 
 void Inventory::prev() {
