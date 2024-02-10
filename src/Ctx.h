@@ -41,18 +41,11 @@ public:
     Ctx();
 
     ~Ctx() {
-        if (saved) delete saved;
     }
 
     void setPlayer(std::shared_ptr<Entity> player);
 
     void setMenu(std::shared_ptr<Entity> menu);
-
-    void autosave();
-
-    bool savegameExists();
-
-    void load(float *x, float *y);
 
     void setActiveScene(SceneType s) {
         if (scenes.find(s) == scenes.end()) return;
@@ -96,8 +89,6 @@ private:
     Topology topology;
 
     Mem memory;
-
-    bool *saved = nullptr;
 };
 
 

@@ -97,10 +97,10 @@ void loop() {
         }
 
         switch (RT_Context.state.currentState()) {
+            case StateStart:
             case StateMainMenu:
                 renderMenu(frameStart);
                 break;
-            case StateStart:
             case StateGame:
                 break;
         }

@@ -12,6 +12,8 @@ namespace Api {
 
     void initPlayer();
 
+    void setStartState();
+
     void setPlayerSpeed(float maxSpeed);
 
     void setPlayerPosition(float x, float y, Direction = N);

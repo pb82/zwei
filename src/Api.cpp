@@ -40,6 +40,10 @@ namespace Api {
         }
     }
 
+    void setStartState() {
+        RT_State.pushState(StateStart);
+    }
+
     void initPlayer() {
         if (RT_Context.getPlayer() != nullptr) {
             // We still need to add the hud back in
