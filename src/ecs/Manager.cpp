@@ -9,7 +9,6 @@
 #include "Ai.h"
 #include "Hostile.h"
 #include "Friend.h"
-#include "LightSource.h"
 
 Manager::Manager() {
     init();

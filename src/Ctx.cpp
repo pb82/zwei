@@ -10,7 +10,6 @@
 #include "ecs/Interactible.h"
 #include "ecs/Id.h"
 #include "ecs/Collider.h"
-#include "scn/Ship_LowerDeck.h"
 #include "scn/EntryPoint.h"
 
 GameStateMachine::GameStateMachine() {
@@ -28,7 +27,6 @@ void GameStateMachine::popState() {
 bool GameStateMachine::toggleMenu() {
     // Can't get out of the initial start menu by pressing esc
     if (this->current.top() == StateStart) return false;
-    if (this->current.top() == StateLoading) return false;
 
     // In-game allow to toggle the menu
     if (this->current.top() == StateMainMenu) {
@@ -49,8 +47,7 @@ void GameStateMachine::pushState(GameState state) {
 }
 
 Ctx::Ctx() {
-    scenes.emplace(Scene_EntryPoint, std::make_shared<EntryPoint>());
-    scenes.emplace(Scene_Ship_LowerDeck, std::make_shared<Ship_LowerDeck>());
+    scenes.emplace(Scene_Game, std::make_shared<EntryPoint>());
 }
 
 void Ctx::setPlayer(std::shared_ptr<Entity> player) {

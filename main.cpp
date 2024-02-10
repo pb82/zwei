@@ -18,55 +18,18 @@
 #include "src/Rt.h"
 
 #include "src/ecs/Manager.h"
-#include "src/ecs/Animation.h"
 #include "src/ecs/Transform.h"
-#include "src/ecs/Sprite.h"
-#include "src/ecs/Acceleration.h"
 #include "src/ecs/Collider.h"
-#include "src/ecs/Ai.h"
-#include "src/ecs/Attack.h"
-#include "src/ecs/Stats.h"
 #include "src/ecs/Menu.h"
-#include "src/ecs/Trigger.h"
-#include "src/ecs/Hud.h"
-
-#include "src/ecs/ui/Tweak.h"
-#include "src/Map.h"
 #include "src/in/Input.h"
-#include "src/Col.h"
-
-#include "src/ecs/minds/Kakta.h"
-#include "src/ecs/Analytics.h"
-#include "src/ecs/arms/Stone.h"
-#include "src/ecs/minds/Spider.h"
-#include "src/ecs/Collectable.h"
-#include "src/snd/Player.h"
-#include "src/alg/Text.h"
-#include "src/Draw.h"
 #include "src/St.h"
-#include "src/ecs/Bar.h"
 
 #include "src/Api.h"
-#include "src/ecs/arms/Stick.h"
-#include "src/ecs/Controller.h"
 
 float targetMillis = (1 / St::instance().getFps()) * 1000;
-std::string game_over("game over");
-std::string saving_game("saving game...");
-std::string loading_game("loading game...");
-Color blackbox{0, 0, 0, 0};
-int globalFrameCounter = 0;
-int artificialDelay = St::instance().getFps();
-
 typedef decltype(std::chrono::system_clock::now()) tp;
 
 void renderMenu(tp frameStart) {
-    Manager::instance().render(BACKGROUND);
-    Manager::instance().render(FLOOR);
-    Manager::instance().render(WALLS);
-    Manager::instance().render(ROOF);
-    Manager::instance().render(SKY);
-
     ImGui_ImplSDL2_NewFrame(Gfx_Window);
     ImGui::NewFrame();
     {
@@ -85,165 +48,6 @@ void renderMenu(tp frameStart) {
     if (delay > 0) SDL_Delay(delay);
 }
 
-void renderLoad(tp frameStart) {
-    auto texture = Assets::instance().getTexture(BITMAPFONT);
-    SDL_SetRenderDrawColor(Gfx_Renderer, 0, 0, 255, 255);
-
-    // Loading a saved game
-    if (globalFrameCounter < artificialDelay) {
-        if (globalFrameCounter < 1) {
-            // First flush all entities
-            Manager::instance().resetAll();
-            RT_Context.setPlayer(nullptr);
-        } else if (globalFrameCounter < 2) {
-            Api::init();
-        } else if (globalFrameCounter < 3) {
-            auto s = RT_State.currentState();
-            float x = 0, y = 0;
-            RT_Context.load(&x, &y);
-            Api::setPlayerPosition(x, y);
-            RT_State.pushState(s);
-        }
-    } else {
-        RT_State.popState();
-        RT_State.pushState(StateGame);
-    }
-
-    SDL_Rect target;
-    target.x = (configWindowWidth / 2) - ((loading_game.length() * 24) / 2);
-    target.y = (configWindowHeight / 2) - 12;
-    target.w = 32;
-    target.h = 32;
-
-    for (const char c: loading_game) {
-        SDL_Rect source;
-        Gfx::pickText(source, Text::fromChar(c), texture->w);
-        Draw::instance().draw(texture->mem, source, target);
-        target.x += 24;
-    }
-
-    target.x = (configWindowWidth / 2) - (200 / 2);
-    target.y = (configWindowHeight / 2) + 32;
-    target.w = 200;
-    target.h = 32;
-
-    Draw::instance().rect(color_White, target);
-
-    target.x += 1;
-    target.y += 1;
-
-    float w = (100 / (float) artificialDelay) * (float) globalFrameCounter;
-    target.w = static_cast<int>(w * 2);
-    target.h -= 2;
-
-    Draw::instance().box(color_Blue, target);
-
-    // Flush
-    SDL_GL_SwapWindow(Gfx_Window);
-    SDL_RenderPresent(Gfx_Renderer);
-    // glFinish();
-
-    auto frameTime = std::chrono::system_clock::now() - frameStart;
-    float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
-    float delay = targetMillis - millis;
-
-    if (delay > 0) {
-        SDL_Delay(delay);
-    }
-    globalFrameCounter++;
-}
-
-void renderGameOver(tp frameStart) {
-    Manager::instance().render(BACKGROUND);
-    Manager::instance().render(FLOOR);
-    Manager::instance().render(WALLS);
-    Manager::instance().render(ROOF);
-    Manager::instance().render(SKY);
-    Manager::instance().render(FOREGROUND);
-
-    auto texture = Assets::instance().getTexture(BITMAPFONT);
-
-    SDL_Rect target;
-
-    target.x = 0;
-    target.y = 0;
-    target.w = configWindowWidth;
-    target.h = configWindowHeight;
-
-    Draw::instance().box(blackbox, target);
-    if (blackbox.a < 255) {
-        blackbox.a++;
-    }
-
-    target.x = (configWindowWidth / 2) - ((game_over.length() * 24) / 2);
-    target.y = (configWindowHeight / 2) - 12;
-    target.w = 32;
-    target.h = 32;
-
-    for (const char c: game_over) {
-        SDL_Rect source;
-        Gfx::pickText(source, Text::fromChar(c), texture->w);
-        Draw::instance().draw(texture->mem, source, target);
-        target.x += 24;
-    }
-
-    // Flush
-    SDL_GL_SwapWindow(Gfx_Window);
-    SDL_RenderPresent(Gfx_Renderer);
-    // glFinish();
-
-    auto frameTime = std::chrono::system_clock::now() - frameStart;
-    float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
-    float delay = targetMillis - millis;
-
-    if (delay > 0) {
-        SDL_Delay(delay);
-    }
-
-    float dt = std::max(millis, delay);
-    Manager::instance().update(dt);
-}
-
-void renderGame(tp frameStart) {
-    Manager::instance().render(PARALLAX);
-    Manager::instance().render(BACKGROUND);
-    Manager::instance().render(FLOOR);
-    Manager::instance().render(WALLS);
-    Manager::instance().render(ITEMS);
-    Manager::instance().render(OBJECTS);
-    Manager::instance().render(ROOF);
-    Manager::instance().render(SKY);
-    Manager::instance().render(FOREGROUND);
-
-    if (!Rt_Commands.empty()) {
-        Rt_Commands.front()->render();
-        if (Rt_Commands.front()->done()) {
-            Rt_Commands.pop();
-        }
-    }
-
-    // Flush
-    // SDL_GL_SwapWindow(Gfx_Window);
-    SDL_RenderPresent(Gfx_Renderer);
-
-    // glFinish();
-
-    // Frametime
-    auto frameTime = std::chrono::system_clock::now() - frameStart;
-    float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
-    float delay = targetMillis - millis;
-    if (delay > 0) SDL_Delay(delay);
-    float dt = std::max(millis, delay);
-
-    // Update entities
-    if (!Rt_Commands.empty()) {
-        Rt_Commands.front()->update(dt);
-    } else {
-        Manager::instance().update(dt);
-        Col::collide(dt);
-    }
-}
-
 void loop() {
     SDL_Event event;
     GameKeyEvent gk;
@@ -252,9 +56,8 @@ void loop() {
         // return;
     }
 
-    RT_Context.setActiveScene(Scene_EntryPoint);
+    RT_Context.setActiveScene(Scene_Game);
 
-    // Global alpha
     while (RT_Running) {
         auto frameStart = std::chrono::system_clock::now();
 
@@ -294,31 +97,14 @@ void loop() {
         }
 
         switch (RT_Context.state.currentState()) {
-            case StateGame:
-                blackbox.a = 0;
-                globalFrameCounter = 0;
-                renderGame(frameStart);
-                break;
-            case StateGameOver:
-                renderGameOver(frameStart);
-                break;
             case StateMainMenu:
-            case StateStart:
                 renderMenu(frameStart);
                 break;
-            case StateLoading:
-                renderLoad(frameStart);
+            case StateStart:
+            case StateGame:
                 break;
-            default:
-                continue;
         }
     }
-}
-
-void initSound() {
-    // force sound to init
-    Player::instance();
-    St::instance().initAll();
 }
 
 void initImgui() {
@@ -356,9 +142,13 @@ void initAssets() {
 }
 
 void initSdl() {
-
-    auto sdlFlags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK |
-                    SDL_INIT_GAMECONTROLLER;
+    auto sdlFlags =
+            SDL_INIT_VIDEO |
+            SDL_INIT_AUDIO |
+            SDL_INIT_TIMER |
+            SDL_INIT_EVENTS |
+            SDL_INIT_JOYSTICK |
+            SDL_INIT_GAMECONTROLLER;
 
     // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -417,7 +207,6 @@ int main(int, char **) {
     initSdl();
     initAssets();
     initImgui();
-    initSound();
     loop();
 
     ImGuiSDL::Deinitialize();

@@ -14,10 +14,9 @@
 
 enum GameState {
     StateGame,
-    StateGameOver,
     StateStart,
     StateMainMenu,
-    StateLoading
+    StateGameOver,
 };
 
 struct GameStateMachine {

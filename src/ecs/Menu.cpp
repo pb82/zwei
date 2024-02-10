@@ -40,7 +40,7 @@ static int getWinFlags() {
 
 static ImVec2 getItemSize() {
     ImVec2 size;
-    size.x = configWindowWidth / 2;
+    size.x = configWindowWidth * 0.9;
     size.y = 32;
     return size;
 }
@@ -50,19 +50,7 @@ Menu::Menu(Entity &parent) : Component(parent) {
 
     allItems.emplace(ItemNewGame, std::make_shared<MenuItem>("New Game", [](GameKeyEvent &key) {
         if (key.key == GK_A) {
-            RT_Context.setActiveScene(Scene_Ship_LowerDeck);
-        }
-    }));
-
-    allItems.emplace(ItemLoad, std::make_shared<MenuItem>("Load game", [](GameKeyEvent &key) {
-        if (key.key == GK_A) {
-            RT_State.pushState(StateLoading);
-        }
-    }));
-
-    allItems.emplace(ItemContinue, std::make_shared<MenuItem>("Continue", [](GameKeyEvent &key) {
-        if (key.key == GK_A) {
-            RT_State.pushState(StateLoading);
+            RT_Context.setActiveScene(Scene_Game);
         }
     }));
 
@@ -231,13 +219,6 @@ void Menu::buildStartMenu(bool started) {
         case Main:
             if (!started) {
                 this->items.push_back(allItems.at(ItemNewGame));
-            }
-            if (RT_Context.savegameExists()) {
-                if (!started) {
-                    this->items.push_back(allItems.at(ItemContinue));
-                } else {
-                    this->items.push_back(allItems.at(ItemLoad));
-                }
             }
             this->items.push_back(allItems.at(ItemSettings));
             this->items.push_back(allItems.at(ItemQuit));
