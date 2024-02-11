@@ -4,6 +4,7 @@
 #include <JSON/value.h>
 
 enum SceneType {
+    Scene_EntryPoint,
     Scene_Game
 };
 

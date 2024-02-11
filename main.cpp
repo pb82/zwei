@@ -29,6 +29,15 @@
 float targetMillis = (1 / St::instance().getFps()) * 1000;
 typedef decltype(std::chrono::system_clock::now()) tp;
 
+void renderGame(tp frameStart) {
+    SDL_RenderPresent(Gfx_Renderer);
+
+    auto frameTime = std::chrono::system_clock::now() - frameStart;
+    float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
+    float delay = targetMillis - millis;
+    if (delay > 0) SDL_Delay(delay);
+}
+
 void renderMenu(tp frameStart) {
     ImGui_ImplSDL2_NewFrame(Gfx_Window);
     ImGui::NewFrame();
@@ -56,7 +65,7 @@ void loop() {
         // return;
     }
 
-    RT_Context.setActiveScene(Scene_Game);
+    RT_Context.setActiveScene(Scene_EntryPoint);
 
     while (RT_Running) {
         auto frameStart = std::chrono::system_clock::now();
@@ -102,6 +111,7 @@ void loop() {
                 renderMenu(frameStart);
                 break;
             case StateGame:
+                renderGame(frameStart);
                 break;
         }
     }

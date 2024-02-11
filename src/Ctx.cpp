@@ -11,6 +11,7 @@
 #include "ecs/Id.h"
 #include "ecs/Collider.h"
 #include "scn/EntryPoint.h"
+#include "scn/Game.h"
 
 GameStateMachine::GameStateMachine() {
     this->current.push(StateStart);
@@ -47,7 +48,8 @@ void GameStateMachine::pushState(GameState state) {
 }
 
 Ctx::Ctx() {
-    scenes.emplace(Scene_Game, std::make_shared<EntryPoint>());
+    scenes.emplace(Scene_EntryPoint, std::make_shared<EntryPoint>());
+    scenes.emplace(Scene_Game, std::make_shared<Game>());
 }
 
 void Ctx::setPlayer(std::shared_ptr<Entity> player) {

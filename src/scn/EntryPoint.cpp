@@ -1,7 +1,7 @@
 #include "EntryPoint.h"
 #include "../Api.h"
 
-EntryPoint::EntryPoint() : Scene(Scene_Game) {}
+EntryPoint::EntryPoint() : Scene(Scene_EntryPoint) {}
 
 void EntryPoint::init() {
     Api::init();
