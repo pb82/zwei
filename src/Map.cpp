@@ -119,14 +119,6 @@ void Layer::load(JSON::Value &layer) {
     type = static_cast<LayerType>(getProperty(layer, "layerType").as<int>());
     asset = static_cast<Asset>(getProperty(layer, "assetId").as<int>());
 
-    auto metadata = getProperty(layer, "metadata");
-    if (!metadata.is(JSON::JSON_NULL)) {
-        tileset = std::make_shared<Tileset>();
-        std::stringstream ss;
-        ss << baseDirTilesets << "/" << metadata.as<std::string>();
-        tileset->load(ss.str().c_str());
-    }
-
     auto data = layer["data"].as<JSON::Array>();
 
     for (int i = 0; i < data.size(); ++i) {
@@ -135,9 +127,6 @@ void Layer::load(JSON::Value &layer) {
 
         // -1 because of the way tiled reserves id 0
         int tileId = data[i].as<int>() - 1;
-        if (tileId == 30) {
-            tileId = 30;
-        }
 
         // Not all tiles have to be set on a map, skip the
         // empty ones

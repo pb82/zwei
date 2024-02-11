@@ -31,10 +31,8 @@ bool GameStateMachine::toggleMenu() {
 
     // In-game allow to toggle the menu
     if (this->current.top() == StateMainMenu) {
-        Player::instance().resume();
         this->current.pop();
     } else {
-        Player::instance().pause();
         this->current.push(StateMainMenu);
         return true;
     }
