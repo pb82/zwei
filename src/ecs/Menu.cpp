@@ -163,6 +163,10 @@ void Menu::render(uint8_t) {
     ImVec2 position;
     getWinPos(position);
 
+    if (menuState == AwaitBinding) {
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, grey());
+    }
+
     ImGui::SetNextWindowPos(position);
     ImGui::SetNextWindowSize(size);
     ImGui::Begin("Menu", nullptr, getWinFlags());
@@ -170,6 +174,10 @@ void Menu::render(uint8_t) {
     for (int i = 0; i < items.size(); i++) {
         auto &item = items.at(i);
         items.at(i)->render(i == selectedIndex);
+    }
+
+    if (menuState == AwaitBinding) {
+        ImGui::PopStyleColor(1);
     }
 
     ImGui::End();
