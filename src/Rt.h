@@ -48,7 +48,7 @@ public:
     }
 
 private:
-    Rt() : running(true), map("./assets/SIMPLE/MAPS", "./assets/SIMPLE/TILESETS") {}
+    Rt() : running(true), map("./assets/SIMPLE/MAPS") {}
 };
 
 #endif

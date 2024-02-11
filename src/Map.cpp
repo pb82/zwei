@@ -8,104 +8,7 @@
 #include "ecs/filters/Twilight.h"
 #include "ecs/Analytics.h"
 
-void Tileset::load(const char *file) {
-    using namespace JSON;
-
-    File f(file);
-    f.open();
-
-    std::string json;
-    json.resize(f.size);
-    f.read(json, 0, f.size);
-    p.parse(v, json);
-}
-
-JSON::Value Tileset::getProperty(int tileId, const char *name) {
-    auto props = getPropsForTile(tileId);
-
-    if (!props.is(JSON::JSON_ARRAY)) {
-        return JSON::null;
-    }
-
-    for (auto &prop: props.as<JSON::Array>()) {
-        auto propName = prop["name"];
-        if (!propName.is(JSON::JSON_STRING)) {
-            continue;
-        }
-
-        if (propName.as<std::string>().compare(name) == 0) {
-            return prop["value"];
-        }
-    }
-    return JSON::null;
-}
-
-bool Tileset::getFrames(int tileId, const char *key, std::vector<int> &frames) {
-    auto prop = getProperty(tileId, key);
-    if (!prop.is(JSON::JSON_STRING)) {
-        return false;
-    }
-
-    JSON::Value f;
-    p.parse(f, prop.as<std::string>());
-    for (auto &frame: f.as<JSON::Array>()) {
-        frames.push_back(frame.as<int>());
-    }
-
-    return true;
-}
-
-bool Tileset::getInt(int tileId, const char *key, int *speed) {
-    auto s = getProperty(tileId, key);
-    if (!s.is(JSON::JSON_NUMBER)) {
-        return false;
-    }
-    *speed = s.as<int>();
-    return true;
-}
-
-bool Tileset::getPadding(int tileId, Padding &padding) {
-    auto s = getProperty(tileId, "padding");
-    if (!s.is(JSON::JSON_STRING)) {
-        padding.left = 0.0f;
-        padding.right = 0.0f;
-        padding.top = 0.0f;
-        padding.bottom = 0.0f;
-        return false;
-    }
-
-    JSON::Value o;
-    std::string array = s.as<std::string>();
-    p.parse(o, array);
-
-    padding.left = o[0].as<float>();
-    padding.right = o[1].as<float>();
-    padding.top = o[2].as<float>();
-    padding.bottom = o[3].as<float>();
-    return true;
-}
-
-JSON::Value Tileset::getPropsForTile(int tileId) {
-    auto tiles = v["tiles"];
-    if (!tiles.is(JSON::JSON_ARRAY)) {
-        return JSON::null;
-    }
-
-    for (auto &tile: tiles.as<JSON::Array>()) {
-        auto id = tile["id"].as<int>();
-        if (id == tileId) {
-            return tile["properties"];
-        }
-    }
-    return JSON::null;
-}
-
-bool Tileset::hasProps(int tileId) {
-    return getPropsForTile(tileId).is(JSON::JSON_NULL) == false;
-}
-
-Layer::Layer(const char *baseDirTilesets) : w(0), h(0),
-                                            baseDirTilesets(baseDirTilesets) {}
+Layer::Layer() : w(0), h(0) {}
 
 std::shared_ptr<Entity> Layer::getTile(int x, int y) {
     int pos = (y * w) + x;
@@ -147,36 +50,6 @@ void Layer::load(JSON::Value &layer) {
             entity->addComponent<Collider>(transform, CT_WALL);
         }
 
-        if (tileset && tileset->hasProps(tileId)) {
-            int speed;
-            int interactSpeed = 300;
-            std::vector<int> frames;
-
-            if (tileset->getInt(tileId, "speed", &speed)) {
-                entity->getComponent<Animation>()->speed = speed;
-            }
-
-            if (tileset->getFrames(tileId, "animation", frames)) {
-                for (int frame: frames) {
-                    entity->getComponent<Animation>()->addAnimationFrame(frame);
-                }
-            }
-            frames.clear();
-            if (tileset->getFrames(tileId, "interactAnimation", frames)) {
-                tileset->getInt(tileId, "interactSpeed", &interactSpeed);
-                for (int frame: frames) {
-                    entity->getComponent<Animation>()->addStateFrame(frame, interactSpeed);
-                }
-            }
-
-
-            Padding p;
-            if (tileset->getPadding(tileId, p) && entity->hasComponent<Collider>()) {
-                auto collider = entity->getComponent<Collider>();
-                collider->setPadding(p);
-            }
-        }
-
         tiles.push_back(entity);
     }
 }
@@ -197,7 +70,7 @@ void Layer::toPos(int w, int n, int *x, int *y) {
     *y = floor(n / w);
 }
 
-Map::Map(const char *baseDir, const char *baseDirTilesets) : baseDir(baseDir), baseDirTilesets(baseDirTilesets) {}
+Map::Map(const char *baseDir) : baseDir(baseDir){}
 
 std::shared_ptr<Entity> Map::getTile(LayerType layer, int x, int y) {
     return layers[layer]->getTile(x, y);
@@ -233,7 +106,7 @@ bool Map::load(const char *file) {
 
     auto ll = v["layers"].as<Array>();
     for (auto &layer: ll) {
-        auto l = std::make_shared<Layer>(this->baseDirTilesets.c_str());
+        auto l = std::make_shared<Layer>();
         l->load(layer);
         layers.emplace(l->type, l);
     }
