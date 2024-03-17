@@ -1,0 +1,41 @@
+{ "compressionlevel":-1,
+ "height":10,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+            2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+            2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+            2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+            2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+            2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+            2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+            2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+         "height":10,
+         "id":1,
+         "name":"Kachelebene 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.10.2",
+ "tileheight":16,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/TILESETS\/Tiles.tsx"
+        }],
+ "tilewidth":16,
+ "type":"map",
+ "version":"1.10",
+ "width":10
+}

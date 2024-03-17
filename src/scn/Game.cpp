@@ -9,6 +9,7 @@ Game::Game() : Scene(Scene_Game) {}
 
 void Game::init() {
     Api::setGameState();
+    Api::loadMap("t.json");
 }
 
 void Game::exit() {}
