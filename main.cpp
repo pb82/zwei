@@ -30,6 +30,12 @@ float targetMillis = (1 / St::instance().getFps()) * 1000;
 typedef decltype(std::chrono::system_clock::now()) tp;
 
 void renderGame(tp frameStart) {
+    Manager::instance().render(BACKGROUND);
+    Manager::instance().render(FLOOR);
+    Manager::instance().render(WALLS);
+    Manager::instance().render(ITEMS);
+    Manager::instance().render(OBJECTS);
+    Manager::instance().render(FOREGROUND);
     SDL_RenderPresent(Gfx_Renderer);
 
     auto frameTime = std::chrono::system_clock::now() - frameStart;

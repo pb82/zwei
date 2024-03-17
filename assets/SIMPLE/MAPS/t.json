@@ -15,8 +15,14 @@
             2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
          "height":10,
          "id":1,
-         "name":"Kachelebene 1",
+         "name":"Foreground",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"layerType",
+                 "type":"int",
+                 "value":1
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":10,

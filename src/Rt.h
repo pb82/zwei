@@ -21,7 +21,6 @@
 #define RT_Menu RT_Context.getMenu()
 #define RT_Memory RT_Context.getMemory()
 #define RT_State RT_Context.state
-#define RT_Spawn RT_Context.spawn
 
 // Shared runtime state
 class Rt {

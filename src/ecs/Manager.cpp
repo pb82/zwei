@@ -22,9 +22,6 @@ void Manager::init() {
     entities.emplace(LayerType::FLOOR, std::vector<std::shared_ptr<Entity>>());
     entities.emplace(LayerType::UI, std::vector<std::shared_ptr<Entity>>());
     entities.emplace(LayerType::WALLS, std::vector<std::shared_ptr<Entity>>());
-    entities.emplace(LayerType::ROOF, std::vector<std::shared_ptr<Entity>>());
-    entities.emplace(LayerType::SKY, std::vector<std::shared_ptr<Entity>>());
-    entities.emplace(LayerType::PARALLAX, std::vector<std::shared_ptr<Entity>>());
 
     // Globally accessible timer component
     timers = std::make_shared<Entity>();
@@ -146,16 +143,6 @@ void Manager::update(float dt) {
 void Manager::render(LayerType layer) {
     if (entities.find(layer) == entities.end()) {
         return;
-    }
-
-    if (layer == ROOF && (renderHints & HINT_HIDE_ROOF_LAYER) == HINT_HIDE_ROOF_LAYER) {
-        return;
-    }
-
-    if (layer == PARALLAX) {
-        setRenderHint(HINT_PARALLAX_LAYER);
-    } else {
-        clearRenderHint(HINT_PARALLAX_LAYER);
     }
 
     if (layer != OBJECTS) {

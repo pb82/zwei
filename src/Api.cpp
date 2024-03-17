@@ -93,20 +93,13 @@ namespace Api {
     }
 
     void setPlayerPosition(float x, float y, Direction d) {
-        if (!RT_Spawn.empty()) {
-            x = RT_Spawn.top().x;
-            y = RT_Spawn.top().y;
-            RT_Spawn.pop();
-        }
-
         if (!RT_Player) return;
         if (!RT_Player->hasComponent<Transform>()) {
             RT_Player->addComponent<Transform>(x, y);
 
             auto transform = RT_Player->getComponent<Transform>();
             RT_Camera.track(&transform->p);
-            RT_Player->addComponent<Collider>(transform, CT_PLAYER,
-                                              Padding{.5, .5, 1, 0});
+            RT_Player->addComponent<Collider>(transform, CT_PLAYER);
         } else {
             RT_Player->getComponent<Transform>()->p = {x, y};
         }

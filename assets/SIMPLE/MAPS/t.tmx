@@ -4,7 +4,10 @@
   <export target="../TILESETS/t.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" source="../../NEW/TILESETS/Tiles.tsx"/>
- <layer id="1" name="Kachelebene 1" width="10" height="10">
+ <layer id="1" name="Foreground" width="10" height="10">
+  <properties>
+   <property name="layerType" type="int" value="1"/>
+  </properties>
   <data encoding="csv">
 2,2,2,2,2,2,2,2,2,2,
 2,1,1,1,1,1,1,1,1,2,

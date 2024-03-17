@@ -20,7 +20,7 @@ void Layer::load(JSON::Value &layer) {
     h = layer["height"].as<int>();
 
     type = static_cast<LayerType>(getProperty(layer, "layerType").as<int>());
-    asset = static_cast<Asset>(getProperty(layer, "assetId").as<int>());
+
 
     auto data = layer["data"].as<JSON::Array>();
 
@@ -40,7 +40,7 @@ void Layer::load(JSON::Value &layer) {
 
         auto entity = Manager::instance().addEntity(type);
         entity->addComponent<Transform>(x, y);
-        entity->addComponent<Tile>(asset);
+        entity->addComponent<Tile>(TILES_BEACH);
         entity->addComponent<Animation>(100.0, true);
         entity->getComponent<Animation>()->addAnimationFrame(tileId);
         entity->addComponent<Analytics>();

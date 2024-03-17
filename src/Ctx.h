@@ -74,9 +74,6 @@ public:
 
     GameStateMachine state;
 
-    std::stack<Position> spawn;
-
-
 private:
     std::shared_ptr<Entity> player = nullptr;
 
