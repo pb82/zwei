@@ -46,6 +46,7 @@
 #include "src/ecs/Bar.h"
 
 #include "src/Api.h"
+#include "src/Bus.h"
 #include "src/ecs/arms/Stick.h"
 #include "src/ecs/Controller.h"
 
@@ -309,6 +310,13 @@ void loop() {
     }
 }
 
+void initBus() {
+    Bus::instance().subscribe(EventPlayerDied, [](const Event &) {
+        RT_State.pushState(StateGameOver);
+        Player::instance().playMusic(MUSIC_GAMEOVER);
+    });
+}
+
 void initSound() {
     // force sound to init
     Player::instance();
@@ -406,6 +414,7 @@ int main(int, char **) {
     initAssets();
     initImgui();
     initSound();
+    initBus();
     loop();
 
     ImGuiSDL::Deinitialize();

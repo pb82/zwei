@@ -8,6 +8,7 @@
 enum EventType {
     EventQuit,
     EventPlayerDamaged,
+    EventPlayerDied,
     EventEnemyDied,
     EventItemCollected,
     EventSceneChange,

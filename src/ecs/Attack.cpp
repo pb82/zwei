@@ -1,6 +1,7 @@
 #include <string>
 
 #include "Attack.h"
+#include "../Bus.h"
 #include "Entity.h"
 #include "Animation.h"
 #include "Manager.h"
@@ -13,7 +14,6 @@
 #include "Analytics.h"
 #include "Projectile.h"
 #include "../Gfx.h"
-#include "../snd/Player.h"
 #include "Bar.h"
 
 Attack::Attack(Entity &parent) : Component(parent) {}
@@ -55,8 +55,7 @@ void Attack::defend(std::shared_ptr<Projectile> projectile) {
             }
         } else {
             if (&this->parent == RT_Context.getPlayer().get()) {
-                RT_State.pushState(StateGameOver);
-                Player::instance().playMusic(MUSIC_GAMEOVER);
+                Bus::instance().publish(Event(EventPlayerDied));
             }
         }
     }

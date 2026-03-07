@@ -7,3 +7,4 @@ savegame.json
 steam-build
 !bin/linux/zwei
 bin/*
+build
