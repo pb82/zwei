@@ -42,11 +42,21 @@ void Inventory::serialize(JSON::Value &to) {
 }
 
 void Inventory::deserialize(JSON::Value &from) {
+    resetAll();
     auto loadedItems = from["inventory"]["items"].as<JSON::Array>();
     for (auto &item: loadedItems) {
         ItemType t = static_cast<ItemType>(item["type"].as<int>());
         int number = item["number"].as<int>();
+        bool wasEquipped = item["equipped"].is(JSON::JSON_BOOL) && item["equipped"].as<bool>();
         addItems(t, number);
+        if (wasEquipped) {
+            for (auto &slot: slots) {
+                if (slot.type == t && slot.item && !slot.item->equipped) {
+                    slot.item->equip(RT_Context.getPlayer());
+                    break;
+                }
+            }
+        }
     }
     auto loadedModifiers = from["inventory"]["modifiers"].as<JSON::Array>();
     for (auto &mod: loadedModifiers) {

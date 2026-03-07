@@ -7,7 +7,6 @@
 #include <SDL_mixer.h>
 
 #include <IMGUI/imgui.h>
-#include <IMGUI/imgui_impl_sdl.h>
 #include <IMGUI/imgui_sdl.h>
 
 #include <ASSETS/Assets.h>
@@ -67,7 +66,6 @@ void renderMenu(tp frameStart) {
     Manager::instance().render(ROOF);
     Manager::instance().render(SKY);
 
-    ImGui_ImplSDL2_NewFrame(Gfx_Window);
     ImGui::NewFrame();
     {
         Manager::instance().render(UI);
@@ -76,7 +74,6 @@ void renderMenu(tp frameStart) {
 
     // Flush
     ImGuiSDL::Render(ImGui::GetDrawData());
-    SDL_GL_SwapWindow(Gfx_Window);
     SDL_RenderPresent(Gfx_Renderer);
     // glFinish();
 
@@ -140,9 +137,7 @@ void renderLoad(tp frameStart) {
     Draw::instance().box(color_Blue, target);
 
     // Flush
-    SDL_GL_SwapWindow(Gfx_Window);
     SDL_RenderPresent(Gfx_Renderer);
-    // glFinish();
 
     auto frameTime = std::chrono::system_clock::now() - frameStart;
     float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
@@ -189,9 +184,7 @@ void renderGameOver(tp frameStart) {
     }
 
     // Flush
-    SDL_GL_SwapWindow(Gfx_Window);
     SDL_RenderPresent(Gfx_Renderer);
-    // glFinish();
 
     auto frameTime = std::chrono::system_clock::now() - frameStart;
     float millis = std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count();
@@ -361,13 +354,6 @@ void initSdl() {
     auto sdlFlags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK |
                     SDL_INIT_GAMECONTROLLER;
 
-    // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-    SDL_GL_SetSwapInterval(1);
-
     if (SDL_Init(sdlFlags) != 0) {
         exit(1);
     }
@@ -386,17 +372,18 @@ void initSdl() {
             SDL_WINDOWPOS_CENTERED,
             configWindowWidth,
             configWindowHeight,
-            SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI
+            SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI
     );
+
+    Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     // Deal with high dpi displays where the scaled resolution is not the same as
     // the requested resolution
     int actualW, actualH;
-    SDL_GL_GetDrawableSize(Gfx_Window, &actualW, &actualH);
+    SDL_GetRendererOutputSize(Gfx_Renderer, &actualW, &actualH);
     configRenderScaleX = actualW / configWindowWidth;
     configRenderScaleY = actualH / configWindowHeight;
 
-    Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderSetScale(Gfx_Renderer, configRenderScaleX, configRenderScaleY);
     Gfx_Tile_Size = configTileSize;
 }

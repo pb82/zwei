@@ -10,7 +10,6 @@ add_executable(
         json/printer.cpp
         json/parser.cpp
         imgui/imgui.cpp
-        imgui/imgui_impl_sdl.cpp
         imgui/imgui_sdl.cpp
         imgui/imgui_widgets.cpp
         imgui/imgui_draw.cpp

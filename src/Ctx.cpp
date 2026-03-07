@@ -105,7 +105,7 @@ bool Ctx::savegameExists() {
         saved = new bool;
         *saved = f.open();
     }
-    return saved;
+    return *saved;
 }
 
 void Ctx::load(float *x, float *y) {

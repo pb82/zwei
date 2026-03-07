@@ -7,6 +7,7 @@
 #include <tuple>
 #include <cmath>
 #include <map>
+#include <cstdint>
 
 namespace JSON {
     enum JsonType {
