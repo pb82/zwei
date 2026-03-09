@@ -31,9 +31,10 @@ A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity 
 - `Animation` — direction-aware frame sequences
 - `Collider` — AABB with tags (PLAYER, ENEMY, WALL, PROJECTILE, TRIGGER, ITEM)
 - `Controller` — player input
-- `Acceleration` — velocity-based movement
+- `Acceleration` — velocity-based movement with configurable acceleration ramp (`acceleration` field, tiles/s²); instant if 0
 - `Stats` — HP, strength, dexterity, defense
-- `Attack` — weapon/combat system
+- `Attack` — weapon/combat system; dispatches to `launchMeleeWeapon` / `launchRangedWeapon`
+- `Hitbox` — attached to weapon hitbox entities; carries `power`, `force`, `isRanged`, `origin`, `launchDirection`
 - `Inventory` — 10 item slots
 - `Ai` — enemy behavior via pluggable `Mind` system
 
@@ -73,6 +74,17 @@ A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity 
 
 Accessed via macros: `RT_Context`, `RT_Player`, `RT_Menu`, `Rt_Map`, `Rt_Commands`.
 
+### Event Bus
+
+`Bus` singleton in `src/Bus.h/cpp`. Decouples cross-cutting reactions from component logic. Subscribe in `main.cpp::initBus()` for game-loop-level concerns; subscribe near the relevant system for domain-specific reactions.
+
+Current events:
+- `EventPlayerDied` — published by `Attack::defend()` when player HP hits 0; subscriber pushes `StateGameOver` and plays music
+- `EventEnemyDied` (`EnemyDiedEvent` with `x,y`) — published by `Stats::update()` when enemy HP hits 0; subscriber spawns explosion entity
+- `EventItemCollected` — published by `Inventory::add()` on successful pickup; subscriber plays sound
+
+To add a new event: add the type to `EventType` enum, optionally subclass `Event` for payload, publish at the source, subscribe in `initBus()` or the relevant system.
+
 ### Command Queue
 
 `Rt_Commands` is a deferred queue of `Command` objects executed one per frame. Used for scene transitions (`ScreenTransition`), loading screens, etc. Keep this pattern.
@@ -108,7 +120,7 @@ Accessed via macros: `RT_Context`, `RT_Player`, `RT_Menu`, `Rt_Map`, `Rt_Command
 3. **Bump to C++17** — gets `std::optional`, `std::variant`, `std::filesystem`, `if constexpr`
 4. **Replace `Asset` enum with string-keyed registry** — adding assets currently requires editing enum + loader + all references
 5. **Add Lua scripting via Sol2** — bind existing `Api::*` functions; write scenes in `.lua` loaded at runtime; enables hot-reload
-6. **Simple event bus** — decouple component communication away from direct singleton access
+6. **Simple event bus** ✓ — implemented in `src/Bus.h/cpp`; three events wired up (`EventPlayerDied`, `EventEnemyDied`, `EventItemCollected`)
 
 ---
 
@@ -118,7 +130,7 @@ Accessed via macros: `RT_Context`, `RT_Player`, `RT_Menu`, `Rt_Map`, `Rt_Command
 - `CMakeLists.txt` lists every `.cpp` file explicitly
 - No entity query system — iteration is manual O(n) per layer
 - `Asset` enum requires code changes to add new assets
-- No event/message system between components
+- Event bus exists but most components still use direct singleton access — migrate gradually
 - Scenes (`Forest::init()`) are imperative C++ — will become unmanageable as content grows
 - OpenGL context created but SDL renderer used (redundant)
 
