@@ -19,7 +19,7 @@ public:
 
     float throwback() override;
 
-    bool isProjectile() override;
+    bool isRanged() override;
 
 private:
 

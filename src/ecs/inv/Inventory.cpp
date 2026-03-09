@@ -9,7 +9,7 @@
 #include "../../alg/Text.h"
 #include "../Collectable.h"
 #include "../Collider.h"
-#include "../../snd/Player.h"
+#include "../../Bus.h"
 #include "../items/HealthPotion.h"
 #include "TorchModifier.h"
 
@@ -116,7 +116,7 @@ bool Inventory::add(std::shared_ptr<Item> item) {
         success = addSingleSlotItem(item);
     }
     if (success) {
-        Player::instance().playSound(SOUND_PICKUP);
+        Bus::instance().publish(Event(EventItemCollected));
     }
     return success;
 }

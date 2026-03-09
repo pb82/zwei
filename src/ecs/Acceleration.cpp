@@ -16,6 +16,16 @@ void Acceleration::update(float dt) {
     // Remember the current position before mutating it
     last = transform->p;
 
+    // Ramp speed toward target — instant if acceleration is 0 (e.g. projectiles)
+    if (speed < targetSpeed) {
+        if (acceleration > 0.0f)
+            speed = std::min(speed + acceleration * (dt / 1000.0f), targetSpeed);
+        else
+            speed = targetSpeed;
+    } else if (speed > targetSpeed) {
+        speed = targetSpeed;
+    }
+
     trajectory.radius = speed * (dt / 1000);
     trajectory.translate(&transform->p.x, &transform->p.y);
 
@@ -60,11 +70,11 @@ void Acceleration::applyForce(float angle, float power, float decay, float weigh
 }
 
 void Acceleration::accelerate() {
-    speed = maxSpeed;
+    targetSpeed = maxSpeed;
 }
 
 void Acceleration::decelerate() {
-    speed = 0;
+    targetSpeed = 0;
 }
 
 void Acceleration::turn(float angle) {
@@ -73,6 +83,8 @@ void Acceleration::turn(float angle) {
 
 void Acceleration::reset(Position &target) {
     target = last;
+    speed = 0;
+    targetSpeed = 0;
 }
 
 float Acceleration::getAngle() {

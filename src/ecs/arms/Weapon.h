@@ -16,11 +16,11 @@ public:
 
     virtual int recharge() { return 500; }
 
-    virtual int damage(const Character &c) { return 0.0f; }
+    virtual int damage(const Character &c) { return 0; }
 
     virtual float throwback() { return 0.0f; }
 
-    virtual bool isProjectile() { return false; }
+    virtual bool isRanged() { return false; }
 
     virtual int getProjectileTile() { return 0; }
 

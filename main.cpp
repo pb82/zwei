@@ -47,6 +47,7 @@
 
 #include "src/Api.h"
 #include "src/Bus.h"
+#include "src/ecs/SelfDestruct.h"
 #include "src/ecs/arms/Stick.h"
 #include "src/ecs/Controller.h"
 
@@ -314,6 +315,23 @@ void initBus() {
     Bus::instance().subscribe(EventPlayerDied, [](const Event &) {
         RT_State.pushState(StateGameOver);
         Player::instance().playMusic(MUSIC_GAMEOVER);
+    });
+    Bus::instance().subscribe(EventItemCollected, [](const Event &) {
+        Player::instance().playSound(SOUND_PICKUP);
+    });
+    Bus::instance().subscribe(EventEnemyDied, [](const Event &e) {
+        const auto &evt = static_cast<const EnemyDiedEvent &>(e);
+        auto entity = std::make_shared<Entity>();
+        entity->addComponent<Sprite>(SPRITES);
+        entity->addComponent<Animation>(100, false);
+        auto explosion = entity->getComponent<Animation>();
+        explosion->addAnimationFrame(128);
+        explosion->addAnimationFrame(129);
+        explosion->addAnimationFrame(130);
+        explosion->addAnimationFrame(131);
+        entity->addComponent<SelfDestruct>(TIMER, 400);
+        entity->addComponent<Transform>(evt.x, evt.y);
+        Manager::instance().enqueue(entity, FOREGROUND);
     });
 }
 

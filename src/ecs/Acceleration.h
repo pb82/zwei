@@ -61,6 +61,8 @@ private:
 
     Position last;
 
+    float targetSpeed = 0.0f;
+
     std::vector<Force> forces;
 
 };

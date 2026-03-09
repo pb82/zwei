@@ -10,7 +10,7 @@
 #include "Transform.h"
 #include "../alg/Direction.h"
 #include "../alg/Vector.h"
-#include "Projectile.h"
+#include "Hitbox.h"
 
 enum ColliderTag {
     CT_PLAYER,

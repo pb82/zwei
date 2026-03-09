@@ -32,28 +32,32 @@ void Col::collide(float dt) {
 
     std::stack<ColliderGroup> collisions;
 
+    for (auto &c : colliders) {
+        c->update(dt);
+    }
+
     for (auto &a : colliders) {
 
         if (a->tag == CT_WALL) continue;
+        if (a->checked) continue;
 
         ColliderGroup group(a);
         collisions.push(group);
 
         for (auto &b : colliders) {
             if (a == b) continue;
-            if (a->checked) continue;
+            if (b->checked) continue;
             if (a->tag == CT_WALL && b->tag == CT_WALL) continue;
-            a->update(dt);
-            b->update(dt);
             if (SDL_HasIntersection(&a->boundingBox, &b->boundingBox)) {
                 collisions.top().collidesWith(b);
-                b->checked = true;
             }
         }
 
         if (collisions.top().size == 0) {
             collisions.pop();
         }
+
+        a->checked = true;
     }
 
     if (!collisions.empty()) {
@@ -155,20 +159,6 @@ void Col::collide(float dt) {
 
                 if (group.has(CT_WALL)) {
                     group.subject->disable();
-                }
-            }
-
-            if (group.subject->tag == CT_ITEM) {
-                if (group.has(CT_PLAYER)) {
-
-                }
-            }
-
-            if (group.subject->tag == CT_WALL) {
-                if (group.has(CT_PROJECTILE)) {
-                    for (auto &involved : group.involved.at(CT_PROJECTILE)) {
-                        involved->disable();
-                    }
                 }
             }
 

@@ -21,7 +21,7 @@ float Stone::speed() {
     return 8;
 }
 
-bool Stone::isProjectile() {
+bool Stone::isRanged() {
     return true;
 }
 

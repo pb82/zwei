@@ -82,7 +82,8 @@ namespace Api {
         auto hud = Manager::instance().addEntity(FOREGROUND);
         hud->addComponent<Hud>();
 
-        setPlayerSpeed(3);
+        setPlayerSpeed(5);
+        RT_Player->getComponent<Acceleration>()->acceleration = 30.0f;
         setPlayerStats(20, 1, 1, 1);
 
         player->getComponent<Acceleration>()->setDirection(N);

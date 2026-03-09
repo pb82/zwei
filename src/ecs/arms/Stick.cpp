@@ -21,7 +21,7 @@ float Stick::speed() {
     return 3;
 }
 
-bool Stick::isProjectile() {
+bool Stick::isRanged() {
     return false;
 }
 

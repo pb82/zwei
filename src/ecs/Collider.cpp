@@ -64,8 +64,8 @@ void Collider::kick(std::shared_ptr<Collider> other) {
 }
 
 bool Collider::defend(std::shared_ptr<Collider> projectile) {
-    if (projectile->parent.hasComponent<Projectile>()) {
-        auto p = projectile->parent.getComponent<Projectile>();
+    if (projectile->parent.hasComponent<Hitbox>()) {
+        auto p = projectile->parent.getComponent<Hitbox>();
         if (p->origin == &this->parent) {
             // No need to defend against your own projectiles
             return false;

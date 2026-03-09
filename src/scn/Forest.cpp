@@ -15,7 +15,7 @@ void Forest::init() {
     Api::setGameState();
 
     if (!GET_BOOL(SceneConstants::KEY_Forest_StickTaken))
-        Api::addItem(2, 15, ItemType::STICK, []() {
+        Api::addItem(2, 15, ItemType::BOW, []() {
             RT_Memory.setBool(SceneConstants::KEY_Forest_StickTaken, true);
         });
 

@@ -26,9 +26,9 @@ void Character::setBase(int hp, int str, int dex, int def) {
     this->hitpoints = hp;
 }
 
-int Character::damage(int d, bool isProjectile) {
+int Character::damage(int d, bool isRanged) {
     d -= baseDefense / 2;
-    if (isProjectile) {
+    if (isRanged) {
         d -= baseDexterity / 5;
     }
 

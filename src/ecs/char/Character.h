@@ -11,7 +11,7 @@ public:
 
     void setBase(int hp, int str, int dex, int def);
 
-    int damage(int d, bool isProjectile);
+    int damage(int d, bool isRanged);
 
     int getStrength() const;
 

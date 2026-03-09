@@ -17,7 +17,12 @@ enum EventType {
 struct Event {
     EventType type;
     explicit Event(EventType t) : type(t) {}
-    virtual ~Event() {}
+    virtual ~Event() = default;
+};
+
+struct EnemyDiedEvent : public Event {
+    float x, y;
+    EnemyDiedEvent(float x, float y) : Event(EventEnemyDied), x(x), y(y) {}
 };
 
 class Bus {

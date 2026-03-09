@@ -3,7 +3,7 @@
 
 #include "Component.h"
 #include "Stats.h"
-#include "Projectile.h"
+#include "Hitbox.h"
 
 class Attack : public Component {
 public:
@@ -13,15 +13,18 @@ public:
 
     void attack();
 
-    void defend(std::shared_ptr<Projectile> projectile);
+    void defend(std::shared_ptr<Hitbox> hitbox);
 
     float wait = 0.0f;
 
 private:
 
-    void launchStickWeapon(std::shared_ptr<Stats> stats);
+    std::shared_ptr<Entity> spawnHitbox(float offsetX, float offsetY, float angle,
+                                        Padding padding, std::shared_ptr<Stats> stats);
 
-    void launchProjectileWeapon(std::shared_ptr<Stats> stats);
+    void launchMeleeWeapon(std::shared_ptr<Stats> stats);
+
+    void launchRangedWeapon(std::shared_ptr<Stats> stats);
 
 };
 
