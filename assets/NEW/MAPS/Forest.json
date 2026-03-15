@@ -9,16 +9,7 @@
          "name":"background",
          "opacity":1,
          "properties":[
-                {
-                 "name":"assetId",
-                 "type":"string",
-                 "value":"1"
-                }, 
-                {
-                 "name":"layerType",
-                 "type":"string",
-                 "value":"0"
-                }],
+                ],
          "type":"tilelayer",
          "visible":true,
          "width":32,
@@ -31,18 +22,7 @@
          "id":1,
          "name":"floor",
          "opacity":1,
-         "properties":[
-                {
-                 "name":"assetId",
-                 "type":"string",
-                 "value":"1"
-                }, 
-                {
-                 "name":"layerType",
-                 "type":"string",
-                 "value":"1"
-                }, 
-                {
+         "properties":[                {
                  "name":"metadata",
                  "type":"string",
                  "value":"Tiles.json"
@@ -59,18 +39,7 @@
          "id":2,
          "name":"walls",
          "opacity":1,
-         "properties":[
-                {
-                 "name":"assetId",
-                 "type":"string",
-                 "value":"1"
-                }, 
-                {
-                 "name":"layerType",
-                 "type":"string",
-                 "value":"2"
-                }, 
-                {
+         "properties":[                {
                  "name":"metadata",
                  "type":"string",
                  "value":"Tiles.json"
@@ -88,16 +57,7 @@
          "name":"roof",
          "opacity":1,
          "properties":[
-                {
-                 "name":"assetId",
-                 "type":"string",
-                 "value":"1"
-                }, 
-                {
-                 "name":"layerType",
-                 "type":"string",
-                 "value":"3"
-                }],
+                ],
          "type":"tilelayer",
          "visible":true,
          "width":32,
@@ -111,16 +71,7 @@
          "name":"sky",
          "opacity":1,
          "properties":[
-                {
-                 "name":"assetId",
-                 "type":"string",
-                 "value":"1"
-                }, 
-                {
-                 "name":"layerType",
-                 "type":"string",
-                 "value":"4"
-                }],
+                ],
          "type":"tilelayer",
          "visible":true,
          "width":32,

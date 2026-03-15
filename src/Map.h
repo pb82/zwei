@@ -12,32 +12,24 @@
 #include "io/File.h"
 #include "alg/Padding.h"
 
-class Tileset {
-public:
-    void load(const char *file);
-
-    bool getFrames(int tileId, const char *key, std::vector<int> &frames);
-
-    bool getInt(int tileId, const char *key, int *speed);
-
-    bool getPadding(int tileId, Padding &p);
-
-    bool hasProps(int tileId);
-
-private:
-    JSON::Value getProperty(int tileId, const char *prop);
-
-    JSON::Value getPropsForTile(int tileId);
-
-    JSON::Value v;
-    JSON::Parser p;
+struct TileData {
+    std::vector<int> frames;
+    int              speed = 100;
+    std::vector<int> interactFrames;
+    int              interactSpeed = 300;
+    Padding          padding = {0, 0, 0, 0};
+    bool             hasPadding = false;
 };
+
+using TilesetIndex = std::unordered_map<int, TileData>;
+
+TilesetIndex loadTilesetIndex(const std::string &path);
 
 class Layer {
 public:
     Layer(const char *baseDirTilesets);
 
-    void load(JSON::Value &layer);
+    void load(JSON::Value &layer, Asset asset);
 
     std::shared_ptr<Entity> getTile(int x, int y);
 
@@ -46,10 +38,8 @@ public:
     int w;
     int h;
     LayerType type;
-    Asset asset;
 
 private:
-
     void toPos(int w, int n, int *x, int *y);
 
     std::string baseDirTilesets;
@@ -58,7 +48,7 @@ private:
 
     std::vector<std::shared_ptr<Entity>> tiles;
 
-    std::shared_ptr<Tileset> tileset;
+    TilesetIndex tilesetIndex;
 };
 
 class Map {
