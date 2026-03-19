@@ -44,6 +44,22 @@ static JSON::Value findProperty(JSON::Value &props, const char *name) {
     return JSON::null;
 }
 
+// Parse a comma-separated string of ints into a vector.
+static void parseCSVInts(const std::string &s, std::vector<int> &out) {
+    std::stringstream ss(s);
+    std::string token;
+    while (std::getline(ss, token, ','))
+        out.push_back(std::stoi(token));
+}
+
+// Parse a comma-separated string of floats into a vector.
+static void parseCSVFloats(const std::string &s, std::vector<float> &out) {
+    std::stringstream ss(s);
+    std::string token;
+    while (std::getline(ss, token, ','))
+        out.push_back(std::stof(token));
+}
+
 TilesetIndex loadTilesetIndex(const std::string &path) {
     TilesetIndex index;
 
@@ -67,39 +83,35 @@ TilesetIndex loadTilesetIndex(const std::string &path) {
 
         TileData data;
 
-        auto animProp = findProperty(props, "animation");
-        if (animProp.is(JSON::JSON_STRING)) {
-            JSON::Value arr;
-            p.parse(arr, animProp.as<std::string>());
-            for (auto &frame: arr.as<JSON::Array>())
-                data.frames.push_back(frame.as<int>());
+        // Native Tiled animation: [{"duration": 500, "tileid": 35}, ...]
+        auto nativeAnim = tile["animation"];
+        if (nativeAnim.is(JSON::JSON_ARRAY)) {
+            auto frames = nativeAnim.as<JSON::Array>();
+            if (!frames.empty()) {
+                data.speed = frames[0]["duration"].as<int>();
+                for (auto &frame: frames)
+                    data.frames.push_back(frame["tileid"].as<int>());
+            }
         }
 
-        auto speedProp = findProperty(props, "speed");
-        if (speedProp.is(JSON::JSON_NUMBER))
-            data.speed = speedProp.as<int>();
-
+        // Interact animation: CSV string "20,21,22"
         auto interactProp = findProperty(props, "interactAnimation");
-        if (interactProp.is(JSON::JSON_STRING)) {
-            JSON::Value arr;
-            p.parse(arr, interactProp.as<std::string>());
-            for (auto &frame: arr.as<JSON::Array>())
-                data.interactFrames.push_back(frame.as<int>());
-        }
+        if (interactProp.is(JSON::JSON_STRING))
+            parseCSVInts(interactProp.as<std::string>(), data.interactFrames);
 
         auto interactSpeedProp = findProperty(props, "interactSpeed");
         if (interactSpeedProp.is(JSON::JSON_NUMBER))
             data.interactSpeed = interactSpeedProp.as<int>();
 
+        // Padding: CSV string "left,right,top,bottom"
         auto paddingProp = findProperty(props, "padding");
         if (paddingProp.is(JSON::JSON_STRING)) {
-            JSON::Value arr;
-            p.parse(arr, paddingProp.as<std::string>());
-            data.padding.left   = arr[0].as<float>();
-            data.padding.right  = arr[1].as<float>();
-            data.padding.top    = arr[2].as<float>();
-            data.padding.bottom = arr[3].as<float>();
-            data.hasPadding = true;
+            std::vector<float> vals;
+            parseCSVFloats(paddingProp.as<std::string>(), vals);
+            if (vals.size() >= 4) {
+                data.padding = {vals[0], vals[1], vals[2], vals[3]};
+                data.hasPadding = true;
+            }
         }
 
         index[id] = data;
@@ -147,30 +159,37 @@ void Layer::load(JSON::Value &layer, Asset asset) {
         entity->addComponent<Transform>(x, y);
         entity->addComponent<Tile>(asset);
         entity->addComponent<Animation>(100.0, true);
-        entity->getComponent<Animation>()->addAnimationFrame(tileId);
         entity->addComponent<Analytics>();
 
-        if (type == WALLS) {
-            auto transform = entity->getComponent<Transform>();
-            entity->addComponent<Collider>(transform, CT_WALL);
-        }
+        auto anim = entity->getComponent<Animation>();
 
         auto it = tilesetIndex.find(tileId);
         if (it != tilesetIndex.end()) {
             const TileData &td = it->second;
-            auto anim = entity->getComponent<Animation>();
 
             if (!td.frames.empty()) {
+                // Native animation defines the complete frame sequence
                 anim->speed = td.speed;
                 for (int frame: td.frames)
                     anim->addAnimationFrame(frame);
+            } else {
+                anim->addAnimationFrame(tileId);
             }
 
             for (int frame: td.interactFrames)
                 anim->addStateFrame(frame, td.interactSpeed);
 
-            if (td.hasPadding && entity->hasComponent<Collider>()) {
-                entity->getComponent<Collider>()->setPadding(td.padding);
+            if (type == WALLS) {
+                auto transform = entity->getComponent<Transform>();
+                entity->addComponent<Collider>(transform, CT_WALL);
+                if (td.hasPadding)
+                    entity->getComponent<Collider>()->setPadding(td.padding);
+            }
+        } else {
+            anim->addAnimationFrame(tileId);
+            if (type == WALLS) {
+                auto transform = entity->getComponent<Transform>();
+                entity->addComponent<Collider>(transform, CT_WALL);
             }
         }
 

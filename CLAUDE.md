@@ -52,9 +52,14 @@ A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity 
 ### Maps
 
 - Tiled editor JSON format (not TMX)
-- Custom loader in `src/io/Map.cpp`
-- Tileset properties: animation frames, speed, collision padding
-- Collision topology extracted from WALLS layer for pathfinding
+- Loader in `src/Map.cpp` — `Map`, `Layer`, `TileData`
+- Layer type derived from Tiled layer **name** (`"floor"`, `"walls"`, etc.) — no custom property needed
+- Asset (texture) derived from map's top-level `tilesets[0].source` filename via `assetFromTilesetSource()`
+- Tileset animations use native Tiled `animation` array (`[{"duration": 500, "tileid": 35}, ...]`)
+- Collision padding and interact animation stored as plain CSV custom properties (`"1,0,1,0"`, `"20,21,22"`)
+- `loadTilesetIndex()` builds an `unordered_map<int, TileData>` once at load time — O(1) per-tile lookup
+- `interactAnimation` on a tile pre-loads state frames onto its `Animation` component; `Api::setDoor()` triggers them via `queueStateFramesForward/Backward()`
+- Collision topology (flat `vector<bool>`) extracted from WALLS layer into `RT_Topology` for A* pathfinding — separate from `Collider`-based collision
 
 ### JSON Parser
 
@@ -118,9 +123,10 @@ To add a new event: add the type to `EventType` enum, optionally subclass `Event
 1. **Strip audio + ImGui + dead code** — simplification, low risk
 2. **Migrate build to Meson** — enables clean Windows/Mac builds; use WrapDB for SDL2
 3. **Bump to C++17** — gets `std::optional`, `std::variant`, `std::filesystem`, `if constexpr`
-4. **Replace `Asset` enum with string-keyed registry** — adding assets currently requires editing enum + loader + all references
+4. **Replace `Asset` enum with string-keyed registry** — adding assets currently requires editing enum + loader + all references; `assetFromTilesetSource()` in Map.cpp is the last place that maps filenames to the enum
 5. **Add Lua scripting via Sol2** — bind existing `Api::*` functions; write scenes in `.lua` loaded at runtime; enables hot-reload
 6. **Simple event bus** ✓ — implemented in `src/Bus.h/cpp`; three events wired up (`EventPlayerDied`, `EventEnemyDied`, `EventItemCollected`)
+7. **Map loader cleanup** ✓ — `Tileset` class replaced by `loadTilesetIndex()`; layer type from name; asset from tilesets array; native Tiled animations; CSV padding/interact properties
 
 ---
 
