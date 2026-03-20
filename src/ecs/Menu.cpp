@@ -2,6 +2,7 @@
 #include "Menu.h"
 
 #include "../Rt.h"
+#include "../Bus.h"
 
 #define WINDOW_MARGIN 0
 
@@ -56,13 +57,13 @@ Menu::Menu(Entity &parent) : Component(parent) {
 
     allItems.emplace(ItemLoad, std::make_shared<MenuItem>("Load game", [](GameKeyEvent &key) {
         if (key.key == GK_A) {
-            RT_State.pushState(StateLoading);
+            Bus::instance().publish(StateChangeRequestedEvent(StateLoading));
         }
     }));
 
     allItems.emplace(ItemContinue, std::make_shared<MenuItem>("Continue", [](GameKeyEvent &key) {
         if (key.key == GK_A) {
-            RT_State.pushState(StateLoading);
+            Bus::instance().publish(StateChangeRequestedEvent(StateLoading));
         }
     }));
 
@@ -149,7 +150,7 @@ Menu::Menu(Entity &parent) : Component(parent) {
     allItems.emplace(ItemYes, std::make_shared<MenuItem>("Yes", [](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         St::instance().serialize();
-        RT_Running = false;
+        Bus::instance().publish(Event(EventQuit));
     }));
 
     allItems.emplace(ItemNo, std::make_shared<MenuItem>("No", [this](GameKeyEvent &key) {

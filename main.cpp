@@ -275,8 +275,11 @@ void loop() {
                     if (gk.state == GK_RELEASED) Manager::instance().key(gk);
                 } else if (gk.state == GK_PUSHED && gk.key == GK_START) {
                     if (RT_State.toggleMenu()) {
+                        Player::instance().pause();
                         auto m = RT_Menu->getComponent<Menu>();
                         m->resetMenu();
+                    } else {
+                        Player::instance().resume();
                     }
                 } else {
                     if (RT_State.currentState() == StateMainMenu ||
@@ -312,8 +315,15 @@ void loop() {
 }
 
 void initBus() {
+    Bus::instance().subscribe(EventStateChangeRequested, [](const Event &e) {
+        const auto &evt = static_cast<const StateChangeRequestedEvent &>(e);
+        RT_State.pushState(static_cast<GameState>(evt.target));
+    });
+    Bus::instance().subscribe(EventQuit, [](const Event &) {
+        RT_Running = false;
+    });
     Bus::instance().subscribe(EventPlayerDied, [](const Event &) {
-        RT_State.pushState(StateGameOver);
+        Bus::instance().publish(StateChangeRequestedEvent(StateGameOver));
         Player::instance().playMusic(MUSIC_GAMEOVER);
     });
     Bus::instance().subscribe(EventItemCollected, [](const Event &) {

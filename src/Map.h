@@ -10,15 +10,11 @@
 
 #include "ecs/Manager.h"
 #include "io/File.h"
-#include "alg/Padding.h"
-
 struct TileData {
     std::vector<int> frames;
     int              speed = 100;
     std::vector<int> interactFrames;
     int              interactSpeed = 300;
-    Padding          padding = {0, 0, 0, 0};
-    bool             hasPadding = false;
 };
 
 using TilesetIndex = std::unordered_map<int, TileData>;

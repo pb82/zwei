@@ -17,7 +17,7 @@ void Test::init() {
     Api::setDoor(14, 17, SceneConstants::ID_Door_1);
     Api::setRoofHideTrigger(14, 16);
     Api::setRoofShowTrigger(14, 18);
-    Api::addKakta(10, 10, 1, 20);
+    // Api::addKakta(10, 10, 1, 20);
 
     /*
     if (!GET_BOOL(SceneConstants::KEY_IntroductionDialog)) {

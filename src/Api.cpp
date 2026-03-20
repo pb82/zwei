@@ -1,5 +1,6 @@
 #include "Api.h"
 
+#include "Bus.h"
 #include "Rt.h"
 #include "ecs/Manager.h"
 #include "ecs/Menu.h"
@@ -141,15 +142,15 @@ namespace Api {
     }
 
     void setMenuState() {
-        RT_State.pushState(StateMainMenu);
+        Bus::instance().publish(StateChangeRequestedEvent(StateMainMenu));
     }
 
     void setGameState() {
-        RT_State.pushState(StateGame);
+        Bus::instance().publish(StateChangeRequestedEvent(StateGame));
     }
 
     void setGameOverState() {
-        RT_State.pushState(StateGameOver);
+        Bus::instance().publish(StateChangeRequestedEvent(StateGameOver));
     }
 
     bool loadMap(const char *file) {

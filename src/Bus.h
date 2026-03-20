@@ -12,6 +12,7 @@ enum EventType {
     EventEnemyDied,
     EventItemCollected,
     EventSceneChange,
+    EventStateChangeRequested,
 };
 
 struct Event {
@@ -23,6 +24,11 @@ struct Event {
 struct EnemyDiedEvent : public Event {
     float x, y;
     EnemyDiedEvent(float x, float y) : Event(EventEnemyDied), x(x), y(y) {}
+};
+
+struct StateChangeRequestedEvent : public Event {
+    int target;
+    StateChangeRequestedEvent(int s) : Event(EventStateChangeRequested), target(s) {}
 };
 
 class Bus {

@@ -52,14 +52,6 @@ static void parseCSVInts(const std::string &s, std::vector<int> &out) {
         out.push_back(std::stoi(token));
 }
 
-// Parse a comma-separated string of floats into a vector.
-static void parseCSVFloats(const std::string &s, std::vector<float> &out) {
-    std::stringstream ss(s);
-    std::string token;
-    while (std::getline(ss, token, ','))
-        out.push_back(std::stof(token));
-}
-
 TilesetIndex loadTilesetIndex(const std::string &path) {
     TilesetIndex index;
 
@@ -102,17 +94,6 @@ TilesetIndex loadTilesetIndex(const std::string &path) {
         auto interactSpeedProp = findProperty(props, "interactSpeed");
         if (interactSpeedProp.is(JSON::JSON_NUMBER))
             data.interactSpeed = interactSpeedProp.as<int>();
-
-        // Padding: CSV string "left,right,top,bottom"
-        auto paddingProp = findProperty(props, "padding");
-        if (paddingProp.is(JSON::JSON_STRING)) {
-            std::vector<float> vals;
-            parseCSVFloats(paddingProp.as<std::string>(), vals);
-            if (vals.size() >= 4) {
-                data.padding = {vals[0], vals[1], vals[2], vals[3]};
-                data.hasPadding = true;
-            }
-        }
 
         index[id] = data;
     }
@@ -182,8 +163,6 @@ void Layer::load(JSON::Value &layer, Asset asset) {
             if (type == WALLS) {
                 auto transform = entity->getComponent<Transform>();
                 entity->addComponent<Collider>(transform, CT_WALL);
-                if (td.hasPadding)
-                    entity->getComponent<Collider>()->setPadding(td.padding);
             }
         } else {
             anim->addAnimationFrame(tileId);

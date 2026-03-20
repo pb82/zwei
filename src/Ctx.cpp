@@ -2,7 +2,6 @@
 
 #include <JSON/printer.h>
 
-#include "snd/Player.h"
 #include "ecs/Stats.h"
 #include "io/Out.h"
 #include "ecs/Acceleration.h"
@@ -33,10 +32,8 @@ bool GameStateMachine::toggleMenu() {
 
     // In-game allow to toggle the menu
     if (this->current.top() == StateMainMenu) {
-        Player::instance().resume();
         this->current.pop();
     } else {
-        Player::instance().pause();
         this->current.push(StateMainMenu);
         return true;
     }
