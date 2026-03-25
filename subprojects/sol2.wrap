@@ -1,0 +1,6 @@
+[wrap-git]
+url = https://github.com/ThePhD/sol2
+revision = v3.3.0
+
+[provide]
+sol2 = sol2_dep

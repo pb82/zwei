@@ -8,3 +8,4 @@ steam-build
 !bin/linux/zwei
 bin/*
 build
+builddir

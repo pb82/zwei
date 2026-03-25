@@ -159,6 +159,10 @@ Menu::Menu(Entity &parent) : Component(parent) {
         this->selectedIndex = 0;
     }));
 
+    allItems.emplace(ItemReloadScene, std::make_shared<MenuItem>("Reload Scene", [](GameKeyEvent &key) {
+        if (key.key != GK_A) return;
+        RT_Context.reloadActiveScene();
+    }));
 
 }
 
@@ -239,6 +243,9 @@ void Menu::buildStartMenu(bool started) {
                 } else {
                     this->items.push_back(allItems.at(ItemLoad));
                 }
+            }
+            if (started) {
+                this->items.push_back(allItems.at(ItemReloadScene));
             }
             this->items.push_back(allItems.at(ItemSettings));
             this->items.push_back(allItems.at(ItemQuit));

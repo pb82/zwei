@@ -1,0 +1,71 @@
+#include "LuaScene.h"
+#include "Api.h"
+#include <iostream>
+
+LuaScene::LuaScene(SceneType type, const std::string& scriptPath)
+    : Scene(type), scriptPath(scriptPath) {}
+
+void LuaScene::bindApi() {
+    auto zwei = lua.create_table("zwei");
+
+    zwei["init_player"] = []() { Api::initPlayer(); };
+    zwei["load_map"] = [](const std::string& file) { Api::loadMap(file.c_str()); };
+    zwei["unload_map"] = []() { Api::unloadMap(); };
+    zwei["set_player_position"] = [](float x, float y) { Api::setPlayerPosition(x, y); };
+    zwei["push_player_position"] = []() { Api::pushPlayerPosition(); };
+    zwei["pop_player_position"] = [](sol::this_state ts) -> sol::variadic_results {
+        float x, y;
+        sol::variadic_results res;
+        if (Api::popPlayerPosition(x, y)) {
+            res.push_back({ ts, sol::in_place, x });
+            res.push_back({ ts, sol::in_place, y });
+        }
+        return res;
+    };
+    zwei["set_player_speed"] = [](float speed) { Api::setPlayerSpeed(speed); };
+    zwei["set_player_stats"] = [](int hp, int str, int dex, int def) {
+        Api::setPlayerStats(hp, str, dex, def);
+    };
+    zwei["set_game_state"] = []() { Api::setGameState(); };
+}
+
+void LuaScene::init() {
+    lua = sol::state();
+    lua.open_libraries(sol::lib::base, sol::lib::string, sol::lib::math, sol::lib::table);
+
+    bindApi();
+
+    auto result = lua.safe_script_file(scriptPath, sol::script_pass_on_error);
+    if (!result.valid()) {
+        sol::error err = result;
+        std::cerr << "[LuaScene] Error loading " << scriptPath << ": " << err.what() << std::endl;
+        return;
+    }
+
+    Api::init();
+
+    sol::protected_function setup = lua["setup"];
+    if (setup.valid()) {
+        auto res = setup();
+        if (!res.valid()) {
+            sol::error err = res;
+            std::cerr << "[LuaScene] Error in setup(): " << err.what() << std::endl;
+        }
+    }
+}
+
+void LuaScene::exit() {
+    sol::protected_function teardown = lua["teardown"];
+    if (teardown.valid()) {
+        auto res = teardown();
+        if (!res.valid()) {
+            sol::error err = res;
+            std::cerr << "[LuaScene] Error in teardown(): " << err.what() << std::endl;
+        }
+    }
+}
+
+void LuaScene::reload() {
+    exit();
+    init();
+}

@@ -2,16 +2,17 @@
 """Create scaffolding for Zwei map and tileset assets.
 
 Usage:
-  create-asset --map     --name <name> --size <WxH> [--tileset <name>]
+  create-asset --map     --name <name> --size <WxH> [--tileset <name>] [--create-scene]
   create-asset --tileset --name <name> --size <WxH>
 
 Examples:
   create-asset --map --name testmap --size 20x20
-  create-asset --map --name testmap --size 20x20 --tileset MyTiles
+  create-asset --map --name testmap --size 20x20 --tileset MyTiles --create-scene
   create-asset --tileset --name testtiles --size 20x20
 
-Maps are created in   assets/NEW/MAPS/<Name>.json
+Maps are created in     assets/NEW/MAPS/<Name>.json
 Tilesets are created in assets/NEW/TILESETS/<Name>.json + <Name>.png
+Scenes are created in   scenes/<name>.lua  (with --create-scene)
 """
 
 import argparse
@@ -25,6 +26,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 MAPS_DIR = os.path.join(PROJECT_ROOT, "assets", "NEW", "MAPS")
 TILESETS_DIR = os.path.join(PROJECT_ROOT, "assets", "NEW", "TILESETS")
+SCENES_DIR = os.path.join(PROJECT_ROOT, "scenes")
 
 TILE_SIZE = 16
 
@@ -170,6 +172,35 @@ def create_tileset(name, w, h):
     print(f"Created image:   {png_path} ({pixel_w}x{pixel_h}px)")
 
 
+def create_scene(name, map_filename):
+    os.makedirs(SCENES_DIR, exist_ok=True)
+    path = os.path.join(SCENES_DIR, name.lower() + ".lua")
+    if os.path.exists(path):
+        print(f"Error: {path} already exists", file=sys.stderr)
+        sys.exit(1)
+
+    content = f"""function setup()
+    zwei.init_player()
+
+    local x, y = zwei.pop_player_position()
+    if not x then x, y = 2, 2 end
+    zwei.set_player_position(x, y)
+
+    zwei.load_map("{map_filename}")
+    zwei.set_game_state()
+end
+
+function teardown()
+    zwei.push_player_position()
+    zwei.unload_map()
+end
+"""
+    with open(path, "w") as f:
+        f.write(content)
+
+    print(f"Created scene:   {path}")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Create Zwei map or tileset assets"
@@ -181,12 +212,19 @@ def main():
     parser.add_argument("--size", required=True, help="Size as WxH (in tiles)")
     parser.add_argument("--tileset-name", default="Tiles",
                         help="Tileset to reference in map layers (default: Tiles)")
+    parser.add_argument("--create-scene", action="store_true",
+                        help="Also create a Lua scene file (only with --map)")
 
     args = parser.parse_args()
     w, h = parse_size(args.size)
 
+    if args.create_scene and not args.map:
+        parser.error("--create-scene can only be used with --map")
+
     if args.map:
         create_map(args.name, w, h, args.tileset_name)
+        if args.create_scene:
+            create_scene(args.name, args.name + ".json")
     elif args.tileset:
         create_tileset(args.name, w, h)
 

@@ -24,7 +24,7 @@ void Forest::init() {
             RT_Memory.setBool(SceneConstants::KEY_Forest_HeartTaken, true);
         });
 
-    Api::addCaterpillar(16, 23, 0, 30);
+    Api::addSpider(16, 23, 0, 30);
 
     Api::setTrigger(2, 31, [](float angle, Entity &) {
         RT_Spawn.push({25, 1});

@@ -72,6 +72,8 @@ public:
 
     std::shared_ptr<Entity> getMenu();
 
+    void reloadActiveScene();
+
     Topology &getTopology() {
         return topology;
     }
@@ -84,6 +86,7 @@ public:
 
     std::stack<Position> spawn;
 
+    std::stack<Position> positionStack;
 
 private:
     std::shared_ptr<Entity> player = nullptr;

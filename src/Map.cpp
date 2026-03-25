@@ -177,7 +177,11 @@ void Layer::load(JSON::Value &layer, Asset asset) {
 }
 
 JSON::Value Layer::getProperty(JSON::Value &layer, const char *prop) {
-    auto properties = layer["properties"].as<JSON::Array>();
+    auto &propsVal = layer["properties"];
+    if (!propsVal.is(JSON::JSON_ARRAY)) {
+        return JSON::null;
+    }
+    auto properties = propsVal.as<JSON::Array>();
     for (auto &property: properties) {
         auto name = property["name"].as<std::string>();
         if (name.compare(prop) == 0) {
@@ -239,7 +243,6 @@ bool Map::load(const char *file) {
         l->load(layer, asset);
         layers.emplace(l->type, l);
     }
-
     return true;
 }
 

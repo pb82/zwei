@@ -123,6 +123,22 @@ namespace Api {
         }
     }
 
+    void pushPlayerPosition() {
+        if (!RT_Player) return;
+        if (!RT_Player->hasComponent<Transform>()) return;
+        auto t = RT_Player->getComponent<Transform>();
+        RT_Context.positionStack.push(t->p);
+    }
+
+    bool popPlayerPosition(float &x, float &y) {
+        if (RT_Context.positionStack.empty()) return false;
+        auto pos = RT_Context.positionStack.top();
+        RT_Context.positionStack.pop();
+        x = pos.x;
+        y = pos.y;
+        return true;
+    }
+
     void setPlayerSpeed(float maxSpeed) {
         if (!RT_Player) return;
         if (!RT_Player->hasComponent<Acceleration>()) {

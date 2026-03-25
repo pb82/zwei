@@ -1,0 +1,8 @@
+[wrap-file]
+directory = lua-5.4.7
+source_url = https://www.lua.org/ftp/lua-5.4.7.tar.gz
+source_filename = lua-5.4.7.tar.gz
+source_hash = 9fbf5b84e42fac3abf6e58107a754ee2ad78e32e79a4452982e4e44dd498d983
+
+[provide]
+dependency_names = lua

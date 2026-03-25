@@ -265,6 +265,10 @@ void loop() {
                 RT_Stop();
                 continue;
             }
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
+                RT_Context.reloadActiveScene();
+                continue;
+            }
             if (RT_Input.map(&event, &gk)) {
                 gk.source = &event;
 

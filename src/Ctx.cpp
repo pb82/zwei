@@ -12,6 +12,7 @@
 #include "scn/Test.h"
 #include "scn/Forest.h"
 #include "scn/Entry.h"
+#include "LuaScene.h"
 
 GameStateMachine::GameStateMachine() {
     this->current.push(StateStart);
@@ -49,7 +50,7 @@ void GameStateMachine::pushState(GameState state) {
 Ctx::Ctx() {
     scenes.emplace(SceneEntry, std::make_shared<Entry>());
     scenes.emplace(SceneTesting, std::make_shared<Test>());
-    scenes.emplace(SceneForest, std::make_shared<Forest>());
+    scenes.emplace(SceneForest, std::make_shared<LuaScene>(SceneForest, "./scenes/forest.lua"));
 }
 
 void Ctx::setPlayer(std::shared_ptr<Entity> player) {
@@ -66,6 +67,13 @@ std::shared_ptr<Entity> Ctx::getPlayer() {
 
 std::shared_ptr<Entity> Ctx::getMenu() {
     return this->menu;
+}
+
+void Ctx::reloadActiveScene() {
+    if (!activeScene) return;
+    auto* luaScene = dynamic_cast<LuaScene*>(activeScene.get());
+    if (!luaScene) return;
+    setActiveScene(activeScene->getSceneType());
 }
 
 void Ctx::autosave() {

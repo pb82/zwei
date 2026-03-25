@@ -4,7 +4,7 @@
 
 A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity Component System (ECS), Tiled editor JSON maps, a custom JSON parser, and a C++ scene scripting API. ~10k lines of source code.
 
-**Build system:** CMake (target: Meson)
+**Build system:** Meson (CMakeLists.txt retained for reference but not maintained)
 **Standard:** C++14 (target: C++17)
 **Platform:** Linux/macOS (target: Windows + Mac cross-platform)
 
@@ -44,10 +44,10 @@ A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity 
 
 ### Scene System
 
-- Base `Scene` with `init()` / `exit()` virtual methods
-- Scenes are C++ classes in `src/scn/` that call `Api::*` functions procedurally
-- Scene state persisted via `SceneConstants` string keys
-- C++ lambdas used as callbacks for triggers/interactions
+- Currently: C++ classes in `src/scn/` with `init()` / `exit()` virtual methods calling `Api::*` procedurally
+- Planned: Lua scripts via Sol2 with `setup()` / `teardown()` lifecycle, hot-reloadable at runtime
+- Scene state persisted via `SceneConstants` string keys in `Mem`
+- C++ lambdas used as callbacks for triggers/interactions (will become Lua functions)
 
 ### Maps
 
@@ -56,7 +56,8 @@ A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity 
 - Layer type derived from Tiled layer **name** (`"floor"`, `"walls"`, etc.) — no custom property needed
 - Asset (texture) derived from map's top-level `tilesets[0].source` filename via `assetFromTilesetSource()`
 - Tileset animations use native Tiled `animation` array (`[{"duration": 500, "tileid": 35}, ...]`)
-- Collision padding and interact animation stored as plain CSV custom properties (`"1,0,1,0"`, `"20,21,22"`)
+- Interact animation stored as plain CSV custom property (`"20,21,22"`)
+- Wall tiles use full-tile colliders (no padding) — visual overhangs belong on the ROOF layer
 - `loadTilesetIndex()` builds an `unordered_map<int, TileData>` once at load time — O(1) per-tile lookup
 - `interactAnimation` on a tile pre-loads state frames onto its `Animation` component; `Api::setDoor()` triggers them via `queueStateFramesForward/Backward()`
 - Collision topology (flat `vector<bool>`) extracted from WALLS layer into `RT_Topology` for A* pathfinding — separate from `Collider`-based collision
@@ -77,16 +78,18 @@ A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity 
 - `St` — persistent settings/save state
 - `Player` — audio (SDL_mixer)
 
-Accessed via macros: `RT_Context`, `RT_Player`, `RT_Menu`, `Rt_Map`, `Rt_Commands`.
+Accessed via macros in `Rt.h`: `RT_Context`, `RT_Camera`, `RT_Player`, `RT_Memory`, `RT_State`, `RT_Spawn`, `RT_Topology`, `Rt_Map`, `Rt_Commands`.
 
 ### Event Bus
 
 `Bus` singleton in `src/Bus.h/cpp`. Decouples cross-cutting reactions from component logic. Subscribe in `main.cpp::initBus()` for game-loop-level concerns; subscribe near the relevant system for domain-specific reactions.
 
 Current events:
-- `EventPlayerDied` — published by `Attack::defend()` when player HP hits 0; subscriber pushes `StateGameOver` and plays music
+- `EventPlayerDied` — published by `Attack::defend()` when player HP hits 0; subscriber publishes `StateChangeRequested(StateGameOver)` and plays music
 - `EventEnemyDied` (`EnemyDiedEvent` with `x,y`) — published by `Stats::update()` when enemy HP hits 0; subscriber spawns explosion entity
 - `EventItemCollected` — published by `Inventory::add()` on successful pickup; subscriber plays sound
+- `EventStateChangeRequested` (`StateChangeRequestedEvent` with `target`) — published by Api/Menu; subscriber calls `RT_State.pushState()`. All state mutations flow through this event.
+- `EventQuit` — published by menu quit confirmation; subscriber sets `running = false`
 
 To add a new event: add the type to `EventType` enum, optionally subclass `Event` for payload, publish at the source, subscribe in `initBus()` or the relevant system.
 
@@ -121,23 +124,22 @@ To add a new event: add the type to `EventType` enum, optionally subclass `Event
 ## Planned Improvements (Priority Order)
 
 1. **Strip audio + ImGui + dead code** — simplification, low risk
-2. **Migrate build to Meson** — enables clean Windows/Mac builds; use WrapDB for SDL2
+2. **Migrate build to Meson** ✓ — `meson.build` at project root; dependencies via pkg-config; `meson setup builddir && meson compile -C builddir`
 3. **Bump to C++17** — gets `std::optional`, `std::variant`, `std::filesystem`, `if constexpr`
 4. **Replace `Asset` enum with string-keyed registry** — adding assets currently requires editing enum + loader + all references; `assetFromTilesetSource()` in Map.cpp is the last place that maps filenames to the enum
-5. **Add Lua scripting via Sol2** — bind existing `Api::*` functions; write scenes in `.lua` loaded at runtime; enables hot-reload
-6. **Simple event bus** ✓ — implemented in `src/Bus.h/cpp`; three events wired up (`EventPlayerDied`, `EventEnemyDied`, `EventItemCollected`)
-7. **Map loader cleanup** ✓ — `Tileset` class replaced by `loadTilesetIndex()`; layer type from name; asset from tilesets array; native Tiled animations; CSV padding/interact properties
+5. **Add Lua scripting via Sol2** — next major milestone; add Lua + Sol2 as Meson wraps; redesign `Api` into a script-friendly surface (`spawn_player`, `add_enemy("type", ...)`, `load_map`); replace C++ scene classes with `.lua` files; add "Reload Scene" menu item for hot-reload
+6. **Simple event bus** ✓ — `src/Bus.h/cpp`; five events wired up; state mutations flow through `EventStateChangeRequested`
+7. **Map loader cleanup** ✓ — `loadTilesetIndex()`; native Tiled animations; wall tiles use full-tile colliders (no tile padding)
+8. **Tile padding removed from walls** ✓ — wall tiles always use full-tile colliders; visual overhangs belong on ROOF layer; padding retained for entity/projectile colliders only
 
 ---
 
 ## Known Issues / Tech Debt
 
-- Heavy singleton + macro abuse makes data flow hard to follow
-- `CMakeLists.txt` lists every `.cpp` file explicitly
+- Heavy singleton + macro abuse makes data flow hard to follow — migrating gradually via event bus
 - No entity query system — iteration is manual O(n) per layer
 - `Asset` enum requires code changes to add new assets
-- Event bus exists but most components still use direct singleton access — migrate gradually
-- Scenes (`Forest::init()`) are imperative C++ — will become unmanageable as content grows
+- Scenes (`Forest::init()`) are imperative C++ — will be replaced by Lua scripts
 - OpenGL context created but SDL renderer used (redundant)
 
 ---
@@ -145,9 +147,13 @@ To add a new event: add the type to `EventType` enum, optionally subclass `Event
 ## Build
 
 ```bash
-mkdir build && cd build
-cmake ..
-make
+meson setup builddir
+meson compile -C builddir
+./builddir/zwei
 ```
 
-Linux requires SDL2, SDL2_image, SDL2_mixer system packages. macOS uses bundled `.dylib` files.
+Linux requires SDL2, SDL2_image, SDL2_mixer system packages (`libsdl2-dev`, `libsdl2-image-dev`, `libsdl2-mixer-dev`).
+
+### Tooling
+
+- `tools/create-asset` — Python script to scaffold new maps and tilesets for the Tiled editor

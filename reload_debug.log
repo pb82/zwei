@@ -1,0 +1,96 @@
+[Ctx] setActiveScene: calling init
+[Ctx] setActiveScene: init done
+[Ctx] setActiveScene: exit done, resetting
+[Ctx] setActiveScene: reset done
+[Ctx] setActiveScene: calling init
+[LuaScene] init() enter
+[LuaScene] creating new lua state
+[LuaScene] init() start
+[LuaScene] loading script: ./scenes/forest.lua
+[LuaScene] calling setup()
+[Api] loadMap: Forest.json
+[Map] parsed JSON, type=4 size=22440
+[Map] tilesets type=3 (JSON_ARRAY=3)
+[Map] tilesets parsed ok, size=1
+[Map] loading layers...
+[Map] layers count=5
+[Map] loading layer 0
+[Map] layer 0 loaded, type=0
+[Map] loading layer 1
+[Map] layer 1 loaded, type=1
+[Map] loading layer 2
+[Map] layer 2 loaded, type=2
+[Map] loading layer 3
+[Map] layer 3 loaded, type=3
+[Map] loading layer 4
+[Map] layer 4 loaded, type=4
+[Map] load complete
+[Api] loadMap: load succeeded
+[LuaScene] init() done
+[Ctx] setActiveScene: init done
+[Ctx] reloadActiveScene: calling setActiveScene
+[LuaScene] exit() start
+[LuaScene] calling teardown()
+[LuaScene] exit() done
+[Ctx] setActiveScene: exit done, resetting
+[Ctx] setActiveScene: reset done
+[Ctx] setActiveScene: calling init
+[LuaScene] init() enter
+[LuaScene] creating new lua state
+[LuaScene] init() start
+[LuaScene] loading script: ./scenes/forest.lua
+[LuaScene] calling setup()
+[Api] loadMap: Forest.json
+[Map] parsed JSON, type=4 size=22440
+[Map] tilesets type=3 (JSON_ARRAY=3)
+[Map] tilesets parsed ok, size=1
+[Map] loading layers...
+[Map] layers count=5
+[Map] loading layer 0
+[Map] layer 0 loaded, type=0
+[Map] loading layer 1
+[Map] layer 1 loaded, type=1
+[Map] loading layer 2
+[Map] layer 2 loaded, type=2
+[Map] loading layer 3
+[Map] layer 3 loaded, type=3
+[Map] loading layer 4
+[Map] layer 4 loaded, type=4
+[Map] load complete
+[Api] loadMap: load succeeded
+[LuaScene] init() done
+[Ctx] setActiveScene: init done
+[Ctx] reloadActiveScene: done
+[Ctx] reloadActiveScene: calling setActiveScene
+[LuaScene] exit() start
+[LuaScene] calling teardown()
+[LuaScene] exit() done
+[Ctx] setActiveScene: exit done, resetting
+[Ctx] setActiveScene: reset done
+[Ctx] setActiveScene: calling init
+[LuaScene] init() enter
+[LuaScene] creating new lua state
+[LuaScene] init() start
+[LuaScene] loading script: ./scenes/forest.lua
+[LuaScene] calling setup()
+[Api] loadMap: Forest.json
+[Map] parsed JSON, type=4 size=22440
+[Map] tilesets type=3 (JSON_ARRAY=3)
+[Map] tilesets parsed ok, size=1
+[Map] loading layers...
+[Map] layers count=5
+[Map] loading layer 0
+[Map] layer 0 loaded, type=0
+[Map] loading layer 1
+[Map] layer 1 loaded, type=1
+[Map] loading layer 2
+[Map] layer 2 loaded, type=2
+[Map] loading layer 3
+[Map] layer 3 loaded, type=3
+[Map] loading layer 4
+[Map] layer 4 loaded, type=4
+[Map] load complete
+[Api] loadMap: load succeeded
+[LuaScene] init() done
+[Ctx] setActiveScene: init done
+[Ctx] reloadActiveScene: done
