@@ -415,8 +415,12 @@ void initSdl() {
             SDL_WINDOWPOS_CENTERED,
             configWindowWidth,
             configWindowHeight,
-            SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI
+            SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI // || SDL_WINDOW_FULLSCREEN_DESKTOP
     );
+
+    // In fullscreen desktop mode, get the actual window size
+    SDL_GetWindowSize(Gfx_Window, &configWindowWidth, &configWindowHeight);
+    configZoomFactor = (float)configWindowWidth / (float)configVirtualWidth;
 
     Gfx_Renderer = SDL_CreateRenderer(Gfx_Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
@@ -424,11 +428,14 @@ void initSdl() {
     // the requested resolution
     int actualW, actualH;
     SDL_GetRendererOutputSize(Gfx_Renderer, &actualW, &actualH);
-    configRenderScaleX = actualW / configWindowWidth;
-    configRenderScaleY = actualH / configWindowHeight;
+    configRenderScaleX = (float)actualW / (float)configWindowWidth;
+    configRenderScaleY = (float)actualH / (float)configWindowHeight;
 
     SDL_RenderSetScale(Gfx_Renderer, configRenderScaleX, configRenderScaleY);
     Gfx_Tile_Size = configTileSize;
+
+    // Update camera zoom to match fullscreen resolution
+    RT_Camera.z = configZoomFactor;
 }
 
 void onSignal(int sig) {
