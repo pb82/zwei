@@ -44,10 +44,10 @@ A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity 
 
 ### Scene System
 
-- Currently: C++ classes in `src/scn/` with `init()` / `exit()` virtual methods calling `Api::*` procedurally
-- Planned: Lua scripts via Sol2 with `setup()` / `teardown()` lifecycle, hot-reloadable at runtime
+- C++ classes in `src/scn/` with `init()` / `exit()` virtual methods calling `Api::*` procedurally
+- Lua scripts via Sol2 (`LuaScene`) with `setup()` / `teardown()` lifecycle, hot-reloadable at runtime (F5)
 - Scene state persisted via `SceneConstants` string keys in `Mem`
-- C++ lambdas used as callbacks for triggers/interactions (will become Lua functions)
+- `Api::init()` automatically calls `initPlayer()` — scenes don't need to call it explicitly
 
 ### Maps
 
@@ -77,8 +77,9 @@ A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity 
 - `Assets` — texture/font cache
 - `St` — persistent settings/save state
 - `Player` — audio (SDL_mixer)
+- `Lighting` — dynamic lighting with darkness overlay
 
-Accessed via macros in `Rt.h`: `RT_Context`, `RT_Camera`, `RT_Player`, `RT_Memory`, `RT_State`, `RT_Spawn`, `RT_Topology`, `Rt_Map`, `Rt_Commands`.
+Accessed via macros in `Rt.h`: `RT_Context`, `RT_Camera`, `RT_Player`, `RT_Memory`, `RT_State`, `RT_Spawn`, `RT_Topology`, `Rt_Map`, `Rt_Commands`, `RT_Lighting`.
 
 ### Event Bus
 
@@ -92,6 +93,19 @@ Current events:
 - `EventQuit` — published by menu quit confirmation; subscriber sets `running = false`
 
 To add a new event: add the type to `EventType` enum, optionally subclass `Event` for payload, publish at the source, subscribe in `initBus()` or the relevant system.
+
+### Lighting System
+
+`Lighting` singleton in `src/Lighting.h/cpp`. Renders a darkness overlay (black rects with per-tile alpha) on top of all world layers, after SKY and before FOREGROUND.
+
+- `addDynamic(Position*, radius, lifetime, tile)` — follows a live Position pointer (player torch)
+- `addStatic(x, y, radius, lifetime)` — fixed position (campfire, lantern); lifetime ≤ 0 means permanent
+- `getAlphaAt(Position&)` — computes brightness at a world position (max across all sources, `radius / d³` formula)
+- All light sources flicker via sine-based radius modulation
+- `clear()` on scene teardown removes non-persistent lights; `clearAll()` removes everything
+- Serialized/deserialized alongside save games
+- Exposed to Lua as `zwei.add_light(x, y, radius, lifetime?)`, `zwei.remove_light(id)`, `zwei.set_enable_lights(bool)`
+- Enabled via `HINT_TURN_LIGHTS_OUT` render hint (set by `Api::setEnableLights(false)`)
 
 ### Command Queue
 
@@ -112,8 +126,7 @@ To add a new event: add the type to `EventType` enum, optionally subclass `Event
 ## What to Strip / Avoid Adding To
 
 - **`src/snd/` (audio)** — not needed yet; removing eliminates SDL2_mixer dependency
-- **`imgui/`** — barely used; remove unless actively debugging with it
-- **`lua/`** — dead code; remove and start fresh if/when scripting is added
+- **`imgui/`** — used for menus; keep
 - **Commented-out narrative/speech bubble code** — clean up
 - **`BloatComponent`** — test artifact, remove
 - **`src/ecs/filters/`** (`Halo`, `Tan`, `Twilight`) — remove until actually used
@@ -123,11 +136,11 @@ To add a new event: add the type to `EventType` enum, optionally subclass `Event
 
 ## Planned Improvements (Priority Order)
 
-1. **Strip audio + ImGui + dead code** — simplification, low risk
+1. **Strip audio + dead code** — simplification, low risk
 2. **Migrate build to Meson** ✓ — `meson.build` at project root; dependencies via pkg-config; `meson setup builddir && meson compile -C builddir`
 3. **Bump to C++17** — gets `std::optional`, `std::variant`, `std::filesystem`, `if constexpr`
 4. **Replace `Asset` enum with string-keyed registry** — adding assets currently requires editing enum + loader + all references; `assetFromTilesetSource()` in Map.cpp is the last place that maps filenames to the enum
-5. **Add Lua scripting via Sol2** — next major milestone; add Lua + Sol2 as Meson wraps; redesign `Api` into a script-friendly surface (`spawn_player`, `add_enemy("type", ...)`, `load_map`); replace C++ scene classes with `.lua` files; add "Reload Scene" menu item for hot-reload
+5. **Add Lua scripting via Sol2** ✓ — `LuaScene` class; Lua + Sol2 as Meson wraps; `Api` exposed as `zwei` table in Lua; scenes in `scenes/*.lua`; F5 hot-reload
 6. **Simple event bus** ✓ — `src/Bus.h/cpp`; five events wired up; state mutations flow through `EventStateChangeRequested`
 7. **Map loader cleanup** ✓ — `loadTilesetIndex()`; native Tiled animations; wall tiles use full-tile colliders (no tile padding)
 8. **Tile padding removed from walls** ✓ — wall tiles always use full-tile colliders; visual overhangs belong on ROOF layer; padding retained for entity/projectile colliders only
@@ -139,7 +152,7 @@ To add a new event: add the type to `EventType` enum, optionally subclass `Event
 - Heavy singleton + macro abuse makes data flow hard to follow — migrating gradually via event bus
 - No entity query system — iteration is manual O(n) per layer
 - `Asset` enum requires code changes to add new assets
-- Scenes (`Forest::init()`) are imperative C++ — will be replaced by Lua scripts
+- Scenes (`Forest::init()`) are imperative C++ — being replaced by Lua scripts (`scenes/*.lua`)
 - OpenGL context created but SDL renderer used (redundant)
 
 ---
