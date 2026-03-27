@@ -47,6 +47,7 @@
 
 #include "src/Api.h"
 #include "src/Bus.h"
+#include "src/Lighting.h"
 #include "src/ecs/SelfDestruct.h"
 #include "src/ecs/arms/Stick.h"
 #include "src/ecs/Controller.h"
@@ -209,6 +210,7 @@ void renderGame(tp frameStart) {
     Manager::instance().render(OBJECTS);
     Manager::instance().render(ROOF);
     Manager::instance().render(SKY);
+    Lighting::instance().renderDarkness();
     Manager::instance().render(FOREGROUND);
 
     if (!Rt_Commands.empty()) {
@@ -236,6 +238,7 @@ void renderGame(tp frameStart) {
         Rt_Commands.front()->update(dt);
     } else {
         Manager::instance().update(dt);
+        Lighting::instance().update(dt);
         Col::collide(dt);
     }
 }

@@ -10,7 +10,6 @@ Test::Test() : Scene(SceneTesting) {}
 
 void Test::init() {
     Api::init();
-    Api::initPlayer();
     Api::setPlayerPosition(14, 30);
     Api::loadMap("Beach.json");
     Api::setGameState();

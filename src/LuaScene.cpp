@@ -1,5 +1,6 @@
 #include "LuaScene.h"
 #include "Api.h"
+#include "Lighting.h"
 #include <iostream>
 
 LuaScene::LuaScene(SceneType type, const std::string& scriptPath)
@@ -27,6 +28,11 @@ void LuaScene::bindApi() {
         Api::setPlayerStats(hp, str, dex, def);
     };
     zwei["set_game_state"] = []() { Api::setGameState(); };
+    zwei["set_enable_lights"] = [](bool enabled) { Api::setEnableLights(enabled); };
+    zwei["add_light"] = [](float x, float y, float radius, sol::optional<float> lifetime) -> int {
+        return Api::addLight(x, y, radius, lifetime.value_or(0));
+    };
+    zwei["remove_light"] = [](int id) { Lighting::instance().remove(id); };
 }
 
 void LuaScene::init() {

@@ -13,6 +13,7 @@
 #include "scn/Forest.h"
 #include "scn/Entry.h"
 #include "LuaScene.h"
+#include "Lighting.h"
 
 GameStateMachine::GameStateMachine() {
     this->current.push(StateStart);
@@ -85,6 +86,7 @@ void Ctx::autosave() {
     to["scene"] = activeScene->getSceneType();
     stats->inventory.serialize(to);
     stats->character.serialize(to);
+    Lighting::instance().serialize(to);
     this->memory.serialize(to);
 
     to["x"] = t->p.x;
@@ -132,6 +134,9 @@ void Ctx::load(float *x, float *y) {
         auto stats = this->getPlayer()->getComponent<Stats>();
         stats->character.deserialize(v);
         stats->inventory.deserialize(v);
+
+        auto t = this->getPlayer()->getComponent<Transform>();
+        Lighting::instance().deserialize(v, &t->p);
 
         *x = v["x"].as<float>();
         *y = v["y"].as<float>();

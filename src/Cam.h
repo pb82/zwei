@@ -91,6 +91,22 @@ public:
         target.h = ((1 + y) * f - dy) - target.y - (p.bottom * f / 2);
     }
 
+    // Compute the range of tile coordinates currently visible on screen.
+    // Adds 1 tile of margin on each side to catch partial tiles at edges.
+    void getVisibleTileRange(int &tx0, int &ty0, int &tx1, int &ty1) const {
+        float f = configTileSize * z;
+        float dx = std::max((tracked->x * f) + (f / 2) - (configWindowWidth / 2), 0.0f);
+        float dy = std::max((tracked->y * f) + (f / 2) - (configWindowHeight / 2), 0.0f);
+        dx = std::min(dx, (mapTilesX * configTileSize * z) - configWindowWidth);
+        dy = std::min(dy, (mapTilesY * configTileSize * z) - configWindowHeight);
+        if (dx < 0) dx /= 2;
+        if (dy < 0) dy /= 2;
+        tx0 = static_cast<int>(dx / f) - 1;
+        ty0 = static_cast<int>(dy / f) - 1;
+        tx1 = static_cast<int>((configWindowWidth + dx) / f) + 1;
+        ty1 = static_cast<int>((configWindowHeight + dy) / f) + 1;
+    }
+
     // set camera position
     void track(Position *p) {
         tracked = p;

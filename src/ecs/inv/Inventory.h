@@ -6,7 +6,6 @@
 #include "../items/Item.h"
 #include "../arms/Weapon.h"
 #include "../Transform.h"
-#include "Modifier.h"
 
 #define MAX_SLOTS 10
 #define MAX_PER_SLOT 9
@@ -31,8 +30,6 @@ public:
 
     void render();
 
-    void update(float dt);
-
     void use();
 
     bool hasWeapon();
@@ -47,25 +44,9 @@ public:
 
     void resetAll();
 
-    // Why is this here?
-    // To allow adding 'torches' to the game that can expire.
-    // If the player uses a torch, which is inside the inventory, then
-    // the value returned here will be different than otherwise.
-    uint8_t getAlphaForTileAt(Position &p);
-
     std::shared_ptr<Weapon> weapon = nullptr;
 
-    template<typename T>
-    void addModifier(float lifetime, int tile) {
-        auto m = std::make_shared<T>(lifetime, tile);
-        modifiers.push_back(m);
-    }
-
-    bool hasModifier(ModifierType type);
-
 private:
-
-    float getCircleOfLight();
 
     bool addStackableItem(std::shared_ptr<Item> item);
 
@@ -74,8 +55,6 @@ private:
     void addItems(ItemType type, int number);
 
     std::vector<InventoryItem> slots;
-
-    std::vector<std::shared_ptr<Modifier>> modifiers;
 
     Entity &parent;
 

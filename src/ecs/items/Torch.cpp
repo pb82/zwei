@@ -1,8 +1,8 @@
 #include "Torch.h"
 
 #include "../Manager.h"
-#include "../Stats.h"
-#include "../inv/TorchModifier.h"
+#include "../Transform.h"
+#include "../../Lighting.h"
 
 Torch::Torch() : Item(TORCH) {}
 
@@ -20,11 +20,9 @@ int Torch::tile() {
 }
 
 bool Torch::use(std::shared_ptr<Entity> on) {
-    auto stats = on->getComponent<Stats>();
-    if (!stats->inventory.hasModifier(CIRCLE_OF_LIGHT)) {
-        Manager::instance().addTimer(tile(), lifetime);
-        stats->inventory.addModifier<TorchModifier>(this->lifetime, tile());
-        return true;
-    }
-    return false;
+    if (RT_Lighting.hasActiveTorch()) return false;
+    auto t = on->getComponent<Transform>();
+    Manager::instance().addTimer(tile(), lifetime);
+    RT_Lighting.addDynamic(&t->p, 512.0f, lifetime, tile());
+    return true;
 }

@@ -2,6 +2,7 @@
 
 #include "Bus.h"
 #include "Rt.h"
+#include "Lighting.h"
 #include "ecs/Manager.h"
 #include "ecs/Menu.h"
 #include "ecs/Sprite.h"
@@ -39,6 +40,7 @@ namespace Api {
             RT_Context.setMenu(menu);
             menu->addComponent<Menu>();
         }
+        initPlayer();
     }
 
     void initPlayer() {
@@ -303,6 +305,10 @@ namespace Api {
         } else {
             Manager::instance().setRenderHint(HINT_TURN_LIGHTS_OUT);
         }
+    }
+
+    int addLight(float x, float y, float radius, float lifetime) {
+        return Lighting::instance().addStatic(x, y, radius, lifetime);
     }
 
     void addItem(float x, float y, ItemType type, std::function<void()> cb) {

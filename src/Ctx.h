@@ -11,6 +11,7 @@
 #include "ecs/Entity.h"
 #include "alg/Path.h"
 #include "Mem.h"
+#include "Lighting.h"
 
 enum GameState {
     StateGame,
@@ -62,6 +63,7 @@ public:
         if (activeScene) {
             activeScene->exit();
             activeScene.reset();
+            Lighting::instance().clear();
         }
 
         activeScene = scene;

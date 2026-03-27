@@ -11,7 +11,6 @@
 #include "../Collider.h"
 #include "../../Bus.h"
 #include "../items/HealthPotion.h"
-#include "TorchModifier.h"
 
 Inventory::Inventory(Entity &parent) : parent(parent) {
     this->slots.resize(MAX_SLOTS);
@@ -29,16 +28,6 @@ void Inventory::serialize(JSON::Value &to) {
         items.push_back(o);
     }
     to["inventory"]["items"] = items;
-    JSON::Array mods;
-    for (int i = 0; i < this->modifiers.size(); i++) {
-        JSON::Object m;
-        m["type"] = this->modifiers.at(i)->type;
-        m["lifetime"] = this->modifiers.at(i)->lifetime;
-        m["max"] = this->modifiers.at(i)->max;
-        m["tile"] = this->modifiers.at(i)->tile;
-        mods.push_back(m);
-    }
-    to["inventory"]["modifiers"] = mods;
 }
 
 void Inventory::deserialize(JSON::Value &from) {
@@ -58,42 +47,11 @@ void Inventory::deserialize(JSON::Value &from) {
             }
         }
     }
-    auto loadedModifiers = from["inventory"]["modifiers"].as<JSON::Array>();
-    for (auto &mod: loadedModifiers) {
-        ModifierType t = static_cast<ModifierType>(mod["type"].as<int>());
-        switch (t) {
-            case CIRCLE_OF_LIGHT:
-                float lifetime = mod["lifetime"].as<float>();
-                float max = mod["max"].as<float>();
-                int tile = mod["tile"].as<int>();
-                addModifier<TorchModifier>(lifetime, tile);
-                Manager::instance().addTimer(tile, (max - lifetime), max);
-                break;
-        }
-    }
 }
 
 void Inventory::resetAll() {
     this->slots.clear();
-    this->modifiers.clear();
     this->slots.resize(MAX_SLOTS);
-}
-
-bool Inventory::hasModifier(ModifierType type) {
-    for (auto &m: modifiers) {
-        if (m->type == type) return true;
-    }
-    return false;
-}
-
-void Inventory::update(float dt) {
-    modifiers.erase(std::remove_if(modifiers.begin(), modifiers.end(), [](std::shared_ptr<Modifier> &m) {
-        return !m->running();
-    }), modifiers.end());
-
-    for (auto &m: modifiers) {
-        m->update(dt);
-    }
 }
 
 void Inventory::next() {
@@ -234,28 +192,8 @@ void Inventory::use() {
     }
 }
 
-float Inventory::getCircleOfLight() {
-    float base = 512.0f;
-    if (!modifiers.empty()) {
-        for (auto &m: modifiers) {
-            if (m->type == CIRCLE_OF_LIGHT) {
-                base = m->modify(base);
-            }
-        }
-    }
-    return base;
-}
-
-uint8_t Inventory::getAlphaForTileAt(Position &p) {
-    auto t = parent.getComponent<Transform>();
-    float d = std::abs(t->p.distance(p));
-    float a = getCircleOfLight() / (d * d * d);
-    a = std::min<float>(a, 255);
-    return static_cast<uint8_t>(a);
-}
-
 void Inventory::render() {
-    int increment = configTileSize * 2;
+    int increment = configTileSize * 6;
     int inventoryWidth = MAX_SLOTS * increment;
     int x = (configWindowWidth / 2) - (inventoryWidth / 2);
     int y = configWindowHeight - increment;
@@ -286,9 +224,9 @@ void Inventory::render() {
         if (slot.number > 1) {
             Gfx::pickText(source, Text::fromInt(slot.number), font->w);
 
-            target.x += configTileSize;
-            target.w = configTileSize;
-            target.h = configTileSize;
+            target.x += increment / 2;
+            target.w = increment / 2;
+            target.h = increment / 2;
 
             SDL_SetTextureColorMod(font->mem, 128, 255, 128);
             Draw::instance().draw(font->mem, source, target);
@@ -298,9 +236,9 @@ void Inventory::render() {
         if (slot.item && slot.item->equipped) {
             Gfx::pickText(source, Text::fromChar('E'), font->w);
 
-            target.x += configTileSize;
-            target.w = configTileSize;
-            target.h = configTileSize;
+            target.x += increment / 2;
+            target.w = increment / 2;
+            target.h = increment / 2;
 
             SDL_SetTextureColorMod(font->mem, 128, 255, 128);
             Draw::instance().draw(font->mem, source, target);

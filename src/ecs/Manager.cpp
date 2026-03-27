@@ -157,9 +157,11 @@ void Manager::render(LayerType layer) {
         clearRenderHint(HINT_PARALLAX_LAYER);
     }
 
+    uint8_t hints = renderHints;
+
     if (layer != OBJECTS) {
         for (auto &entity: entities.at(layer)) {
-            entity->render(renderHints);
+            entity->render(hints);
         }
     } else {
         // Perspective correction: sort entities to draw them from south to north
@@ -174,7 +176,7 @@ void Manager::render(LayerType layer) {
                   });
 
         for (auto &entity: entities.at(OBJECTS)) {
-            entity->render(renderHints);
+            entity->render(hints);
         }
     }
 }

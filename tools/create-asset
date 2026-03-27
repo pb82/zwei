@@ -180,8 +180,6 @@ def create_scene(name, map_filename):
         sys.exit(1)
 
     content = f"""function setup()
-    zwei.init_player()
-
     local x, y = zwei.pop_player_position()
     if not x then x, y = 2, 2 end
     zwei.set_player_position(x, y)

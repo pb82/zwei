@@ -6,8 +6,6 @@
 #include "Animation.h"
 #include "Collider.h"
 #include "Acceleration.h"
-#include "Stats.h"
-
 #include "../Gfx.h"
 #include "../Draw.h"
 
@@ -45,14 +43,5 @@ void Tile::render(uint8_t hints) {
         return;
     }
 
-    if ((hints & HINT_TURN_LIGHTS_OUT) == HINT_TURN_LIGHTS_OUT) {
-        auto t = this->parent.getComponent<Transform>();
-        uint8_t alpha = RT_Player->getComponent<Stats>()->inventory.getAlphaForTileAt(t->p);
-        Draw::instance().pushAlpha(texture->mem);
-        SDL_SetTextureAlphaMod(texture->mem, alpha);
-        Draw::instance().draw(texture->mem, source, target);
-        Draw::instance().popAlpha();
-    } else {
-        Draw::instance().draw(texture->mem, source, target);
-    }
+    Draw::instance().draw(texture->mem, source, target);
 }

@@ -6,7 +6,6 @@
 
 #include "../src/Gfx.h"
 #include "../src/Draw.h"
-#include "Stats.h"
 
 Sprite::Sprite(Entity &parent, Asset id)
         : Component(parent),
@@ -49,18 +48,8 @@ void Sprite::render(uint8_t hints) {
     if (!filters.empty()) filters.front()->render(texture->mem, &transform->p);
 
     // Draw
-    if ((hints & HINT_TURN_LIGHTS_OUT) == HINT_TURN_LIGHTS_OUT) {
-        auto t = this->parent.getComponent<Transform>();
-        uint8_t alpha = RT_Player->getComponent<Stats>()->inventory.getAlphaForTileAt(t->p);
-        Draw::instance().pushAlpha(texture->mem);
-        SDL_SetTextureAlphaMod(texture->mem, alpha);
-        Draw::instance().draw(texture->mem, source, target, rotate);
-        SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
-        Draw::instance().popAlpha();
-    } else {
-        Draw::instance().draw(texture->mem, source, target, rotate);
-        SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
-    }
+    Draw::instance().draw(texture->mem, source, target, rotate);
+    SDL_SetTextureColorMod(texture->mem, 255, 255, 255);
 }
 
 void Sprite::update(float dt) {

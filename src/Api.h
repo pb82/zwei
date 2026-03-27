@@ -75,6 +75,10 @@ namespace Api {
 
     void setEnableLights(bool enabled);
 
+    // Add a static light source at the given tile coordinates.
+    // lifetime <= 0 means permanent.
+    int addLight(float x, float y, float radius, float lifetime = 0);
+
 }
 
 #endif //ZWEI_API_H
