@@ -9,3 +9,5 @@ steam-build
 bin/*
 build
 builddir
+subprojects/sol2
+subprojects/lua-*
