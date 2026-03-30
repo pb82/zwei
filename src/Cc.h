@@ -5,6 +5,7 @@
 #include <memory>
 #include <typeindex>
 #include <typeinfo>
+#include <string>
 
 #include "in/Input.h"
 #include "Scene.h"
@@ -73,13 +74,14 @@ private:
 
 class SpeechBubble : public Command {
 public:
-    SpeechBubble(std::vector<int> &sequence, bool last = true);
-
     SpeechBubble(const char *text, bool last = true);
 
-    ~SpeechBubble() {}
+    ~SpeechBubble();
 
     static void split(const char *text, std::vector<std::shared_ptr<SpeechBubble>> &target);
+
+    static int getWrapWidth();
+    static int getLineHeight();
 
     void render() override;
 
@@ -95,16 +97,21 @@ private:
 
     float time = 0.0f;
 
-    float lastIndex = 0.0f;
+    float charTimer = 0.0f;
 
     bool tick = false;
 
     bool read = false;
 
-    int index = 0;
+    int visibleChars = 0;
 
-    std::vector<int> sequence;
+    std::string text;
 
+    SDL_Texture *textTexture = nullptr;
+    int textW = 0;
+    int textH = 0;
+
+    void buildTexture();
 };
 
 #endif

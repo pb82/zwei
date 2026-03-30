@@ -193,7 +193,7 @@ void Inventory::use() {
 }
 
 void Inventory::render() {
-    int increment = configTileSize * 6;
+    int increment = configTileSize * 4;
     int inventoryWidth = MAX_SLOTS * increment;
     int x = (configWindowWidth / 2) - (inventoryWidth / 2);
     int y = configWindowHeight - increment;

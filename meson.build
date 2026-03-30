@@ -7,13 +7,13 @@ project('zwei', 'cpp',
 sdl2_dep = dependency('sdl2')
 sdl2_image_dep = dependency('SDL2_image')
 sdl2_mixer_dep = dependency('SDL2_mixer')
+sdl2_ttf_dep = dependency('SDL2_ttf')
 lua_dep = dependency('lua', fallback: ['lua', 'lua_dep'])
 sol2_dep = dependency('sol2', fallback: ['sol2', 'sol2_dep'])
 
 # Include directories for internal libraries
 inc_dirs = include_directories(
   'json',
-  'imgui',
   'base64',
   'assets',
 )
@@ -24,16 +24,8 @@ json_sources = files(
   'json/printer.cpp',
 )
 
-imgui_sources = files(
-  'imgui/imgui.cpp',
-  'imgui/imgui_sdl.cpp',
-  'imgui/imgui_widgets.cpp',
-  'imgui/imgui_draw.cpp',
-)
-
 asset_sources = files(
   'assets/Assets.cpp',
-  'assets/EMBEDDED/Font.cpp',
   'assets/EMBEDDED/Tiles.cpp',
 )
 
@@ -49,6 +41,7 @@ src_sources = files(
   'src/Debug.cpp',
   'src/Api.cpp',
   'src/Bus.cpp',
+  'src/Font.cpp',
   'src/Lighting.cpp',
   'src/Cc.cpp',
   'src/Mem.cpp',
@@ -116,8 +109,7 @@ src_sources = files(
 executable('zwei',
   src_sources,
   json_sources,
-  imgui_sources,
   asset_sources,
   include_directories: inc_dirs,
-  dependencies: [sdl2_dep, sdl2_image_dep, sdl2_mixer_dep, lua_dep, sol2_dep],
+  dependencies: [sdl2_dep, sdl2_image_dep, sdl2_mixer_dep, sdl2_ttf_dep, lua_dep, sol2_dep],
 )

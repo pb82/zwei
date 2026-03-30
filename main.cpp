@@ -5,12 +5,9 @@
 
 #include <SDL_image.h>
 #include <SDL_mixer.h>
-
-#include <IMGUI/imgui.h>
-#include <IMGUI/imgui_sdl.h>
+#include <SDL_ttf.h>
 
 #include <ASSETS/Assets.h>
-#include <EMBEDDED/Font.h>
 
 #include "./config.h"
 #include "src/Gfx.h"
@@ -69,14 +66,9 @@ void renderMenu(tp frameStart) {
     Manager::instance().render(ROOF);
     Manager::instance().render(SKY);
 
-    ImGui::NewFrame();
-    {
-        Manager::instance().render(UI);
-    }
-    ImGui::Render();
+    Manager::instance().render(UI);
 
     // Flush
-    ImGuiSDL::Render(ImGui::GetDrawData());
     SDL_RenderPresent(Gfx_Renderer);
     // glFinish();
 
@@ -358,32 +350,9 @@ void initSound() {
     St::instance().initAll();
 }
 
-void initImgui() {
-    assert(Gfx_Window);
-    assert(Gfx_Renderer);
-    IMGUI_CHECKVERSION();
-
-    ImGui::CreateContext();
-    ImGui::StyleColorsLight();
-    ImGui::GetIO().IniFilename = nullptr;
-    ImGui::GetIO().Fonts->AddFontFromMemoryTTF(Assets::instance().getFont(FONT), 16, 16);
-
-    ImGuiStyle &style = ImGui::GetStyle();
-    style.Colors[ImGuiCol_WindowBg] = ImVec4{0.345, 0.345, 0.98, 0.4};
-    style.Colors[ImGuiCol_Text] = ImVec4{0.949, 0.949, 0.949, 1};
-    style.Colors[ImGuiCol_Button] = ImVec4{0.1, 0.1, 0.1, 0};
-    style.Colors[ImGuiCol_ButtonActive] = ImVec4{0.1, 0.1, 0.1, 0};
-    style.Colors[ImGuiCol_ButtonHovered] = ImVec4{0.1, 0.1, 0.1, 0};
-    style.Colors[ImGuiCol_Separator] = ImVec4{0.1, 0.1, 0.1, 0};
-
-    ImGuiStyle &s = ImGui::GetStyle();
-    ImGuiSDL::Initialize(Gfx_Renderer, configWindowWidth, configWindowHeight);
-}
-
 void initAssets() {
     assert(Gfx_Renderer);
 
-    Assets::instance().addFont(FONT, assets_Font);
     // Assets::instance().addTexture(TILES, assets_Tiles);
     Assets::instance().addTexture(TILES_BEACH, "assets/NEW/TILESETS/Tiles.png");
     Assets::instance().addTexture(GIRL, "assets/NEW/TILESETS/Girl.png");
@@ -406,6 +375,10 @@ void initSdl() {
     }
 
     if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        exit(1);
+    }
+
+    if (TTF_Init() != 0) {
         exit(1);
     }
 
@@ -439,7 +412,6 @@ void initSdl() {
 }
 
 void onSignal(int sig) {
-    ImGuiSDL::Deinitialize();
     exit(sig);
 }
 
@@ -454,10 +426,7 @@ int main(int, char **) {
 
     initSdl();
     initAssets();
-    initImgui();
     initSound();
     initBus();
     loop();
-
-    ImGuiSDL::Deinitialize();
 }

@@ -1,50 +1,11 @@
-#include <IMGUI/imgui.h>
 #include "Menu.h"
 
 #include "../Rt.h"
 #include "../Bus.h"
-
-#define WINDOW_MARGIN 0
-
-static ImVec4 white() {
-    return ImVec4{1, 1, 1, 1};
-}
-
-static ImVec4 black() {
-    return ImVec4{0, 0, 0, 1};
-}
-
-static ImVec4 grey() {
-    return ImVec4{0.3, 0.3, 0.3, 1};
-}
-
-static ImVec4 lightgrey() {
-    return ImVec4{0.5, 0.5, 0.5, 1};
-}
-
-static void getWinSize(ImVec2 &s) {
-    s.x = configWindowWidth - WINDOW_MARGIN;
-    s.y = configWindowHeight - WINDOW_MARGIN;
-}
-
-static void getWinPos(ImVec2 &p) {
-    p.x = WINDOW_MARGIN / 2;
-    p.y = WINDOW_MARGIN / 2;
-}
-
-static int getWinFlags() {
-    return ImGuiWindowFlags_NoDecoration
-           | ImGuiWindowFlags_NoResize
-           | ImGuiWindowFlags_NoMove
-           | ImGuiWindowFlags_NoCollapse;
-}
-
-static ImVec2 getItemSize() {
-    ImVec2 size;
-    size.x = configWindowWidth / 2;
-    size.y = 32;
-    return size;
-}
+#include "../Draw.h"
+#include "../Font.h"
+#include "../Gfx.h"
+#include "../../config.h"
 
 Menu::Menu(Entity &parent) : Component(parent) {
     this->level.push(Main);
@@ -71,18 +32,21 @@ Menu::Menu(Entity &parent) : Component(parent) {
         if (key.key != GK_A) return;
         this->level.push(Settings);
         this->selectedIndex = 0;
+        this->scrollOffset = 0;
     }));
 
     allItems.emplace(ItemBack, std::make_shared<MenuItem>("Back", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.pop();
         this->selectedIndex = 0;
+        this->scrollOffset = 0;
     }));
 
     allItems.emplace(ItemAudioSettings, std::make_shared<MenuItem>("Audio Settings", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.push(AudioSettings);
         this->selectedIndex = 0;
+        this->scrollOffset = 0;
     }));
 
     allItems.emplace(ItemMusicVolume,
@@ -125,18 +89,21 @@ Menu::Menu(Entity &parent) : Component(parent) {
         if (key.key != GK_A) return;
         this->level.push(VideoSettings);
         this->selectedIndex = 0;
+        this->scrollOffset = 0;
     }));
 
     allItems.emplace(ItemKeyboardSettings, std::make_shared<MenuItem>("Keyboard", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.push(Keyboard);
         this->selectedIndex = 0;
+        this->scrollOffset = 0;
     }));
 
     allItems.emplace(ItemGamepadSettings, std::make_shared<MenuItem>("Gamepad", [this](GameKeyEvent &key) {
         if (key.key != GK_A) return;
         this->level.push(Gamepad);
         this->selectedIndex = 0;
+        this->scrollOffset = 0;
     }));
 
     allItems.emplace(ItemQuit, std::make_shared<MenuItem>("Quit", [this](GameKeyEvent &key) {
@@ -157,6 +124,7 @@ Menu::Menu(Entity &parent) : Component(parent) {
         if (key.key != GK_A) return;
         this->level.pop();
         this->selectedIndex = 0;
+        this->scrollOffset = 0;
     }));
 
     allItems.emplace(ItemReloadScene, std::make_shared<MenuItem>("Reload Scene", [](GameKeyEvent &key) {
@@ -174,22 +142,78 @@ void Menu::render(uint8_t) {
 
     buildMenu();
 
-    ImVec2 size;
-    getWinSize(size);
+    // Semi-transparent blue overlay
+    SDL_Rect overlay;
+    overlay.x = 0;
+    overlay.y = 0;
+    overlay.w = configWindowWidth;
+    overlay.h = configWindowHeight;
+    Color bgColor{88, 88, 250, 102};
+    Draw::instance().box(bgColor, overlay);
 
-    ImVec2 position;
-    getWinPos(position);
+    // Layout
+    int lineH = Font::instance().lineHeight();
+    int padding = static_cast<int>(4 * configZoomFactor);
+    int itemH = lineH + padding;
+    int itemW = configWindowWidth * 3 / 4;
+    int startX = (configWindowWidth - itemW) / 2;
 
-    ImGui::SetNextWindowPos(position);
-    ImGui::SetNextWindowSize(size);
-    ImGui::Begin("Menu", nullptr, getWinFlags());
+    // How many items fit on screen (with margin)
+    int margin = static_cast<int>(16 * configZoomFactor);
+    int visibleArea = configWindowHeight - (margin * 2);
+    int maxVisible = visibleArea / itemH;
 
-    for (int i = 0; i < items.size(); i++) {
-        auto &item = items.at(i);
-        items.at(i)->render(i == selectedIndex);
+    // Clamp scroll so selected item is always visible
+    if (selectedIndex < scrollOffset) {
+        scrollOffset = selectedIndex;
+    }
+    if (selectedIndex >= scrollOffset + maxVisible) {
+        scrollOffset = selectedIndex - maxVisible + 1;
     }
 
-    ImGui::End();
+    int totalItems = (int)items.size();
+    int visibleCount = std::min(totalItems - scrollOffset, maxVisible);
+
+    // Center the visible items vertically
+    int totalH = visibleCount * itemH;
+    int startY = (configWindowHeight - totalH) / 2;
+
+    for (int i = 0; i < visibleCount; i++) {
+        int idx = i + scrollOffset;
+        int y = startY + i * itemH;
+        items.at(idx)->render(idx == selectedIndex, startX, y, itemW, itemH);
+    }
+
+    // Scrollbar (only when list is scrollable)
+    if (totalItems > maxVisible) {
+        int barW = static_cast<int>(4 * configZoomFactor);
+        int trackX = startX + itemW + barW;
+        int trackY = startY;
+        int trackH = totalH;
+
+        // Track
+        Color trackColor{255, 255, 255, 40};
+        SDL_Rect track;
+        track.x = trackX;
+        track.y = trackY;
+        track.w = barW;
+        track.h = trackH;
+        Draw::instance().box(trackColor, track);
+
+        // Thumb
+        int thumbH = std::max(trackH * maxVisible / totalItems, barW * 2);
+        int scrollRange = trackH - thumbH;
+        int maxScroll = totalItems - maxVisible;
+        int thumbY = trackY + (maxScroll > 0 ? scrollOffset * scrollRange / maxScroll : 0);
+
+        Color thumbColor{255, 255, 255, 180};
+        SDL_Rect thumb;
+        thumb.x = trackX;
+        thumb.y = thumbY;
+        thumb.w = barW;
+        thumb.h = thumbH;
+        Draw::instance().box(thumbColor, thumb);
+    }
 }
 
 void Menu::up() {
@@ -202,7 +226,7 @@ void Menu::up() {
 }
 
 void Menu::down() {
-    for (int i = selectedIndex + 1; i < items.size(); ++i) {
+    for (int i = selectedIndex + 1; i < (int)items.size(); ++i) {
         if (items.at(i)->canSelect) {
             selectedIndex = i;
             break;
@@ -216,6 +240,7 @@ void Menu::key(GameKeyEvent &key) {
     if (key.key == GK_B && menuState != AwaitBinding) {
         if (this->level.size() > 1) this->level.pop();
         this->selectedIndex = 0;
+        this->scrollOffset = 0;
     } else if (key.key == GK_UP && menuState != AwaitBinding) {
         up();
     } else if (key.key == GK_DOWN && menuState != AwaitBinding) {
@@ -229,6 +254,7 @@ void Menu::resetMenu() {
     while (!this->level.empty()) this->level.pop();
     this->level.push(Main);
     this->selectedIndex = 0;
+    this->scrollOffset = 0;
 }
 
 void Menu::buildStartMenu(bool started) {
@@ -431,35 +457,48 @@ void MenuItem::call(GameKeyEvent &key) {
     if (this->cb) cb(key);
 }
 
-void MenuItem::render(bool selected) {
-    auto s = getItemSize();
-    ImGui::SetCursorPosX((configWindowWidth / 2) - (s.x / 2));
+static void renderText(const char *text, SDL_Color color, int x, int y) {
+    TTF_Font *f = Font::instance().get();
+    SDL_Surface *surface = TTF_RenderUTF8_Blended(f, text, color);
+    if (!surface) return;
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(Gfx_Renderer, surface);
+    SDL_Rect target;
+    target.x = x;
+    target.y = y;
+    target.w = surface->w;
+    target.h = surface->h;
+    SDL_RenderCopy(Gfx_Renderer, texture, nullptr, &target);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+}
+
+void MenuItem::render(bool selected, int x, int y, int w, int h) {
+    SDL_Color textColor = {255, 255, 255, 255};
 
     if (selected) {
-        ImGui::PushStyleColor(ImGuiCol_Button, white());
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, white());
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, white());
-        ImGui::PushStyleColor(ImGuiCol_Text, black());
+        Color white{255, 255, 255, 255};
+        SDL_Rect bg;
+        bg.x = x;
+        bg.y = y;
+        bg.w = w;
+        bg.h = h;
+        Draw::instance().box(white, bg);
+        textColor = {0, 0, 0, 255};
     }
 
-    if (this->value) {
-        // Two rows: key and value from pointer
-        s.x = s.x / 2;
-        ImGui::Button(this->key.c_str(), s);
-        ImGui::SameLine();
-        ImGui::Button(this->value->c_str(), s);
-    } else if (this->value2.size() > 0) {
-        // Two rows: key and value from prepopulated string
-        s.x = s.x / 2;
-        ImGui::Button(this->key.c_str(), s);
-        ImGui::SameLine();
-        ImGui::Button(this->value2.c_str(), s);
+    int textY = y + (h - Font::instance().lineHeight()) / 2;
+
+    if (this->value || this->value2.size() > 0) {
+        // Two columns: key on left, value on right
+        renderText(this->key.c_str(), textColor, x + 4, textY);
+        const char *val = this->value ? this->value->c_str() : this->value2.c_str();
+        renderText(val, textColor, x + w / 2, textY);
     } else {
-        // One row only
-        ImGui::Button(this->key.c_str(), s);
-    }
-
-    if (selected) {
-        ImGui::PopStyleColor(4);
+        // Single column: centered text
+        int textW = 0;
+        TTF_SizeUTF8(Font::instance().get(), this->key.c_str(), &textW, nullptr);
+        int textX = x + (w - textW) / 2;
+        renderText(this->key.c_str(), textColor, textX, textY);
     }
 }

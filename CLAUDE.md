@@ -5,7 +5,7 @@
 A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity Component System (ECS), Tiled editor JSON maps, a custom JSON parser, and a C++ scene scripting API. ~10k lines of source code.
 
 **Build system:** Meson (CMakeLists.txt retained for reference but not maintained)
-**Standard:** C++14 (target: C++17)
+**Standard:** C++17
 **Platform:** Linux/macOS (target: Windows + Mac cross-platform)
 
 ---
@@ -74,7 +74,8 @@ A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity 
 - `Rt` — runtime context (map, commands queue, scene state)
 - `Gfx` — graphics context
 - `Draw` — rendering primitives
-- `Assets` — texture/font cache
+- `Font` — shared TTF font (m5x7.ttf, scaled by `configZoomFactor`)
+- `Assets` — texture cache
 - `St` — persistent settings/save state
 - `Player` — audio (SDL_mixer)
 - `Lighting` — dynamic lighting with darkness overlay
@@ -107,9 +108,36 @@ To add a new event: add the type to `EventType` enum, optionally subclass `Event
 - Exposed to Lua as `zwei.add_light(x, y, radius, lifetime?)`, `zwei.remove_light(id)`, `zwei.set_enable_lights(bool)`
 - Enabled via `HINT_TURN_LIGHTS_OUT` render hint (set by `Api::setEnableLights(false)`)
 
+### Menu System
+
+Custom TTF-based menu in `src/ecs/Menu.cpp`. Replaced ImGui (removed entirely).
+
+- Renders using `Font` singleton (m5x7.ttf via SDL_ttf) and `Draw` primitives
+- Semi-transparent blue overlay, vertically centered items, white highlight for selected
+- Key-value two-column layout for settings (volume, FPS, window size, key bindings)
+- Scrolling viewport for long lists (keyboard/gamepad rebinding)
+- Navigation via `GameKeyEvent` (up/down/A/B), no mouse input
+
+### Speech Bubbles
+
+`SpeechBubble` command in `src/Cc.cpp`. TTF-rendered text boxes with typewriter effect.
+
+- Fixed height (3 lines), auto-splits long text via `SpeechBubble::split()` using actual rendered height measurement
+- Exposed to Lua as `zwei.speech(text)` (auto-split) and `zwei.speech_single(text, more?)` (single bubble)
+- Blinking "more" indicator for multi-bubble sequences
+- Press A/B to skip typewriter or advance to next bubble
+
 ### Command Queue
 
-`Rt_Commands` is a deferred queue of `Command` objects executed one per frame. Used for scene transitions (`ScreenTransition`), loading screens, etc. Keep this pattern.
+`Rt_Commands` is a deferred queue of `Command` objects executed one per frame. Used for scene transitions (`ScreenTransition`), speech bubbles, loading screens, etc. Keep this pattern.
+
+### Display / Resolution
+
+- Fixed virtual resolution: 320x224 (`configVirtualWidth` / `configVirtualHeight`)
+- `configZoomFactor = configWindowWidth / configVirtualWidth` — determines tile scaling
+- `configWindowWidth` / `configWindowHeight` are mutable (updated for fullscreen)
+- Fullscreen via `SDL_WINDOW_FULLSCREEN_DESKTOP` (commented out by default, toggle in `initSdl()`)
+- Font size, UI padding, and bubble dimensions all scale by `configZoomFactor`
 
 ---
 
@@ -122,15 +150,17 @@ To add a new event: add the type to `EventType` enum, optionally subclass `Event
 - Core components: `Stats`, `Animation`, `Collider`, `Attack`, `Inventory`, `Controller`
 - Command queue pattern
 - Layered rendering pipeline
+- Custom menu system (SDL_ttf + Draw primitives)
 
 ## What to Strip / Avoid Adding To
 
 - **`src/snd/` (audio)** — not needed yet; removing eliminates SDL2_mixer dependency
-- **`imgui/`** — used for menus; keep
+- **`imgui/` directory** — no longer compiled or referenced; can be deleted from disk
 - **Commented-out narrative/speech bubble code** — clean up
 - **`BloatComponent`** — test artifact, remove
 - **`src/ecs/filters/`** (`Halo`, `Tan`, `Twilight`) — remove until actually used
 - **OpenGL context setup** — SDL renderer is used, not GL; drop the `SDL_GL_*` calls
+- **`assets/EMBEDDED/Font.h/.cpp`** — embedded ImGui font, no longer used; can be deleted
 
 ---
 
@@ -138,12 +168,15 @@ To add a new event: add the type to `EventType` enum, optionally subclass `Event
 
 1. **Strip audio + dead code** — simplification, low risk
 2. **Migrate build to Meson** ✓ — `meson.build` at project root; dependencies via pkg-config; `meson setup builddir && meson compile -C builddir`
-3. **Bump to C++17** — gets `std::optional`, `std::variant`, `std::filesystem`, `if constexpr`
+3. **Bump to C++17** ✓ — `default_options: ['cpp_std=c++17']` in meson.build
 4. **Replace `Asset` enum with string-keyed registry** — adding assets currently requires editing enum + loader + all references; `assetFromTilesetSource()` in Map.cpp is the last place that maps filenames to the enum
 5. **Add Lua scripting via Sol2** ✓ — `LuaScene` class; Lua + Sol2 as Meson wraps; `Api` exposed as `zwei` table in Lua; scenes in `scenes/*.lua`; F5 hot-reload
 6. **Simple event bus** ✓ — `src/Bus.h/cpp`; five events wired up; state mutations flow through `EventStateChangeRequested`
 7. **Map loader cleanup** ✓ — `loadTilesetIndex()`; native Tiled animations; wall tiles use full-tile colliders (no tile padding)
 8. **Tile padding removed from walls** ✓ — wall tiles always use full-tile colliders; visual overhangs belong on ROOF layer; padding retained for entity/projectile colliders only
+9. **Lighting system** ✓ — `src/Lighting.h/cpp`; dynamic + static lights; darkness overlay; Lua bindings; serialize/deserialize
+10. **Replace ImGui with custom menu** ✓ — SDL_ttf + Draw primitives; scrolling; `imgui/` directory can be deleted
+11. **Fixed virtual resolution** ✓ — 320x224 SNES-style viewport; fullscreen desktop support
 
 ---
 
@@ -154,6 +187,7 @@ To add a new event: add the type to `EventType` enum, optionally subclass `Event
 - `Asset` enum requires code changes to add new assets
 - Scenes (`Forest::init()`) are imperative C++ — being replaced by Lua scripts (`scenes/*.lua`)
 - OpenGL context created but SDL renderer used (redundant)
+- `imgui/` directory and `assets/EMBEDDED/Font.*` still on disk but no longer compiled — delete when convenient
 
 ---
 
@@ -165,7 +199,7 @@ meson compile -C builddir
 ./builddir/zwei
 ```
 
-Linux requires SDL2, SDL2_image, SDL2_mixer system packages (`libsdl2-dev`, `libsdl2-image-dev`, `libsdl2-mixer-dev`).
+Linux requires SDL2, SDL2_image, SDL2_mixer, SDL2_ttf system packages (`libsdl2-dev`, `libsdl2-image-dev`, `libsdl2-mixer-dev`, `libsdl2-ttf-dev`).
 
 ### Tooling
 

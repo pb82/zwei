@@ -108,6 +108,7 @@ if (UNIX AND NOT APPLE)
     find_package(SDL2 REQUIRED)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_mixer REQUIRED)
+    find_package(SDL2_ttf REQUIRED)
 
     target_include_directories(
             zwei
@@ -125,6 +126,7 @@ if (UNIX AND NOT APPLE)
             PRIVATE ${SDL2_LIBRARY}
             PRIVATE ${SDL2_IMAGE_LIBRARIES}
             PRIVATE ${SDL2_MIXER_LIBRARIES}
+            PRIVATE ${SDL2_TTF_LIBRARIES}
     )
 
     add_custom_command(TARGET zwei

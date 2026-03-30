@@ -33,6 +33,10 @@ void LuaScene::bindApi() {
         return Api::addLight(x, y, radius, lifetime.value_or(0));
     };
     zwei["remove_light"] = [](int id) { Lighting::instance().remove(id); };
+    zwei["speech"] = [](const std::string& text) { Api::createSpeechBubble(text.c_str()); };
+    zwei["speech_single"] = [](const std::string& text, sol::optional<bool> more) {
+        Api::createSingleSpeechBubble(text.c_str(), more.value_or(false));
+    };
 }
 
 void LuaScene::init() {

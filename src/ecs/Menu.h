@@ -63,7 +63,7 @@ public:
 
     void call(GameKeyEvent &key);
 
-    void render(bool selected = false);
+    void render(bool selected, int x, int y, int w, int h);
 
     bool canSelect = true;
 
@@ -120,6 +120,8 @@ private:
     void down();
 
     int selectedIndex = 0;
+
+    int scrollOffset = 0;
 
     MenuState menuState = Normal;
 
