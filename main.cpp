@@ -2,6 +2,7 @@
 #include <chrono>
 #include <algorithm>
 #include <csignal>
+#include <unistd.h>
 
 #include <SDL_image.h>
 #include <SDL_mixer.h>
@@ -49,13 +50,13 @@
 #include "src/ecs/arms/Stick.h"
 #include "src/ecs/Controller.h"
 
-float targetMillis = (1 / St::instance().getFps()) * 1000;
+float targetMillis;
 std::string game_over("game over");
 std::string saving_game("saving game...");
 std::string loading_game("loading game...");
 Color blackbox{0, 0, 0, 0};
 int globalFrameCounter = 0;
-int artificialDelay = St::instance().getFps();
+int artificialDelay;
 
 typedef decltype(std::chrono::system_clock::now()) tp;
 
@@ -416,6 +417,10 @@ void onSignal(int sig) {
 }
 
 int main(int, char **) {
+#ifdef PROJECT_SOURCE_DIR
+    chdir(PROJECT_SOURCE_DIR);
+#endif
+
     signal(SIGABRT, onSignal);
     signal(SIGTERM, onSignal);
     signal(SIGINT, onSignal);
@@ -423,6 +428,12 @@ int main(int, char **) {
 
     // Seed random number generator
     srand((unsigned int) time(nullptr));
+
+    configWindowWidth = St::instance().getWindowSize().w;
+    configWindowHeight = St::instance().getWindowSize().h;
+    configZoomFactor = (float)configWindowWidth / (float)configVirtualWidth;
+    targetMillis = (1 / St::instance().getFps()) * 1000;
+    artificialDelay = St::instance().getFps();
 
     initSdl();
     initAssets();

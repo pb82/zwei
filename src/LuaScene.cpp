@@ -37,6 +37,23 @@ void LuaScene::bindApi() {
     zwei["speech_single"] = [](const std::string& text, sol::optional<bool> more) {
         Api::createSingleSpeechBubble(text.c_str(), more.value_or(false));
     };
+    zwei["set_trigger"] = [](int x, int y, sol::function onEnter, sol::function onExit, sol::optional<float> proximity) {
+        trigger_Fn enterFn = [onEnter](float angle, Entity&) {
+            auto res = sol::protected_function(onEnter)(angle);
+            if (!res.valid()) {
+                sol::error err = res;
+                std::cerr << "[LuaScene] Trigger onEnter error: " << err.what() << std::endl;
+            }
+        };
+        trigger_Fn exitFn = [onExit](float angle, Entity&) {
+            auto res = sol::protected_function(onExit)(angle);
+            if (!res.valid()) {
+                sol::error err = res;
+                std::cerr << "[LuaScene] Trigger onExit error: " << err.what() << std::endl;
+            }
+        };
+        Api::setTrigger(x, y, enterFn, exitFn, proximity.value_or(0));
+    };
 }
 
 void LuaScene::init() {

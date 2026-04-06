@@ -6,6 +6,8 @@
 #include <JSON/printer.h>
 #include <JSON/parser.h>
 
+#include <iostream>
+
 #define SETTINGS_FILE "./settings.json"
 #define MUSIC_VOLUME "musicVolume"
 #define EFFECTS_VOLUME "effectsVolume"
@@ -148,6 +150,7 @@ void St::serialize() {
     Out out(SETTINGS_FILE);
     if (out.open()) {
         out.write(settings);
+        std::cout << "writing settings file" << std::endl;
     }
 }
 
@@ -177,12 +180,20 @@ void St::deserializeControls(JSON::Value &source) {
 void St::deserialize() {
     File f(SETTINGS_FILE);
     if (!f.open()) {
+
+        std::cout << "settings file not found" << std::endl;
+
         return;
     }
 
     std::string s;
     s.resize(f.size);
     f.read(s, 0, f.size);
+
+    std::cout << "===========" << std::endl;
+    std::cout << "size: " << f.size << std::endl;
+    std::cout << s << std::endl;
+    std::cout << "===========" << std::endl;
 
     JSON::Parser parser;
     JSON::Value source;

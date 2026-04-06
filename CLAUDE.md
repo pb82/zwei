@@ -127,6 +127,16 @@ Custom TTF-based menu in `src/ecs/Menu.cpp`. Replaced ImGui (removed entirely).
 - Blinking "more" indicator for multi-bubble sequences
 - Press A/B to skip typewriter or advance to next bubble
 
+### Triggers
+
+`Trigger` component in `src/ecs/Trigger.h`. Fires callbacks when the player enters/exits a collider area.
+
+- `trigger_Fn` signature: `std::function<void(float angle, Entity &parent)>`
+- `Api::setTrigger(x, y, onEnter, onExit, proximity)` — creates a trigger entity at tile (x,y); proximity expands the collider
+- `Api::setTrigger(x, y, onEnter, onExit, extendX, extendY)` — asymmetric collider variant
+- Exposed to Lua as `zwei.set_trigger(x, y, on_enter, on_exit, proximity?)` — Lua callbacks receive the approach angle
+- Used for roof hide/show (`setRoofHideTrigger`/`setRoofShowTrigger`) and scene-specific logic
+
 ### Command Queue
 
 `Rt_Commands` is a deferred queue of `Command` objects executed one per frame. Used for scene transitions (`ScreenTransition`), speech bubbles, loading screens, etc. Keep this pattern.

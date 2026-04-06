@@ -112,4 +112,5 @@ executable('zwei',
   asset_sources,
   include_directories: inc_dirs,
   dependencies: [sdl2_dep, sdl2_image_dep, sdl2_mixer_dep, sdl2_ttf_dep, lua_dep, sol2_dep],
+  cpp_args: ['-DPROJECT_SOURCE_DIR="' + meson.project_source_root() + '"'],
 )
