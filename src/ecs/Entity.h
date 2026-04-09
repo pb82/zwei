@@ -14,11 +14,11 @@ public:
     Entity() : isActive(true) {}
 
     template<typename T, typename... TArgs>
-    std::shared_ptr<Component> addComponent(TArgs... args) {
-        auto component = new T(*this, std::forward<TArgs>(args)...);
+    std::shared_ptr<T> addComponent(TArgs... args) {
+        auto ptr = std::make_shared<T>(*this, std::forward<TArgs>(args)...);
         auto type = std::type_index(typeid(T));
-        components.emplace(type, component);
-        return components[type];
+        components[type] = ptr;
+        return ptr;
     }
 
     template<typename T>
@@ -36,8 +36,9 @@ public:
     template<typename T>
     std::shared_ptr<T> getComponent() {
         auto type = std::type_index(typeid(T));
-        auto component = components[type];
-        return std::dynamic_pointer_cast<T>(component);
+        auto it = components.find(type);
+        if (it == components.end()) return nullptr;
+        return std::dynamic_pointer_cast<T>(it->second);
     }
 
     void update(float dt) {
