@@ -5,10 +5,10 @@
 
 Acceleration::Acceleration(Entity &parent, float maxSpeed, float angle)
         : Component(parent),
-          trajectory(0, angle),
-          maxSpeed(maxSpeed),
+          acceleration(0.0f),
           speed(0),
-          acceleration(0.0f) {}
+          maxSpeed(maxSpeed),
+          trajectory(0, angle) {}
 
 void Acceleration::update(float dt) {
     auto transform = parent.getComponent<Transform>();

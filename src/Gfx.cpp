@@ -1,5 +1,7 @@
 #include "Gfx.h"
 
+#include <iostream>
+#include <ostream>
 #include <SDL_image.h>
 
 void Gfx::pick(SDL_Rect &source, int tileId, int textureWidth) {
@@ -29,9 +31,7 @@ void Gfx::pickText(SDL_Rect &source, int tileId, int textureWidth) {
     source.h = PIXELFONT_HEIGHT;
 }
 
-Gfx::~Gfx() {
-    SDL_GL_DeleteContext(glContext);
-
+void Gfx::shutdown() {
     if (renderer) {
         SDL_DestroyRenderer(renderer);
         renderer = nullptr;
@@ -44,4 +44,11 @@ Gfx::~Gfx() {
 
     IMG_Quit();
     SDL_Quit();
+}
+
+Gfx::~Gfx() {
+    // Cleanup handled by explicit shutdown() call in main.
+    // Static destruction order is unreliable — other singletons
+    // may still hold SDL resources (textures, fonts) when this
+    // destructor runs, making SDL_DestroyRenderer unsafe here.
 }

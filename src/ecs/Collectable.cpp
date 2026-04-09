@@ -26,6 +26,12 @@ void Collectable::render(uint8_t hints) {
         return;
     }
 
+    // Render items at 2x size, centered on the transform
+    target.x -= target.w / 2;
+    target.y -= target.h / 2;
+    target.w *= 2;
+    target.h *= 2;
+
     Draw::instance().pushAlpha(texture->mem);
     SDL_SetTextureAlphaMod(texture->mem, alpha);
     Draw::instance().draw(texture->mem, source, target);

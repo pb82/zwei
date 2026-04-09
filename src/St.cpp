@@ -1,5 +1,5 @@
 #include "St.h"
-#include "snd/Player.h"
+#include "Bus.h"
 #include "io/File.h"
 #include "io/Out.h"
 #include "in/Input.h"
@@ -32,6 +32,8 @@ St::St()
 
     supportedFps.push_back(30.0f);
     supportedFps.push_back(60.0f);
+
+    deserialize();
 }
 
 int St::getMusicVolume() {
@@ -43,7 +45,7 @@ int St::incMusicVolume() {
     if (musicVolume > 100) {
         musicVolume = 100;
     }
-    Player::instance().setMusicVolume(musicVolume);
+    Bus::instance().publish(SettingsChangedEvent(SettingMusicVolume, musicVolume));
     return musicVolume;
 }
 
@@ -52,7 +54,7 @@ int St::decMusicVolume() {
     if (musicVolume < 0) {
         musicVolume = 0;
     }
-    Player::instance().setMusicVolume(musicVolume);
+    Bus::instance().publish(SettingsChangedEvent(SettingMusicVolume, musicVolume));
     return musicVolume;
 }
 
@@ -65,7 +67,7 @@ int St::incEffectsVolume() {
     if (effectsVolume > 100) {
         effectsVolume = 100;
     }
-    Player::instance().setEffectsVolume(effectsVolume);
+    Bus::instance().publish(SettingsChangedEvent(SettingEffectsVolume, effectsVolume));
     return effectsVolume;
 }
 
@@ -74,7 +76,7 @@ int St::decEffectsVolume() {
     if (effectsVolume < 0) {
         effectsVolume = 0;
     }
-    Player::instance().setEffectsVolume(effectsVolume);
+    Bus::instance().publish(SettingsChangedEvent(SettingEffectsVolume, effectsVolume));
     return effectsVolume;
 }
 
@@ -115,8 +117,8 @@ float St::getFps() {
 }
 
 void St::initAll() {
-    Player::instance().setMusicVolume(musicVolume);
-    Player::instance().setEffectsVolume(effectsVolume);
+    Bus::instance().publish(SettingsChangedEvent(SettingMusicVolume, musicVolume));
+    Bus::instance().publish(SettingsChangedEvent(SettingEffectsVolume, effectsVolume));
 }
 
 void St::serializeControls(JSON::Value &target) {

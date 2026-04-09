@@ -442,15 +442,15 @@ void Menu::populateGamepadMenu() {
     addGamepadMenuItem(GK_SELECT, bound);
 }
 
-MenuItem::MenuItem(std::string key) : key(key), cb(nullptr), canSelect(false) {}
+MenuItem::MenuItem(std::string key) : canSelect(false), key(key), cb(nullptr) {}
 
-MenuItem::MenuItem(std::string key, menu_Callback cb) : key(key), cb(cb), canSelect(true) {}
+MenuItem::MenuItem(std::string key, menu_Callback cb) : canSelect(true), key(key), cb(cb) {}
 
-MenuItem::MenuItem(std::string key, std::string *value, menu_Callback cb) : key(key), value(value), cb(cb),
-                                                                            canSelect(true) {}
+MenuItem::MenuItem(std::string key, std::string *value, menu_Callback cb) : canSelect(true), key(key),
+                                                                            value(value), cb(cb) {}
 
-MenuItem::MenuItem(const char *key, const char *value, menu_Callback cb) : key(key), value2(value), cb(cb),
-                                                                           canSelect(true) {}
+MenuItem::MenuItem(const char *key, const char *value, menu_Callback cb) : canSelect(true), key(key),
+                                                                           value2(value), cb(cb) {}
 
 
 void MenuItem::call(GameKeyEvent &key) {

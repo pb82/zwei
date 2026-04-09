@@ -14,10 +14,10 @@
 class Camera {
 public:
     Camera()
-            : tracked(nullptr),
+            : z(configZoomFactor),
+              tracked(nullptr),
               w(configWindowWidth),
               h(configWindowHeight),
-              z(configZoomFactor),
               mapTilesX(0),
               mapTilesY(0) {
     }

@@ -123,9 +123,9 @@ void Layer::load(JSON::Value &layer, Asset asset) {
 
     auto data = layer["data"].as<JSON::Array>();
 
-    for (int i = 0; i < data.size(); ++i) {
+    for (size_t i = 0; i < data.size(); ++i) {
         int x, y;
-        toPos(w, i, &x, &y);
+        toPos(w, (int)i, &x, &y);
 
         // -1 because of the way tiled reserves id 0
         int tileId = data[i].as<int>() - 1;

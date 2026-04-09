@@ -3,7 +3,6 @@
 
 #include <SDL.h>
 
-#define Gfx_GL_Context Gfx::instance().glContext
 #define Gfx_Renderer Gfx::instance().renderer
 #define Gfx_Window Gfx::instance().window
 #define Gfx_Tile_Size Gfx::instance().tileSize
@@ -27,11 +26,12 @@ public:
 
     static void pickText(SDL_Rect &source, int tileId, int textureWidth);
 
-    SDL_GLContext glContext;
-    SDL_Renderer *renderer;
-    SDL_Window *window;
+    void shutdown();
 
-    unsigned int tileSize;
+    SDL_Renderer *renderer = nullptr;
+    SDL_Window *window = nullptr;
+
+    unsigned int tileSize = 0;
 
 private:
     Gfx() {}

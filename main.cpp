@@ -38,6 +38,7 @@
 #include "src/ecs/minds/Spider.h"
 #include "src/ecs/Collectable.h"
 #include "src/snd/Player.h"
+#include "src/Font.h"
 #include "src/alg/Text.h"
 #include "src/Draw.h"
 #include "src/St.h"
@@ -329,6 +330,17 @@ void initBus() {
     Bus::instance().subscribe(EventItemCollected, [](const Event &) {
         Player::instance().playSound(SOUND_PICKUP);
     });
+    Bus::instance().subscribe(EventSettingsChanged, [](const Event &e) {
+        const auto &evt = static_cast<const SettingsChangedEvent &>(e);
+        switch (evt.key) {
+            case SettingMusicVolume:
+                Player::instance().setMusicVolume(evt.value);
+                break;
+            case SettingEffectsVolume:
+                Player::instance().setEffectsVolume(evt.value);
+                break;
+        }
+    });
     Bus::instance().subscribe(EventEnemyDied, [](const Event &e) {
         const auto &evt = static_cast<const EnemyDiedEvent &>(e);
         auto entity = std::make_shared<Entity>();
@@ -413,7 +425,7 @@ void initSdl() {
 }
 
 void onSignal(int sig) {
-    exit(sig);
+    _exit(sig);
 }
 
 int main(int, char **) {
@@ -424,7 +436,6 @@ int main(int, char **) {
     signal(SIGABRT, onSignal);
     signal(SIGTERM, onSignal);
     signal(SIGINT, onSignal);
-    signal(SIGSEGV, onSignal);
 
     // Seed random number generator
     srand((unsigned int) time(nullptr));
@@ -440,4 +451,9 @@ int main(int, char **) {
     initSound();
     initBus();
     loop();
+
+    Font::instance().shutdown();
+    Player::instance().shutdown();
+    Gfx::instance().shutdown();
+    return 0;
 }

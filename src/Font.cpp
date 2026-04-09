@@ -16,3 +16,11 @@ int Font::lineHeight() {
     if (!font) init();
     return TTF_FontLineSkip(font);
 }
+
+void Font::shutdown() {
+    if (font) {
+        TTF_CloseFont(font);
+        font = nullptr;
+    }
+    TTF_Quit();
+}

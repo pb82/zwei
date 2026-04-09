@@ -12,8 +12,8 @@
 Collider::Collider(Entity &parent, std::shared_ptr<Transform> tracked, ColliderTag tag,
                    Padding p) :
         Component(parent),
-        tracked(tracked),
         tag(tag),
+        tracked(tracked),
         padding(p) {
     updateBoundingBox();
 }

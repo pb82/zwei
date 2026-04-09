@@ -2,7 +2,7 @@
 
 Color color_Red = Color{255, 0, 0, 255};
 Color color_White = Color{240, 240, 240, 255};
-Color color_Blue = Color{100, 150, 240, 128};
+Color color_Blue = Color{100, 150, 240, 220};
 Color color_Bubble = Color{0, 0, 0, 220};
 
 

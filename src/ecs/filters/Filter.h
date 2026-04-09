@@ -7,9 +7,9 @@
 
 class Filter {
 public:
-    Filter() : duration(1), initial(1), permanent(true) {}
+    Filter() : initial(1), duration(1), permanent(true) {}
 
-    Filter(float duration) : duration(0.0f), initial(duration), permanent(false) {}
+    Filter(float duration) : initial(duration), duration(0.0f), permanent(false) {}
 
     bool upate(float dt) {
         if (permanent) return true;

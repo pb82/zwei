@@ -15,7 +15,7 @@ function setup()
         function(angle)
             print("angle: ", angle)
         end,
-        1.0  -- expand collider by 1 tile
+        0.0  -- expand collider by 1 tile
     )
 
 end

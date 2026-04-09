@@ -3,19 +3,21 @@
 #include <algorithm>
 
 #include <ASSETS/Assets.h>
+#include <SDL_ttf.h>
 
 #include "../../config.h"
 #include "../Draw.h"
+#include "../Font.h"
 #include "../Gfx.h"
 #include "../alg/Text.h"
 
 Timer::Timer(Entity &parent) : Component(parent) {}
 
 TimerValue::TimerValue(float cur, float max, std::string &&text) {
-    this->tile = tile;
+    this->tile = 0;
     this->max = max;
     this->cur = cur;
-    Text::toSequence(text.c_str(), letters);
+    this->text = std::move(text);
 }
 
 void Timer::update(float dt) {
@@ -56,35 +58,38 @@ void Timer::render(uint8_t) {
 
     int y = 16;
     for (auto &t: timers) {
-        target.w = (configWindowWidth / 5) + 2;
-        target.h = 20;
-        target.x = 10 + configWindowWidth - target.w - 32;
+        target.w = (configWindowWidth / 5) + 4;
+        target.h = 40;
+        target.x = 10 + configWindowWidth - target.w - 64;
         target.y = y;
 
         SDL_Rect icon;
         icon = target;
-        icon.w = 32;
-        icon.h = 32;
-        icon.x -= 32;
-        icon.y -= 6;
+        icon.w = 64;
+        icon.h = 64;
+        icon.x -= 64;
+        icon.y -= 12;
 
         SDL_Rect source;
         // Tile
-        if (t.letters.empty()) {
+        if (t.text.empty()) {
             Gfx::pick(source, t.tile, texture->w);
             Draw::instance().draw(texture->mem, source, icon);
         } else {
-            auto font = Assets::instance().getTexture(BITMAPFONT);
-            SDL_Rect letter = target;
-            letter.x = (configWindowWidth - (t.letters.size() * 14) - 10);
-            letter.w = 14;
-            letter.h = 18;
-            for (auto c: t.letters) {
-                Gfx::pickText(source, c, font->w);
-                Draw::instance().draw(font->mem, source, letter);
-                letter.x += 14;
+            SDL_Color white = {255, 255, 255, 255};
+            SDL_Surface *surface = TTF_RenderUTF8_Blended(Font::instance().get(), t.text.c_str(), white);
+            if (surface) {
+                SDL_Texture *tex = SDL_CreateTextureFromSurface(Gfx_Renderer, surface);
+                SDL_Rect textTarget;
+                textTarget.w = surface->w;
+                textTarget.h = surface->h;
+                textTarget.x = configWindowWidth - surface->w - 10;
+                textTarget.y = y + (target.h - surface->h) / 2;
+                SDL_RenderCopy(Gfx_Renderer, tex, nullptr, &textTarget);
+                SDL_DestroyTexture(tex);
+                SDL_FreeSurface(surface);
             }
-            y += 32;
+            y += 64;
             continue;
         }
 
@@ -94,12 +99,12 @@ void Timer::render(uint8_t) {
         }
 
         bar = target;
-        bar.x += 1;
-        bar.y += 1;
-        bar.h -= 2;
+        bar.x += 2;
+        bar.y += 2;
+        bar.h -= 4;
         bar.w = ((configWindowWidth / 5) * percent);
         Draw::instance().rect(color_White, target);
         Draw::instance().box(color_Blue, bar);
-        y += 32;
+        y += 64;
     }
 }

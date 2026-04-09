@@ -15,10 +15,6 @@ class St {
 public:
     static St &instance() {
         static St instance;
-        if (!instance.fresh) {
-            instance.deserialize();
-            instance.fresh = true;
-        }
         return instance;
     }
 
@@ -76,8 +72,6 @@ private:
     std::vector<ScreenResolution> supportedSizes;
 
     std::vector<float> supportedFps;
-
-    bool fresh = false;
 };
 
 #endif //ZWEI_ST_H

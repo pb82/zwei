@@ -16,6 +16,7 @@ public:
     void init();
     TTF_Font *get();
     int lineHeight();
+    void shutdown();
 
 private:
     Font() {}

@@ -64,7 +64,7 @@ int SpeechBubble::getLineHeight() {
     return Font::instance().lineHeight();
 }
 
-SpeechBubble::SpeechBubble(const char *text, bool last) : text(text), last(last) {
+SpeechBubble::SpeechBubble(const char *text, bool last) : last(last), text(text) {
     buildTexture();
 }
 

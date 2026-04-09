@@ -18,7 +18,7 @@ Inventory::Inventory(Entity &parent) : parent(parent) {
 
 void Inventory::serialize(JSON::Value &to) {
     JSON::Array items;
-    for (int i = 0; i < this->slots.size(); i++) {
+    for (size_t i = 0; i < this->slots.size(); i++) {
         JSON::Object o;
         o["type"] = this->slots.at(i).type;
         o["number"] = this->slots.at(i).number;
@@ -171,7 +171,7 @@ void Inventory::use() {
             slot.item->unequip(RT_Context.getPlayer());
         } else {
             // Only one weapon can be equipped at the same time
-            for (int i = 0; i < slots.size(); i++) {
+            for (size_t i = 0; i < slots.size(); i++) {
                 if (slots.at(i).item) slots.at(i).item->unequip(RT_Context.getPlayer());
             }
             slot.item->equip(RT_Context.getPlayer());

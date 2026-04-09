@@ -1,7 +1,10 @@
 #include "LuaScene.h"
 #include "Api.h"
 #include "Lighting.h"
+#include "ecs/Manager.h"
 #include <iostream>
+
+#include "scn/SceneConstants.h"
 
 LuaScene::LuaScene(SceneType type, const std::string& scriptPath)
     : Scene(type), scriptPath(scriptPath) {}
@@ -57,6 +60,7 @@ void LuaScene::bindApi() {
 }
 
 void LuaScene::init() {
+    Manager::instance().collect();
     lua = sol::state();
     lua.open_libraries(sol::lib::base, sol::lib::string, sol::lib::math, sol::lib::table);
 
@@ -70,6 +74,7 @@ void LuaScene::init() {
     }
 
     Api::init();
+    Api::addItem(10, 27, ItemType::TORCH, []() {});
 
     sol::protected_function setup = lua["setup"];
     if (setup.valid()) {

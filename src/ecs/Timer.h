@@ -1,6 +1,7 @@
 #ifndef ZWEI_TIMER_H
 #define ZWEI_TIMER_H
 
+#include <string>
 #include <vector>
 
 #include "Component.h"
@@ -23,7 +24,7 @@ struct TimerValue {
     int tile = 0;
     float max = 0.0f;
     float cur = 0.0f;
-    std::vector<int> letters;
+    std::string text;
 
     bool running() {
         return cur < max;

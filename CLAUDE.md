@@ -187,6 +187,7 @@ Custom TTF-based menu in `src/ecs/Menu.cpp`. Replaced ImGui (removed entirely).
 9. **Lighting system** ✓ — `src/Lighting.h/cpp`; dynamic + static lights; darkness overlay; Lua bindings; serialize/deserialize
 10. **Replace ImGui with custom menu** ✓ — SDL_ttf + Draw primitives; scrolling; `imgui/` directory can be deleted
 11. **Fixed virtual resolution** ✓ — 320x224 SNES-style viewport; fullscreen desktop support
+12. **Melee slash VFX** — melee hitbox currently has no visual, so the player can't see the blade's reach/position. Plan: mirror the ranged path in `Attack::launchMeleeWeapon` (`src/ecs/Attack.cpp:137`) by attaching `Sprite` + `Animation` to the hitbox entity, using a short one-shot arc/streak graphic. Needs: (a) a slash tile in `sprites.png` — start with a single rotated tile via `Animation::rotate`, upgrade to per-direction multi-frame arcs later; (b) `Weapon::getSlashTile()` alongside the existing `getProjectileTile()`; (c) swap the hitbox's `SelfDestruct(DISTANCE, 0.75)` for a time-based ~120–180ms lifetime so the VFX plays fully. Optional follow-ups for combat feel: swing SFX, 1-frame white tint on enemies when hit (via the event bus).
 
 ---
 

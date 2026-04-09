@@ -3,7 +3,9 @@
 #include "../src/Gfx.h"
 
 Texture::~Texture() {
-    SDL_DestroyTexture(this->mem);
+    if (Gfx_Renderer) {
+        SDL_DestroyTexture(this->mem);
+    }
 }
 
 void Assets::addFont(Asset id, EmbeddedAsset &asset) {

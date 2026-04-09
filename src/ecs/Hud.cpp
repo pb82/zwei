@@ -36,17 +36,17 @@ void Hud::render(uint8_t) {
     SDL_Rect source;
 
     target.x = 10;
-    target.h = 20;
-    target.w = (configWindowWidth / BAR_SCREEN_RATIO) + 2;
+    target.h = 40;
+    target.w = (configWindowWidth / BAR_SCREEN_RATIO) + 4;
     target.y = 16;
 
     Draw::instance().rect(color_White, target);
 
     float percent = cur / max;
-    target.x += 1;
-    target.y += 1;
+    target.x += 2;
+    target.y += 2;
     target.w = ((configWindowWidth / BAR_SCREEN_RATIO) * percent);
-    target.h -= 2;
+    target.h -= 4;
 
     if (percent >= 0.5) {
         Draw::instance().box(color_Good, target);
@@ -58,21 +58,21 @@ void Hud::render(uint8_t) {
 
     // Heart symbols
     Gfx::pick(source, 90, texture->w);
-    target.x = (configWindowWidth / BAR_SCREEN_RATIO) + 12;
-    target.y = 10;
-    target.w = 32;
-    target.h = 32;
+    target.x = (configWindowWidth / BAR_SCREEN_RATIO) + 14;
+    target.y = 4;
+    target.w = 64;
+    target.h = 64;
 
     auto hearts = stats->character.getHearts();
     for (int i = 0; i < std::get<0>(hearts); i++) {
         Draw::instance().draw(texture->mem, source, target);
-        target.x += 18;
+        target.x += 36;
     }
 
     Gfx::pick(source, 109, texture->w);
     for (int i = 0; i < std::get<1>(hearts); i++) {
         Draw::instance().draw(texture->mem, source, target);
-        target.x += 18;
+        target.x += 36;
     }
 
     if (!stats->inventory.hasWeapon()) {
@@ -81,18 +81,18 @@ void Hud::render(uint8_t) {
 
     auto attack = player->getComponent<Attack>();
 
-    target.x = (configWindowWidth / BAR_SCREEN_RATIO) + 10;
-    target.y = 42;
-    target.w = 32;
-    target.h = 32;
+    target.x = (configWindowWidth / BAR_SCREEN_RATIO) + 12;
+    target.y = 84;
+    target.w = 64;
+    target.h = 64;
 
     Gfx::pick(source, 107, texture->w);
     Draw::instance().draw(texture->mem, source, target);
 
     target.x = 10;
-    target.h = 20;
-    target.w = (configWindowWidth / BAR_SCREEN_RATIO) + 2;
-    target.y = 48;
+    target.h = 40;
+    target.w = (configWindowWidth / BAR_SCREEN_RATIO) + 4;
+    target.y = 96;
 
     Draw::instance().rect(color_White, target);
 
@@ -104,10 +104,10 @@ void Hud::render(uint8_t) {
         percent *= (current / recharge);
     }
 
-    target.x += 1;
-    target.y += 1;
+    target.x += 2;
+    target.y += 2;
     target.w = ((configWindowWidth / BAR_SCREEN_RATIO) * percent);
-    target.h -= 2;
+    target.h -= 4;
 
     Draw::instance().box(color_Blue, target);
 }

@@ -13,6 +13,7 @@ enum EventType {
     EventItemCollected,
     EventSceneChange,
     EventStateChangeRequested,
+    EventSettingsChanged,
 };
 
 struct Event {
@@ -29,6 +30,17 @@ struct EnemyDiedEvent : public Event {
 struct StateChangeRequestedEvent : public Event {
     int target;
     StateChangeRequestedEvent(int s) : Event(EventStateChangeRequested), target(s) {}
+};
+
+enum SettingKey {
+    SettingMusicVolume,
+    SettingEffectsVolume,
+};
+
+struct SettingsChangedEvent : public Event {
+    SettingKey key;
+    int value;
+    SettingsChangedEvent(SettingKey key, int value) : Event(EventSettingsChanged), key(key), value(value) {}
 };
 
 class Bus {

@@ -49,6 +49,8 @@ public:
 
     void setEffectsVolume(int volume);
 
+    void shutdown();
+
 private:
     Player();
 
