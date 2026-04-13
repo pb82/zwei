@@ -41,13 +41,13 @@ namespace Api {
 
     void setRoofShowTrigger(int entryX, int entryY);
 
-    void setDoor(int x, int y, uint16_t id);
+    void setDoor(int x, int y);
 
     void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit, float proximity = 0);
 
     void setTrigger(int x, int y, trigger_Fn onEnter, trigger_Fn onExit, float extendX, float extendY);
 
-    void setInteractible(int x, int y, uint16_t id, interact_Fn onInteract, bool reveal = false);
+    void setInteractible(int x, int y, interact_Fn onInteract, bool reveal = false);
 
     void createSpeechBubble(const char *text);
 
@@ -55,15 +55,15 @@ namespace Api {
 
     // Enemies
 
-    void addKakta(int x, int y, uint8_t id, int hp = 20);
+    void addKakta(int x, int y, int hp = 20);
 
-    void addSpider(int x, int y, uint8_t id, int hp = 10);
+    void addSpider(int x, int y, int hp = 10);
 
-    void addCaterpillar(int x, int y, uint8_t id, int hp = 10);
+    void addCaterpillar(int x, int y, int hp = 10);
 
-    void addAlly(int x, int y, uint8_t id, int hp = 20);
+    void addAlly(int x, int y, int hp = 20);
 
-    std::shared_ptr<Entity> addNpc(int x, int y, uint8_t id);
+    std::shared_ptr<Entity> addNpc(int x, int y);
 
     void addTurnToNpc(std::shared_ptr<Entity> npc, float angle, float duration, float speed = 2.0f);
 

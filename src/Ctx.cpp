@@ -7,10 +7,7 @@
 #include "ecs/Acceleration.h"
 #include "ecs/Animation.h"
 #include "ecs/Interactible.h"
-#include "ecs/Id.h"
 #include "ecs/Collider.h"
-#include "scn/Test.h"
-#include "scn/Forest.h"
 #include "scn/Entry.h"
 #include "LuaScene.h"
 #include "Lighting.h"
@@ -50,7 +47,6 @@ void GameStateMachine::pushState(GameState state) {
 
 Ctx::Ctx() {
     scenes.emplace(SceneEntry, std::make_shared<Entry>());
-    scenes.emplace(SceneTesting, std::make_shared<Test>());
     scenes.emplace(SceneForest, std::make_shared<LuaScene>(SceneForest, "./scenes/forest.lua"));
 }
 

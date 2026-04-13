@@ -4,8 +4,6 @@
 #include "ecs/Manager.h"
 #include <iostream>
 
-#include "scn/SceneConstants.h"
-
 LuaScene::LuaScene(SceneType type, const std::string& scriptPath)
     : Scene(type), scriptPath(scriptPath) {}
 

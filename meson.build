@@ -100,9 +100,6 @@ src_sources = files(
   'src/ecs/minds/Ally.cpp',
   'src/ecs/minds/Caterpillar.cpp',
   'src/scn/Entry.cpp',
-  'src/scn/Test.cpp',
-  'src/scn/Forest.cpp',
-  'src/scn/SceneConstants.cpp',
   'src/LuaScene.cpp',
 )
 

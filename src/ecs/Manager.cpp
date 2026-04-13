@@ -4,7 +4,6 @@
 #include "Group.h"
 #include "Interactible.h"
 #include "Timer.h"
-#include "Id.h"
 #include "Collectable.h"
 #include "Ai.h"
 #include "Hostile.h"
@@ -257,16 +256,6 @@ void Manager::getAllies(std::vector<std::shared_ptr<Entity>> &target) {
     }
 }
 
-std::shared_ptr<Entity> Manager::getEnemy(uint8_t id) {
-    for (auto &entity: entities.at(OBJECTS)) {
-        if (entity->hasComponent<Ai>() && entity->hasComponent<Id>()) {
-            auto enemyId = entity->getComponent<Id>();
-            if (enemyId->id == id) return entity;
-        }
-    }
-    return nullptr;
-}
-
 std::shared_ptr<Interactible> Manager::getInteractible(int x, int y) {
     for (auto &entity: entities.at(WALLS)) {
         if (entity->hasComponent<Interactible>() && entity->hasComponent<Transform>()) {
@@ -290,23 +279,6 @@ std::shared_ptr<Interactible> Manager::getInteractible(int x, int y) {
     }
     return nullptr;
 }
-
-std::shared_ptr<Entity> Manager::getInteractible(uint8_t id) {
-    for (auto &entity: entities.at(WALLS)) {
-        if (entity->hasComponent<Interactible>() && entity->hasComponent<Id>()) {
-            auto entityId = entity->getComponent<Id>();
-            if (entityId->id == id) return entity;
-        }
-    }
-    for (auto &entity: entities.at(OBJECTS)) {
-        if (entity->hasComponent<Interactible>()) {
-            auto entityId = entity->getComponent<Id>();
-            if (entityId->id == id) return entity;
-        }
-    }
-    return nullptr;
-}
-
 
 bool Manager::hasEntities(Position p, LayerType layer) {
     for (auto &entity: entities.at(layer)) {

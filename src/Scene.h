@@ -5,7 +5,6 @@
 
 enum SceneType {
     SceneEntry,
-    SceneTesting,
     SceneForest
 };
 

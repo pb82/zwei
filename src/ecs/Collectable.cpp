@@ -4,7 +4,6 @@
 #include "../Gfx.h"
 #include "SelfDestruct.h"
 #include "Stats.h"
-#include "Id.h"
 #include "../Draw.h"
 
 Collectable::Collectable(Entity &parent, std::shared_ptr<Item> item) : Component(parent), item(item) {}
@@ -58,10 +57,6 @@ void Collectable::collect() {
     if (stats->inventory.add(this->item)) {
         this->collected = true;
         this->parent.disable();
-        if (this->parent.hasComponent<Id>()) {
-            auto id = this->parent.getComponent<Id>();
-            RT_Memory.addToArray("collectedItems", id->id);
-        }
 
         std::string s;
         if (this->item->notification(s)) {

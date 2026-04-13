@@ -44,9 +44,9 @@ A Zelda-style 2D action RPG written in C++ with SDL2. Uses a hand-rolled Entity 
 
 ### Scene System
 
-- C++ classes in `src/scn/` with `init()` / `exit()` virtual methods calling `Api::*` procedurally
-- Lua scripts via Sol2 (`LuaScene`) with `setup()` / `teardown()` lifecycle, hot-reloadable at runtime (F5)
-- Scene state persisted via `SceneConstants` string keys in `Mem`
+- Lua scripts via Sol2 (`LuaScene`) with `setup()` / `teardown()` lifecycle, hot-reloadable at runtime (F5); scenes live in `scenes/*.lua`
+- `Entry` (C++) is the only remaining native scene — it boots the menu
+- Enemies are respawned each time a scene is entered; there are no persistent entity IDs
 - `Api::init()` automatically calls `initPlayer()` — scenes don't need to call it explicitly
 
 ### Maps
@@ -169,7 +169,6 @@ Custom TTF-based menu in `src/ecs/Menu.cpp`. Replaced ImGui (removed entirely).
 - **Commented-out narrative/speech bubble code** — clean up
 - **`BloatComponent`** — test artifact, remove
 - **`src/ecs/filters/`** (`Halo`, `Tan`, `Twilight`) — remove until actually used
-- **OpenGL context setup** — SDL renderer is used, not GL; drop the `SDL_GL_*` calls
 - **`assets/EMBEDDED/Font.h/.cpp`** — embedded ImGui font, no longer used; can be deleted
 
 ---
@@ -197,7 +196,6 @@ Custom TTF-based menu in `src/ecs/Menu.cpp`. Replaced ImGui (removed entirely).
 - No entity query system — iteration is manual O(n) per layer
 - `Asset` enum requires code changes to add new assets
 - Scenes (`Forest::init()`) are imperative C++ — being replaced by Lua scripts (`scenes/*.lua`)
-- OpenGL context created but SDL renderer used (redundant)
 - `imgui/` directory and `assets/EMBEDDED/Font.*` still on disk but no longer compiled — delete when convenient
 
 ---

@@ -48,8 +48,6 @@ public:
 
     std::shared_ptr<Interactible> getInteractible(int x, int y);
 
-    std::shared_ptr<Entity> getInteractible(uint8_t id);
-
     void getInteractibles(std::vector<std::shared_ptr<Entity>> &target);
 
     void getItems(std::vector<std::shared_ptr<Entity>> &target);
@@ -57,8 +55,6 @@ public:
     void getEnemies(std::vector<std::shared_ptr<Entity>> &target);
 
     void getAllies(std::vector<std::shared_ptr<Entity>> &target);
-
-    std::shared_ptr<Entity> getEnemy(uint8_t id);
 
     void update(float dt);
 

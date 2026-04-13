@@ -17,7 +17,6 @@
 #include "ecs/Analytics.h"
 #include "ecs/Timer.h"
 #include "Cc.h"
-#include "ecs/Id.h"
 #include "ecs/Ai.h"
 #include "ecs/Bar.h"
 #include "ecs/arms/Stick.h"
@@ -224,12 +223,11 @@ namespace Api {
         handler->onExit(nullptr);
     }
 
-    void setDoor(int x, int y, uint16_t id) {
+    void setDoor(int x, int y) {
         Position p(x, y);
         auto wall = Manager::instance().getWall(p);
         if (wall) {
             wall->addComponent<Interactible>();
-            wall->addComponent<Id>(id);
             auto action = wall->getComponent<Interactible>();
             action->onInteract([x, y](Entity &parent) {
                 bool accessible = RT_Topology.flipBarrier(x, y);
@@ -274,14 +272,13 @@ namespace Api {
     }
 
 
-    void setInteractible(int x, int y, uint16_t id, interact_Fn onInteract, bool reveal) {
+    void setInteractible(int x, int y, interact_Fn onInteract, bool reveal) {
         Position p(x, y);
         auto e = Manager::instance().getWall(p);
         if (!e) {
             return;
         }
         e->addComponent<Interactible>(reveal);
-        e->addComponent<Id>(id);
         auto i = e->getComponent<Interactible>();
         i->onInteract(onInteract);
     }
@@ -319,14 +316,13 @@ namespace Api {
 
     // Enemies
 
-    std::shared_ptr<Entity> addNpc(int x, int y, uint8_t id) {
+    std::shared_ptr<Entity> addNpc(int x, int y) {
         auto npc = Manager::instance().addEntity(OBJECTS);
         npc->addComponent<Transform>(x, y);
         npc->addComponent<Sprite>(GIRL);
         npc->addComponent<Animation>(200, true);
         npc->addComponent<Acceleration>(2.0f, 0);
         npc->getComponent<Acceleration>()->setDirection(S);
-        npc->addComponent<Id>(id);
         npc->addComponent<Npc>();
         npc->getComponent<Animation>()->addAnimationFrame(12, 0, 8, 4);
         npc->getComponent<Animation>()->addAnimationFrame(13, 1, 9, 5);
@@ -342,7 +338,7 @@ namespace Api {
         n->addTurn(angle, duration, speed);
     }
 
-    void addAlly(int x, int y, uint8_t id, int hp) {
+    void addAlly(int x, int y, int hp) {
         auto kakta = Manager::instance().addEntity(OBJECTS);
         kakta->addComponent<Transform>(x, y);
         kakta->addComponent<Sprite>(SPRITES);
@@ -351,7 +347,6 @@ namespace Api {
         kakta->addComponent<Ai>();
         kakta->addComponent<Attack>();
         kakta->addComponent<Bar>();
-        kakta->addComponent<Id>(id);
         kakta->addComponent<Friend>();
 
         kakta->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
@@ -380,7 +375,7 @@ namespace Api {
         ai->brainify<Ally>();
     }
 
-    void addSpider(int x, int y, uint8_t id, int hp) {
+    void addSpider(int x, int y, int hp) {
         auto skeleton = Manager::instance().addEntity(OBJECTS);
         skeleton->addComponent<Transform>(x, y);
         skeleton->addComponent<Sprite>(SPRITES);
@@ -391,7 +386,6 @@ namespace Api {
         skeleton->addComponent<Attack>();
 
         skeleton->addComponent<Bar>();
-        skeleton->addComponent<Id>(id);
         skeleton->addComponent<Hostile>();
 
         skeleton->getComponent<Animation>()->addAnimationFrame(144);
@@ -413,7 +407,7 @@ namespace Api {
         ai->brainify<Spider>();
     }
 
-    void addCaterpillar(int x, int y, uint8_t id, int hp) {
+    void addCaterpillar(int x, int y, int hp) {
         auto c = Manager::instance().addEntity(OBJECTS);
         c->addComponent<Transform>(x, y);
         c->addComponent<Sprite>(CATERPILLAR);
@@ -424,7 +418,6 @@ namespace Api {
         c->addComponent<Attack>();
 
         c->addComponent<Bar>();
-        c->addComponent<Id>(id);
         c->addComponent<Hostile>();
 
         c->getComponent<Animation>()->addAnimationFrame(12, 0, 8, 4);
@@ -447,7 +440,7 @@ namespace Api {
         ai->brainify<Caterpillar>();
     }
 
-    void addKakta(int x, int y, uint8_t id, int hp) {
+    void addKakta(int x, int y, int hp) {
         if (!RT_Topology.accessible(x, y)) {
             return;
         }
@@ -460,7 +453,6 @@ namespace Api {
         kakta->addComponent<Ai>();
         kakta->addComponent<Attack>();
         kakta->addComponent<Bar>();
-        kakta->addComponent<Id>(id);
         kakta->addComponent<Hostile>();
 
         kakta->getComponent<Animation>()->addAnimationFrame(112, 64, 96, 80);
